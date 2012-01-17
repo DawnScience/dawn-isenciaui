@@ -1,0 +1,46 @@
+1 Header
+1.1 smaller Header
+
+
+- list
+* list
+** indent
+* list
+
+----
+
+a line with __bold__ and ~~italic~~ and --strike--
+
+ some plain text (actually set to Text Font in Eclipse preferences)
+
+ a line break\\here and another\\here
+
+{table}
+A|Big|Table
+very|cool|indeed
+WardsBrowserContentRendererTest|SnipSnapContentRendererTest|TwikiBrowserContentRendererTest
+Acronym:WTF |http://www.google.com |EclipseWiki:license.html
+{table}
+
+{table}
+Mnemonic | Rendering | Comment
+1 Title || a style 1 heading (major heading)
+1.1 Title || a style 1.1 heading (minor heading)
+{table}
+
+Text with Java types com.teaminabox.foo.BigClass and an inner class com.teaminabox.foo.BigClass.InnerClass
+
+A [forced link] and one to an existing page: [Wards Browser Content Renderer Test]
+
+Bug: 1490342 URL in brackets detected incorrectly: I am sure you have heard of Google (http://www.google.com).
+
+Bug: 2014771 %-encoded URLs like this http://abc.def.se/WEBLINK/ViewDocs?DocumentName=EAB%2FOEP-07%3A0518&Latest=true
+
+Embed:EmbeddedContent here
+
+Embed:[EmbeddedContent] forced link
+
+Embed:com.teaminabox.foo.BigClass
+
+Eclipse:TEST_PROJECT_NAME/com/teaminabox/foo/BigClass.java should be a link
+Eclipse:/com/teaminabox/foo/BigClass.java should be a link

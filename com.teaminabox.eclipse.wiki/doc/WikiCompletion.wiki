@@ -1,0 +1,3 @@
+Back to HomePage, GeneralOverview
+
+The class of interest is the com.teaminabox.eclipse.wiki.editors.completion.WikiCompletionProcessor which is fairly self explanatory. Once again, there were complications do to the fact that the Eclipse resource links can have spaces in them so its more fiddly than it otherwise might have been.

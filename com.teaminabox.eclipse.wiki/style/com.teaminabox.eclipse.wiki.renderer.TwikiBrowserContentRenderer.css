@@ -1,0 +1,66 @@
+body {
+	text-align:justify;
+	font: 10pt verdana, sans-serif; 
+	color: #000000; 
+	background: #ffffff;
+}
+
+.monospace {font-family:monospace;}
+
+.quote {
+	padding: 0.5em;
+	margin: 0 0 0.5em 0.5em;	
+	border: 1px solid #ccc;	
+	background: #eee;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-variant: small-caps;
+	color: #111;
+}
+
+li {
+	text-align: left
+}
+
+table {
+	border-size:0;
+}
+
+th {
+	vertical-align: top;
+	color: #FFFF99;
+	background: #0c2577;
+}
+
+td {
+	vertical-align: top;
+	padding: 1px;
+	margin; 2px;
+	font: 10pt verdana, sans-serif;
+}
+
+.twikiToc {
+	margin:1em 0;
+	padding:.3em 0 .6em 0;
+}
+.twikiToc ul {
+	list-style:none;
+	padding:0 0 0 .5em;
+	margin:0;
+}
+.twikiToc li {
+	margin-left:1em;
+	padding-left:1em;
+	background-repeat:no-repeat;
+	background-position:0 .5em;
+}
+.twikiToc .twikiTocTitle {
+	margin:0;
+	padding:0;
+	font-weight:bold;
+}
+
+.twikiToc .twikiTocTitle {
+	color:#666;
+}

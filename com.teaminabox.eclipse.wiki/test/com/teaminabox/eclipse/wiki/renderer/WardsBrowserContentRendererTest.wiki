@@ -1,0 +1,42 @@
+Horizontal lines
+----
+
+* list
+** list
+*** list
+** list
+
+ some plain text
+ and more
+
+
+'''Header'''
+'''''Not a header'''''
+
+'''Quotations''' 
+	 :	To be or not to be ...
+	 
+a line with WardsBrowserContentRendererTest''''''s plural, __emphasis__ and ''italic'' , another '''''emphasis''''' bit and WardsBrowserContentRendererTest''''''s plural
+
+WardsBrowserContentRendererTest''''''s plural
+
+|*A*|*Big*|*Table*|
+|very|cool|indeed|
+|WardsBrowserContentRendererTest|SnipSnapContentRendererTest|TwikiContentRendererTest|
+|Acronym:WTF |http://www.google.com |EclipseWiki:license.html |
+|and|images |http://www.google.com/images/logo.gif |
+'''Images'''
+http://www.google.com/images/logo.gif
+
+Text with Java types com.teaminabox.foo.BigClass and an inner class com.teaminabox.foo.BigClass.InnerClass
+
+Bug: [ 1490342 ] URL in brackets detected incorrectly: I am sure you have heard of Google (http://www.google.com).
+
+Bug: [2014771] %-encoded URLs like this http://abc.def.se/WEBLINK/ViewDocs?DocumentName=EAB%2FOEP-07%3A0518&Latest=true
+
+Embed:EmbeddedContent here
+
+Embed:com.teaminabox.foo.BigClass
+
+Eclipse:TEST_PROJECT_NAME/com/teaminabox/foo/BigClass.java should be a link
+Eclipse:/com/teaminabox/foo/BigClass.java should be a link

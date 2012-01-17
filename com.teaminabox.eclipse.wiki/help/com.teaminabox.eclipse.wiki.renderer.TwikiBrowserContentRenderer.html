@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>
+      TWiki Browser Renderer
+    </title>
+    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+  </head>
+  <body>
+    <h1>
+      TWiki Wiki Renderer
+    </h1>
+<table border="1" cellpadding="3" cellspacing="1" bgcolor="#000000">
+<tr bgcolor="#ffffff">
+<td>
+ <strong>Formatting Command:</strong>
+</td><td>
+ <strong>Example: You write:</strong>
+
+</td><td>
+ <strong>You get:</strong>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Paragraphs:</strong> <br />
+ Blank lines will create new paragraphs.
+</td><td valign="top">
+<pre>
+
+1st paragraph
+
+2nd paragraph
+</pre>
+</td><td valign="top">
+1st paragraph
+<p />
+2nd paragraph
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Headings:</strong> <br />
+ At least three dashes at the beginning of a line, followed by plus signs and the heading text. 
+ One plus creates a level 1 heading (most important), two pluses a level 2 heading; the maximum is level 6.
+ A Table of Content can be created automatically with the %TOC% variable
+</td><td valign="top">
+<pre>
+---++ Sushi
+
+---+++ Maguro
+</pre>
+</td><td valign="top">
+<h2 >Sushi</h2>
+<p />
+<h3 >Maguro</h3>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Bold Text:</strong> <br />
+
+ Words get <strong>bold</strong> by enclosing them in <code>*</code> asterisks.
+</td><td valign="top">
+<pre>
+*Bold*
+</pre>
+</td><td valign="top">
+<strong>Bold</strong>
+
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Italic Text:</strong> <br />
+ Words get <em>italic</em> by enclosing them in <code>_</code> underscores.
+</td><td valign="top">
+
+<pre>
+_Italic_
+</pre>
+</td><td valign="top">
+<em>Italic</em>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Bold Italic:</strong> <br />
+ Words get <em>_bold italic</em> by enclosing them in <code>_</code> double-underscores.
+
+</td><td valign="top">
+<pre>
+__Bold italic__
+</pre>
+</td><td valign="top">
+<strong><em>Bold italic</em></strong>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Fixed Font:</strong> <br />
+
+ Words get shown in <code>fixed font</code> by enclosing them in <code>=</code> equal signs.
+</td>
+	<td valign="top">
+
+<pre>
+=Fixed font=
+</pre>
+
+</td>
+	<td valign="top">
+<code>Fixed font</code>
+
+<p />
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Bold Fixed Font:</strong> <br />
+ Words get shown in <code><b>bold fixed font</b></code> by enclosing them in <code><b></b></code> double equal signs.
+</td><td valign="top">
+
+
+<pre>
+==Bold fixed==
+</pre>
+
+</td><td valign="top">
+<code><b>Bold fixed</b></code>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Verbatim Mode:</strong> <br />
+
+ Surround code excerpts and other formatted text with <code>&lt;verbatim&gt;</code> and <code>&lt;/verbatim&gt;</code> tags. <br /> <strong><em>Note:</em></strong> Use <code>&lt;pre&gt;</code> and <code>&lt;/pre&gt;</code> tags instead if you want that HTML code is interpreted. <br /> <strong><em>Note:</em></strong> Each tag must be on a line by itself.
+
+</td><td valign="top">
+
+<pre>
+&lt;verbatim&gt;
+class CatAnimal {
+  void purr() {
+    &lt;code here&gt;
+  }
+}
+&lt;/verbatim&gt;
+</pre>
+
+</td><td valign="top">
+<pre>
+class CatAnimal {
+  void purr() {
+    &lt;code here>
+  }
+}
+
+</pre>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Separator:</strong> <br />
+ At least three dashes at the beginning of a line.
+</td><td valign="top">
+
+<pre>
+-------
+</pre>
+
+
+</td><td valign="top">
+<hr />
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>List Item:</strong> <br />
+ Three spaces, an asterisk, and another space.
+</td><td valign="top">
+
+<pre>
+   * bullet item
+
+</pre>
+
+</td><td valign="top">
+<ul>
+<li> bullet item</li>
+</ul>
+</td>
+</tr>
+
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Ordered List:</strong> <br />
+ Three spaces, a number, a dot, and another space. Several types are available besides a number:
+<table border="0" cellspacing="2" cellpadding="1">
+<tr><th valign="top" class="twikiFirstCol" bgcolor="#0c2577"><a href="http://twiki.org/cgi-bin/view/TWiki/TextFormattingRules?sortcol=0&amp;table=1&amp;up=0#sorted_table" title="Sort by this column"><font color="#FFFF99"> Type</font></a> </th><th valign="top" bgcolor="#0c2577"><a href="http://twiki.org/cgi-bin/view/TWiki/TextFormattingRules?sortcol=1&amp;table=1&amp;up=0#sorted_table" title="Sort by this column"><font color="#FFFF99"> Generated Style</font></a> </th><th valign="top" bgcolor="#0c2577"><a href="http://twiki.org/cgi-bin/view/TWiki/TextFormattingRules?sortcol=2&amp;table=1&amp;up=0#sorted_table" title="Sort by this column"><font color="#FFFF99"> Sample Sequence</font></a> </th></tr>
+
+<tr><td valign="top" class="twikiFirstCol" bgcolor="#F8F8F8"> 1. </td><td valign="top" bgcolor="#F8F8F8"> Arabic numerals </td><td valign="top" bgcolor="#F8F8F8"> 1, 2, 3, 4... </td></tr>
+<tr><td valign="top" class="twikiFirstCol" bgcolor="#DDDDDD"> A. </td><td valign="top" bgcolor="#DDDDDD"> Uppercase letters </td><td valign="top" bgcolor="#DDDDDD"> A, B, C, D... </td></tr>
+<tr><td valign="top" class="twikiFirstCol" bgcolor="#F8F8F8"> a. </td><td valign="top" bgcolor="#F8F8F8"> Lowercase letters </td><td valign="top" bgcolor="#F8F8F8"> a, b, c, d... </td></tr>
+
+<tr><td valign="top" class="twikiFirstCol" bgcolor="#DDDDDD"> I. </td><td valign="top" bgcolor="#DDDDDD"> Uppercase Roman Numerals </td><td valign="top" bgcolor="#DDDDDD"> I, II, III, IV... </td></tr>
+<tr><td valign="top" class="twikiFirstCol" bgcolor="#F8F8F8"> i. </td><td valign="top" bgcolor="#F8F8F8"> Lowercase Roman Numerals </td><td valign="top" bgcolor="#F8F8F8"> i, ii, iii, iv... </td></tr>
+</table>
+<p />
+</td><td valign="top">
+
+<pre>
+   1. Sushi
+   1. Dim Sum
+
+   A. Sushi
+   A. Dim Sum
+
+   i. Sushi
+   i. Dim Sum
+</pre>
+
+</td><td valign="top">
+<ol>
+<li> Sushi
+</li>
+<li> Dim Sum
+</li>
+</ol>
+<p />
+<ol type="A">
+
+<li> Sushi
+</li>
+<li> Dim Sum
+</li>
+</ol>
+<p />
+<ol type="i">
+<li> Sushi
+</li>
+<li> Dim Sum
+</li>
+</ol>
+</td>
+
+</tr>
+
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Nested List Item:</strong> <br />
+ Six, nine, ... spaces, an asterisk, and another space.
+
+</td><td valign="top">
+
+<pre>
+   * level 1
+      * level 2
+</pre>
+
+</td><td valign="top">
+<ul>
+<li> level 1
+	<ul>
+	<li> level 2
+	</li>
+	</ul>
+</li>
+
+</ul>
+</td>
+</tr>
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Table:</strong> <br />
+
+ Any number of lines of text. Each line is one row of the table consisting of one or more cells. Each cell starts and ends with a vertical bar '|'. 
+ Any spaces at the beginning of a line are ignored.<br />
+ <strong><em>Notes:</em></strong> 
+ <br />&#8226; <code>| *bold* |</code> cells are displayed as table headers.
+</td>
+	<td valign="top">
+
+<pre>
+| *L* | *C* | *R* |
+| A2 |  2  |  2 |
+| A3 |  3  |  3 |
+</pre>
+
+</td><td valign="top">
+<table border="0" cellspacing="2" cellpadding="1">
+<tr><th valign="top" bgcolor="#0c2577"><font color="#FFFF99"> L</font> </th><th valign="top" bgcolor="#0c2577"><font color="#FFFF99"> C</font> </th><th valign="top" bgcolor="#0c2577">
+		<font color="#FFFF99"> R</font> </th></tr>
+
+<tr><td valign="top" bgcolor="#F8F8F8"> A2 </td><td align="center" valign="top" bgcolor="#F8F8F8"> 2 </td><td align="right" valign="top" bgcolor="#F8F8F8"> 2 </td></tr>
+<tr><td valign="top" bgcolor="#DDDDDD"> A3 </td><td align="center" valign="top" bgcolor="#DDDDDD"> 3 </td><td align="right" valign="top" bgcolor="#DDDDDD"> 3 </td></tr>
+
+</table>
+</td>
+</tr>
+
+<tr bgcolor="#ffffff">
+<td valign="top">
+ <strong>Forced Links:</strong> <br />
+ You can create a forced internal link by enclosing words in double square brackets.
+ <br /> <strong><em>Note:</em></strong> Text within the brackets may contain optional spaces;name is formed by capitalizing 
+ the initial letter and by removing the spaces; for example, <code>[[text formatting FAQ]]</code> links to topic <code>TextFormattingFAQ</code>.
+
+</td><td valign="top">
+<pre>
+[[wiki syntax]]
+</pre>
+</td><td valign="top">
+<span style="color:#0000FF;">wiki syntax</span>
+<p />
+</td>
+</tr>
+
+</table>
+
+<h2>Unsupported</h2>
+<ul>
+	<li>Definition Lists</li>
+	<li>Tables: centre-spaced, right-spaced, column and row spanning</li>
+	<li>Escaped forced links</li>
+</ul>
+  </body>
+</html>
+

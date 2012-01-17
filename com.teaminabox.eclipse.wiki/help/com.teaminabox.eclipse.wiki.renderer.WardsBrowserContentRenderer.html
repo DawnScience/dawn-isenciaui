@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>
+      Ward's Browser Renderer
+    </title>
+    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+  </head>
+  <body>
+    <h1>
+      Ward's Wiki Renderer
+    </h1>
+	<p>This renderer is based on the markup of the original Wiki.</p>
+	<hr/>
+	<strong>Paragraphs</strong>
+<p></p>
+<ul>
+<li> Do not indent paragraphs.</li>
+<li> Words wrap to window width and fill as needed. (Emphasis fails to work if you insert end of line by hand!)</li>
+<li> Use blank lines as separators.</li>
+</ul>
+<hr/>
+<strong>Horizontal Lines</strong>
+<p></p>
+<ul>
+<li> Four or more hyphens (----) at the beginning of a line make a horizontal rule.</li>
+</ul>
+<hr/>
+<strong>Lists</strong>
+<p></p>
+<ul>
+<li> asterisk in column one for bullet item</li>
+<li> up to four asterisks for deeper indenting</li>
+<li> old format using tabs and numbered lists <b>is not supported</b>.</li>
+</ul>
+<hr/>
+<strong>Fonts</strong>
+<p></p>
+<ul>
+<li> Indent with one or more spaces to use a monospace font:</li>
+</ul><pre>
+ This is text in a monospaced font.
+   This is indented with three spaces.
+</pre>
+This is not.
+<p></p>
+<hr/>
+<p>You can generate vertical whitespace by using multiple newlines after a monospaced line, but doing so to create more than one blank line is discouraged.</p>
+<p></p>
+<hr/>
+<strong>Indented Paragraphs</strong>
+<em>(Quotes)</em>
+<p></p>
+<ul>
+<li> tab space colon tab -- often used (with emphasis) for quotations.</li>
+</ul>
+<strong>Emphasis</strong>
+<ul>
+<li> Use doubled single-quotes for emphasis (usually <em>italics</em>)</li>
+<li> Use tripled single-quotes for strong emphasis (usually <strong>bold</strong>)</li>
+<li> Use five single-quotes, or triples within doubles, for some other kind of emphasis (<strong><em>Bold Italic</em></strong>)</li>
+<li> Emphasis can be used multiple times within a line, but cannot span across line boundaries</li>
+</ul>
+<hr/>
+<strong>Links</strong>
+<p>Apart from usual links, the renderer supports the following:</p>
+<ul>
+<li>Separate suffixes (like 's') from WikiNames. </li>
+<li> URLs ending with .gif, .jpg, .jpeg, .jpe or .png are inlined.</li>
+</ul>
+<hr/>
+<strong>Tables</strong>
+<p>The original Wiki does not support tables but it was actually simpler to include table support with this renderer than to exclude it.</p>
+<p>Any number of lines of text. Each line is one row of the table consisting of one or more cells. 
+	Each cell starts and ends with a vertical bar '|'. Any spaces at the beginning of a line are ignored.</p>
+<hr/>
+<strong>Not Supported</strong>
+<ul>
+	<li>The use of Six Single Quotes to avoid making links to wiki pages is not supported</li>
+	<li>Definitions</li>
+</ul>
+  </body>
+</html>
+

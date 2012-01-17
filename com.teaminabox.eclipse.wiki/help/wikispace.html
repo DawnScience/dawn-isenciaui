@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>
+      WikiSpace
+    </title>
+    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+  </head>
+  <body>
+    <h1>
+      WikiSpace
+    </h1>
+	<p>The <b>WikiSpace</b> is a configurable collection of aliases enabling you to create links to external resources 
+	such as wikis, websites, and bugtracking tools. In addition, aliases can be made to eclipse resources using URLs of the form: 
+	<b>Eclipse:[workspace relative path]</b> 
+    </p>
+    <p>There are a default set of WikiSpace links defined in preferences:
+    <br/><img src="wikispacePrefs.jpg" alt="WikiSpace Preferences" />
+    </p>
+    <p>To use the links simply type the alias followed by a colon and then a suffix which completes the link.</p>
+    <p/><img src="wikispaceExample.jpg" alt="WikiSpace Example"/>
+    <h1>Local WikiSpace Overrides</h1>
+    <p>You can override the global wikispace settings and add local aliases by adding a properties file called <b>wikispace.properties</b>
+    of names and links to a directory containing wiki documents. The WikiSpace aliases defined in this property file will add to and
+    override the global WikiSpace aliases defined in the Wiki Preferences.
+    The property key is the name you will use in wiki documents, and the value is the URL the alias is for.
+    </p>
+    <p>
+    For example,
+	</p>
+    <p class="code">EclipseBugs=https://bugs.eclipse.org/bugs/show_bug.cgi?id=</p> 
+    <p>will allow links such as <b>EclipseBugs:1234</b> to
+    be made.
+    <br/>
+    Note that links made to eclipse resources should have a trailing slash if they are folders.
+	</p>
+    <p class="code">Code=Eclipse:/MyProject/src/</p> 
+  </body>
+</html>
+

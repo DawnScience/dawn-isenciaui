@@ -1,0 +1,99 @@
+Back to HomePage, GeneralOverview
+
+Hover support is added with com.teaminabox.eclipse.wiki.editors.WikiHover which is self explanatory.
+The hover presented is the contents of the link the cursor is hovering over.
+
+'''F2 - Preview'''
+To make the preview work like the Java one we need something like the code below:
+
+    public void openPreview() {
+        class InformationProvider implements IInformationProvider, IInformationProviderExtension2 {
+  
+            private IRegion fHoverRegion;
+            private String fHoverInfo;
+            private IInformationControlCreator fControlCreator;
+            
+            InformationProvider(IRegion hoverRegion, String hoverInfo, IInformationControlCreator controlCreator) {
+                fHoverRegion= hoverRegion;
+                fHoverInfo= hoverInfo;
+                fControlCreator= controlCreator;
+            }
+            /*
+             * @see org.eclipse.jface.text.information.IInformationProvider#getSubject(org.eclipse.jface.text.ITextViewer, int)
+             */
+            public IRegion getSubject(ITextViewer textViewer, int invocationOffset) {                   
+                return fHoverRegion;
+            }
+            /*
+             * @see org.eclipse.jface.text.information.IInformationProvider#getInformation(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
+             */
+            public String getInformation(ITextViewer textViewer, IRegion subject) {
+                return fHoverInfo;
+            }
+            /*
+             * @see org.eclipse.jface.text.information.IInformationProviderExtension2#getInformationPresenterControlCreator()
+             * @since 3.0
+             */
+            public IInformationControlCreator getInformationPresenterControlCreator() {
+                return fControlCreator;
+            }
+        }      
+  
+        if (getSourceViewer() instanceof ITextViewerExtension2) {
+            ITextViewerExtension2 textViewerExtension2 = (ITextViewerExtension2) getSourceViewer();
+ 
+            // does a text hover exist?
+            ITextHover textHover = textViewerExtension2.getCurrentTextHover();
+            if (textHover == null) {
+                return;
+            }
+            Point hoverEventLocation= textViewerExtension2.getHoverEventLocation();
+            int offset= computeOffsetAtLocation(getSourceViewer(), hoverEventLocation.x, hoverEventLocation.y);
+            if (offset == -1) {
+                return;             
+            }               
+ 
+            try {
+                String contentType= getSourceViewer().getDocument().getContentType(offset);
+                IRegion hoverRegion= textHover.getHoverRegion(getSourceViewer(), offset);                        
+                if (hoverRegion == null)
+                    return;
+                
+                String hoverInfo= textHover.getHoverInfo(getSourceViewer(), hoverRegion);
+ 
+                IInformationControlCreator controlCreator= getSourceViewerConfiguration().getInformationControlCreator(getSourceViewer());                
+    
+                IInformationProvider informationProvider= new InformationProvider(hoverRegion, hoverInfo, controlCreator);
+                InformationPresenter fInformationPresenter = new InformationPresenter(controlCreator);
+                fInformationPresenter.setOffset(offset);
+                fInformationPresenter.install(getTextViewerForTest());
+                fInformationPresenter.setInformationProvider(informationProvider, contentType);
+                fInformationPresenter.showInformation();
+ 
+            } catch (BadLocationException e) {              
+            }
+            return;
+        }
+   }
+        
+   private int computeOffsetAtLocation(ITextViewer textViewer, int x, int y) {
+        
+        StyledText styledText= textViewer.getTextWidget();
+        IDocument document= textViewer.getDocument();
+        
+        if (document == null)
+            return -1;      
+ 
+        try {
+            int widgetLocation= styledText.getOffsetAtLocation(new Point(x, y));
+            if (textViewer instanceof ITextViewerExtension5) {
+                ITextViewerExtension5 extension= (ITextViewerExtension5) textViewer;
+                return extension.widgetOffset2ModelOffset(widgetLocation);
+            } else {
+                IRegion visibleRegion= textViewer.getVisibleRegion();
+                return widgetLocation + visibleRegion.getOffset();
+            }
+        } catch (IllegalArgumentException e) {
+            return -1;  
+        }
+    }

@@ -1,0 +1,25 @@
+Back to HomePage, GeneralOverview
+
+Syntax colouring in wiki is done with an IRule and org.eclipse.jface.text.rules.RuleBasedScanner
+
+The wiki classes are:
+
+* com.teaminabox.eclipse.wiki.editors.WikiScanner 
+* implementations of com.teaminabox.eclipse.wiki.text.TextRegionMatcher
+
+The scanner has a set of com.teaminabox.eclipse.wiki.text.TextRegionMatcher added to its set of rules upon construction. The particular set of matchers depends on the renderer chosen by the user.
+The editor gets the scanner through the com.teaminabox.eclipse.wiki.editors.WikiConfiguration - see method public org.eclipse.jface.text.presentation.IPresentationReconciler 
+getPresentationReconciler(org.eclipse.jface.text.source.ISourceViewer sourceViewer)
+
+The method of interest for deciding upon colours is in the rule (com.teaminabox.eclipse.wiki.text.TextRegionMatcher):
+
+	 :	public org.eclipse.jface.text.rules.IToken evaluate(org.eclipse.jface.text.rules.ICharacterScanner scanner) 
+
+The algorithm for each matcher depends on what it is matching but basically:
+* Using the scanner, scan to an appropriate end marker (whitespace, end of line, end of document, etc) for the matcher
+** The first character is tested so that the matcher fails fast. For example, if the first character is not a capital letter then the com.teaminabox.eclipse.wiki.text.WikiWordMatcher will terminate immediately. This was done to help improve performance.
+* If the text obtained is a match then an appropriate IToken is returned. If it isn't a match then org.eclipse.jface.text.rules.IToken.UNDEFINED is returned.
+
+Thats all there is to it.
+
+Back to HomePage, GeneralOverview

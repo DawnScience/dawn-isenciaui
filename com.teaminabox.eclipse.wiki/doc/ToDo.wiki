@@ -1,0 +1,5 @@
+HomePage
+
+* Document Embedded wiki link and make sure all the features are documented
+* Fix the com.teaminabox.eclipse.wiki.editors.completion.JavaCompletionProcessor2 and use it
+* Make the functional tests more readable

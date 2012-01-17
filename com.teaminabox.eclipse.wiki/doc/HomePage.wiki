@@ -1,0 +1,36 @@
+'''Wiki Plugin Overview'''
+
+I am writing this design overview for two reasons:
+* So that I can explain myself and therefore hope to receive guidance on how I might have done things better
+* So that others building editors can see how it was done.
+
+Further details about the plugin can be found on SourceForge: http://eclipsewiki.sourceforge.net
+
+And ThankYou
+
+----
+'''How to read these documents ?'''
+
+These documents are written as a Wiki and so the best way to read them is in Eclipse with the Wiki plugin.
+Set up the project as follows:
+* Create a project called 'wiki'
+* Add the src in a directory called src
+* Add these documents in a directory called doc
+
+If you do this then the references to source code will work.
+----
+'''Suggested Order for Reading'''
+
+|Image:1.png GeneralOverview|
+|Image:2.png WikiColouring|
+|Image:3.png WikiCompletion|
+|Image:4.png HoverSupport|
+|Image:5.png RunningUnitTests|
+
+See also FeatureOverview, CodingGuidelines and ToDo
+
+Please submit feedback to http://sourceforge.net/projects/eclipsewiki/
+
+Channing Walton
+
+http://www.stateofflow.com/

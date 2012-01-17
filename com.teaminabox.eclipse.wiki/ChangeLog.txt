@@ -1,0 +1,178 @@
+Version 2.7.1
+	Fixed [ 2014771 ] %-encoded URLs
+	
+Version 2.7.0 - requires Eclipse 3.3
+	Implemented [ 1597549 ] Activate the spelling the checker Eclipse 3.2
+	Improved Java completion by using an EvaluationContext and code snippet support
+	Implemented [ 1695976 ] Per-project renderer selection
+	Fixed [ 1861618 ] Help docs are breaking the help system
+	
+Version 2.6.0
+	Added support for embedding WikiDocs
+	Fixed [ 1060777 ] Make keybindings work automatically
+	Fixed [ 1232632 ] Alt-w does not work anymore
+	Fixed [ 1555738 ] tilde char not recognized as part of URL
+	Added the embedding feature described in [ 1489731 ] Need a mechanism to auto-include common header and footer
+	Added embedding Forced Links for TWiki and SnipSnap
+	Added option to open editor showing browser
+
+Version 2.5.0
+	Added Kim Tiedemanm's patch for forced links in the SnipSnap renderer.
+	Lots of refactoring to clean up the mess of the editor code.
+	Added Craig Jones code to make the tests work properly on windows.
+	Rewrote the preferences code.
+	Fixed [ 1490342 ] URL in brackets detected incorrectly
+	Fixed [ 1487063 ] Some WikiWords not recognized
+	Implemented [ 1444086 ] Shorten Class names in exports
+	Implemented [ 1181020 ] Escape WikiWords for the TWiki Renderer
+	Fixed [ 1490333 ] WikiWord in heading not recognized
+	Fixed [ 1489075 ] non-WIkiWord incorrectly recognized as WikiWord
+	Added support to link to any Java type in the current project
+	Implemented feature [ 1378079 ] Add Headers and Footers
+	
+Version 2.4.2
+	Fixed use of deprecated key binding services.
+	Fixed [ 1243309 ] css files for help (Removed link to SnipSnap css on SnipSnap website which was breaking the Help page when the user was offline.)
+	Fixed NPE when exporting Wiki Documents
+Version 2.4.1
+	Fixed [ 1274310 ] TWiki [[...]] doesn't work
+	Removed testDummy() methods in unit tests. They were added as a result of https://bugs.eclipse.org/bugs/show_bug.cgi?id=46407
+Version 2.4.0
+	Merged in Ronald Steinhau's contribution for the new 'Plugin' protocol
+	Fiddled with the WardsWikiRenderer style sheet
+	De-camelcased rendered page titles
+	Fixed [ 1124285 ] NullPointerException when typing a fullstop in the editor view
+	Fixed [1159728] Can't get navigation to work
+	Fixed [ 1080525 ] WardsWiki: pre section needs newline
+	Improved performance of the JavaTypeMatcher at the expense of losing syntax highlighting for types in the default package
+	Added [ 1063083 ] Support inlining for Eclipse: URL
+	Fixed the Open Wiki Link popup menu which has been broken for a while
+Version 2.3.9
+	Improved the double click strategy so that word selection behaves more like other editors.
+	Migrated to OSGI bundle.
+	Fixed [ 1100392 ] Twiki parser error with italics, bold, etc. notation. Used TWiki's actual regex :-O
+Version 2.3.8
+	Fixed [ 1079107 ] No {table} with SnipSnap in browser
+	Fixed [ 1079857 ] Outline view not showing headings
+Version 2.3.7
+	This is a major overhaul of the matchers to improve performance of the editor. 
+	Added some functional tests for the renderers.
+	Fixed a problem with the outline producing BadLocationExceptions
+Version 2.3.6
+	Fixed [ 1090116 ] Stack from JavaCompletion Processor
+	Added a 'Sightings' page to the website.
+Version 2.3.5
+	Fixed [ 1079631 ] Editor Charset - second attempt :-)
+	Fixed [ 1089118 ] WardsWiki: markup in quote section is ignored
+	Fixed some breaks in plugin.xml as a result of Eclipse 3.1 M4 release
+Version 2.3.4
+	Fixed [ 1080672 ] TWiki: Parser
+Version 2.3.3
+	Fixed [ 1079631 ] Editor Charset
+Version 2.3.2
+	Fixed: [ 1079106 ] No preview within Eclipse:/
+	Fixed: Hover wasn't working at all for Wiki links
+Version 2.3.1
+	Fixed: [ 1072504 ] WardsWiki: monospace shouldn't trim
+Version 2.3.0
+	Added news: protocol
+	Added: TWiki Forced links - [[foo bar]] is linked to foobar.wiki
+	Added: Numbered lists in TWiki and SnipSnap, types supported are numbers, upper and lowercase roman numerals and letters
+Version 2.2.3
+	Implemented RFE:1059776	Exclude words from being links
+	Implemented RFE:1060001	Make Java Type Completion more like the Java Editor
+	Fixed some broken unit tests.	
+	Made the help pages conform to some kind of DTD
+Version 2.2.2 for Eclipse 3.1
+	Fixed the matching for Java types which had required a trailing space to work.
+	Added completion for Java Types
+	Added a crude index when exporting a Wiki
+	Fixed a rendering bug, thanks to Steve Bate for pointing that out and supplying test code from XPlanner.
+	Added Localisation support for Export dialogs
+	Updated the Keybindings to work with the new way of things.
+Version 2.2.1 for Eclipse 3
+	My "Added Exports to HTML !!" also "Broke images !!"
+Version 2.2.0 for Eclipse 3
+	Added Exports to HTML !!
+Version 2.1.1 for Eclipse 3
+	Added file url support
+	Fixed the monospaced rendering in Ward's Wiki renderer (it was creating a new paragraph between each line)
+	The editor was trying to open any file type when the reuse editor preference was set. Its been fixed to only open wiki documents.
+	Wards Wiki Renderer was not rendering '''''Foo''''' correctly if it was on a line on its own - thought it was a header.
+Version 2.1.0 for Eclipse 3
+	A syntax view has been added to the editor
+	The browser has been improved to behave more like a browser! (Anyone out there with nice icons they would like to contribute?)
+	A bug relating to links to eclipse resources that have spaces in their paths has been fixed (thanks to Daniel Lindner for reporting it).
+Version 2.0.6 for Eclipse 3
+	A syntax view has been added to the editor
+	The beginnings of an outline provider has been added to show headings in the editor
+	A number of enhancements and improvements have been made to the renderers
+Version 2.0.5 for Eclipse 3
+	The Twiki renderer now handles tables!
+Version 2.0.4 for Eclipse 3
+	Renderers handle lists better (indenting etc). Numbered lists coming ...
+	The old list markup for Wards Wiki is no longer supported
+	Bug fix: the browser widget was listening to preference changes when it should have been disposed
+Version 2.0.3 for Eclipse 3
+	Made the SnipSnap render handle headings a little better. Headings from H1 to H6 can be marked up with 1, 1.1, 1.2, ... 1.5 (which is not stricly accurate but why not :-) )
+Version 2.0.2 for Eclipse 3
+	Wiki words can be suffixed with a number.
+Version 2.0.1 for Eclipse 3
+	Fixed a NPE when the browser view is used when a file wiki doc has been created but not saved.
+	Added bold markup for wiki renderer
+Version 2.0.0 for Eclipse 3
+	Added a browser view using the new SWT Browser. The renderers used to produce the contents are very basic for this release. Improvements to follow (and suggestions for Wiki renderers welcome :-)
+Version 1.7.7 for Eclipse 3
+	Improved the performance of the Java type matcher.
+Version 1.7.6 for Eclipse 3
+	Fully qualified Java types are now automatically linked to from the editor if they are in the current project.
+Version 1.7.5 for Eclipse 3
+	You can append a line number to an Eclipse resource link so that when the link is opened the editor moves to the required line. The line number is added to the link like this: Eclipse:/foo/bar:123
+Version 1.7.4 for Eclipse 3
+	You can now set the editors font in the Workbench Font preferences.
+	Introduced word wrapping (set in preferences)
+Version 1.7.3 for Eclipse 3
+	Realised I made a complete mess of the whole resource change listener/update wiki docs thing and did it properly ... the shame!
+Version 1.7.2 for Eclipse 2.1.2
+    Fixed a bug preventing Wiki links from being recognised unless its the last thing on the line.
+Version 1.7.1 for Eclipse 2.1.2
+    Fixed a null pointer caused when wiki files are deleted, or editors are closed and new wiki files created.
+Version 1.7.0 for Eclipse 2.1.2
+    Split codebase into two streams to follow Eclipse 2 and Eclipse 3.
+    Hopefully, features will remain identical between both versions ;)
+    Added support for local WikiSpace properties.
+    Improved Help.
+Version 1.3.9
+    Fixed bugs with move to next/previous link - its a bit of a mess but I believe it works now :-(
+    What I really need to do is understand how to run unit tests with plugins...
+Version 1.3.8
+    Move to next/previous link with the JDT's Go to next/previous member accelerator keys, which are Ctrl+Shift+Arrow_Down and Ctrl+Shift+Arrow_Up by default, respectively.
+    Extracted some text into the resource bundle.
+Version 1.3.7
+    Added support to resuse the editor when opening wiki links (set in Preferences).
+Version 1.3.6
+    Fixed bugs introduced by white space support.
+Version 1.3.5
+    Added support for Eclipse paths that include spaces.
+Version 1.3.4
+    Added F3 to open wiki links thanks to Torsten Juergeleit's help.
+Version 1.3.3 	Now using the standard completion accelerator thanks to Torsten Juergeleit's help.
+Version 1.3.2 	
+	Added the forgotten default foreground colour in the preference pane.
+	Cleaned up SWT Color resources properly.
+Version 1.3.1 	
+	Improved the preference pane.
+Version 1.3.0 	A general clean up
+	Source is included
+	I no longer need to use ORO
+	Hover support to show a preview of either an eclipse resource or Wiki document
+	Bold option added to some of the Wiki links in the preference pane - the preferance pane is pretty but I'll fix that soon.
+	Completion now follows linked directories and files correctly.
+Version 1.2.1
+	Fixed a bug causing Bug: links of only 1 character not to work.
+Version 1.2.0
+	Fixed a bug causing interwiki links followed by a non letter character to include the offending character when launching the browser.
+	Added Bug: link support
+	Added ftp and mailto support
+Version 1.0.0
+	First release

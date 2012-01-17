@@ -1,0 +1,10 @@
+HomePage
+----
+
+The unit tests need to be run as a JUnit Plugin test.
+* Open the Run Configuration Wizard
+* Create a new JUnit Plug-in Test configuration
+* Select the wikieclipse project
+* Select ''Run all tests in the selected project, package or source folder'' and select the ''test'' src folder.
+* Run the tests
+

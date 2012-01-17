@@ -1,0 +1,3 @@
+Back to FeatureRequests, HomePage
+
+The WikiSpace is a set of names URLs. The names are used as internwiki links in documents, but can be links to any URL. For example, the default set has a Wiki: which is a link to http://c2.com/cgi/wiki? so that, Wiki:RecentChanges links to http://c2.com/cgi/wiki?RecentChanges

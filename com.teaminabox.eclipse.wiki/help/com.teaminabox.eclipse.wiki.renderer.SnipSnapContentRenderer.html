@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>
+      SnipSnap Browser Renderer
+    </title>
+    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+  </head>
+  <body>
+  <div>
+	<h3 class="heading-1">Text formatting rules</h3>
+		<p>SnipSnap text may contain the following to format text.</p>
+	  This includes simple filters for <b class="bold">bold</b> and <i class="italic">italic</i> as well as special markup for tables.
+		<h3 class="heading-1-1">Simple text filters</h3>
+
+		<table class="wiki-table" cellpadding="0" cellspacing="0" border="0">
+		<tr><th>Mnemonic</th><th>Rendering</th><th>Comment</th></tr>
+		<tr class="table-odd"><td>1 Title</td><td>&#160;</td><td>a style 1 heading (major heading)</td></tr>
+		<tr class="table-even"><td>1.1 Title</td><td>&#160;</td><td>a style 1.1 heading (minor heading)</td></tr>
+		<tr class="table-odd"><td>- text</td><td>&#160;</td><td>a list item (with -), several lines create a single list</td></tr>
+		<tr class="table-even"><td>* text</td><td>&#160;</td><td>a list item (with *)</td></tr>
+		<tr class="table-even"><td>1. text</td><td>&#160;</td><td>a numbered list item</td></tr>
+		<tr class="table-even"><td>i. text</td><td>&#160;</td><td>a lowercase roman numerals list item</td></tr>
+		<tr class="table-even"><td>I. text</td><td>&#160;</td><td>an upper case roman numerals list item</td></tr>
+		<tr class="table-even"><td>a. text</td><td>&#160;</td><td>a lower case letter list item</td></tr>
+		<tr class="table-even"><td>A. text</td><td>&#160;</td><td>an upper case letter list item</td></tr>
+		<tr class="table-odd"><td>&#95;&#95;bold&#95;&#95;</td><td><b class="bold">bold</b></td><td>simple bold text</td></tr>
+		<tr class="table-even"><td>&#126;&#126;italics&#126;&#126;</td><td><i class="italic">italics</i></td><td>simple italic text</td></tr>
+		<tr class="table-odd"><td>&#45;&#45;strike&#45;&#45;</td><td><strike class="strike">strike</strike></td><td>strike through text</td></tr>
+		<tr class="table-even"><td>(empty line)</td><td>&#160;</td><td>produces a new paragraph</td></tr>
+		<tr class="table-odd"><td>&#92;&#92;</td><td>&#160;</td><td>creates a line break, please use sparingly!</td></tr>
+		<tr class="table-odd"><td>&#45;&#45;&#45;&#45;</td><td>&#160;</td><td>creates a horizontal rule</td></tr>
+		</table>
+	
+		<h3 class="heading-1-1">Text formatting macros</h3>
+		<table class="wiki-table" cellpadding="0" cellspacing="0" border="0">
+		<tr><th>Mnemonic</th><th>Rendering</th><th>Comment</th></tr>
+		<tr class="table-odd"><td>&#123;table&#125;</td><td>tables</td>
+		<td>Simple tables with header. Separate columns with &#124;</td></tr>
+		<tr class="table-even"><td>&#123;quote&#125;Citation&#123;quote&#125;</td>
+		<td><blockquote class="quote">Citation</blockquote></td><td>creates a quotation</td></tr></table>
+	</div>
+	<div>
+		<h3 class="heading-1">Unsupported</h3>
+		<ul>
+			<li>Enumerated lists</li>
+			<li>All macros except table</li>
+		</ul>
+	</div>
+  </body>
+</html>
+

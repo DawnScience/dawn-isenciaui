@@ -1,0 +1,15 @@
+Back to HomePage
+
+Its convenient to have a common style in shared projects to avoid difficulties with merging etc. 
+
+Here are the basics, which are open to discussion of course:
+
+* Write tests
+* Use the project specific formatting
+* Read http://www.eclipse.org/eclipse/development/performance/bloopers.html - particularly the bit about String.substring
+* Write tests
+* Keep methods small
+* Give methods and classes meaningful names
+* Write tests
+
+Back to HomePage

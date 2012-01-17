@@ -1,0 +1,132 @@
+/* Lays out the page using a header, 3 columns (navigation, main and sidebar for links)
+ * and a footer.
+ */
+body { 
+	font: 10pt verdana, sans-serif; 
+	color: #202020; 
+	background: #ffffff;
+}
+
+#sourceforge {
+	float: left;
+}
+
+.header {
+	text-align: center;
+	height: 90px; /* need to give vertical space for the logo */
+	background-image: url("../images/Logo.jpg");
+  	background-position: 0px 0em;
+  	background-repeat: no-repeat; 
+}
+
+.nav {
+	position: absolute;
+	left: 1em;
+	font-variant:small-caps;
+	line-height: 120%
+}
+
+.main {
+	margin: 0 110px 0 7em; 
+	border-left: 2px solid #ccc;
+	border-right: 2px solid #ccc;
+	padding: 0 1em 0em 1em;
+}
+
+.links {
+	position: absolute;
+	right: 0px;
+	width: 110px; 
+}
+
+.footer {
+	font-size: smaller;
+	margin: 2em;
+}
+
+.quotebox {
+	float: right;
+	padding: 0.5em;
+	margin: 0 0 0.5em 0.5em;
+	border: 1px solid #ccc;
+	background: #eee;
+	font-size: small;
+}
+.quotebox h1,h2,h3,h4,h5,h6 {
+	font-variant: small-caps;
+	margin: 0em;
+}
+.quotebox ul {	
+	list-style-type:none;
+	margin: 0em;
+	padding: 0 0 0 0.5em;
+}
+
+h1 {
+	color: #404040;
+	margin-bottom:0em;
+	font-variant:small-caps;
+}
+
+.sub {
+	font-size: large;
+	font-variant:small-caps;
+}
+
+h2 {
+	color: #404040;
+	margin:0em 0em 0.2em 0em;
+	font-variant:small-caps;
+}
+
+.paragraph {
+	text-align: justify;
+	margin:0em 0em 1em 0em;
+}
+
+.emphasised {
+	font-weight: bolder;
+	font-size: larger;
+}
+
+li.doublespace {
+	line-height: 200%
+}
+
+.deEmphasised {
+	color: #aaa;
+}
+
+:link {
+    color : #114477;
+    text-decoration: none;
+}
+
+:visited {
+    color: #114477;
+    text-decoration: none;
+}
+
+a.mail {
+	color: #114477;
+	text-decoration: none;
+}
+
+.copyright {
+	text-align: left;
+    font-size:smaller;
+    color:#999999;
+    text-align: center;
+}
+
+img {
+	border: 0px;
+}
+
+hr {
+	color: #ccc;
+}
+
+.partitionKey {
+	text-decoration: underline;
+}

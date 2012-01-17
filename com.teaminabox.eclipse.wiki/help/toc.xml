@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Eclipse Wiki" topic="help/index.html">
+	<topic label="Getting Started"  href="help/gettingStarted.html"> </topic>
+	<topic label="Images"  href="help/images.html"> </topic>
+	<topic label="Excludes"  href="help/excludes.html"> </topic>
+	<topic label="Headers and Footers"  href="help/headersAndFooters.html"></topic>
+	<topic label="Embedded Documents"  href="help/embeddedDocuments.html"></topic>
+	<topic label="WikiSpace"  href="help/wikispace.html"> </topic>
+	<topic label="Export"  href="help/export.html"> </topic>
+	<topic label="Markup"  href="help/renderers.html"> 
+		<topic label="Wards Wiki"  href="help/com.teaminabox.eclipse.wiki.renderer.WardsBrowserContentRenderer.html"></topic>
+		<topic label="TWiki"  href="help/com.teaminabox.eclipse.wiki.renderer.TwikiBrowserContentRenderer.html"></topic>
+		<topic label="SnipSnap"  href="help/com.teaminabox.eclipse.wiki.renderer.SnipSnapContentRenderer.html"></topic>
+	</topic>
+</toc>

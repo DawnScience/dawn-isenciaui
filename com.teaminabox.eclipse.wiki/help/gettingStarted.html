@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>
+      Getting Started
+    </title>
+    <link rel="stylesheet" href="book.css" charset="ISO-8859-1" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+  </head>
+  <body>
+    <h1>
+      Enable Commands
+    </h1>
+    <p>The first thing you need to do is enable the Wiki accelerator keys as follows:</p>
+    <ol>
+    <li>Open the perspective you will use Wiki documents in</li>
+    <li>Open the Window menu and select <i>Customize Perspective...</i></li>
+    <li>Select the <i>Commands</i> tab</li>
+    <li>Check the <i>Wiki</i> command group</li>
+    <li>Click <i>Ok</i></li>
+    </ol>
+    <h1>
+      Getting Started
+    </h1>
+	<p>The simplest way to start your wiki is to create a folder in your project and create a new file called <b>HomePage.wiki</b>.
+	The file could be called anything but it should be a <a href="http://c2.com/cgi/wiki?WikiWord">Wiki Word</a> 
+	so other documents can link to it. Note the Wiki words can also be suffixed with a number which can be useful: WikiWord123 for example.
+    </p>
+    <p>
+    If you want to create a wiki link in a document, just type the wiki word and the editor will highlight the word. To visit the document
+    place your cursor on the wiki word and press <b>F3</b>. If the document doesn't exist, a new one will be created with the extension <b>wiki</b>.
+    </p>
+    <p>Here is an example with a link to <b>RoadMap</b>.</p>
+    <br/><img src="gettingStarted.jpg" alt="example of a wiki link"/>
+    <h1>Links</h1>
+    <p>Apart from links formed by wiki words, links are automatically formed for:</p>
+    <ul>
+    <li>URLs</li>
+    <li>Local eclipse resources beginning with <b>Eclipse:</b> followed by a path relative to the eclipse workspace. You can also
+    append a line number to make the editor open at the indicated line: 
+    	<span class="code">Eclipse:/foo/bar:12</span></li>
+    	<li>Wiki documentation in plugins with <b>Plugin:</b> followed by a path relative to the plugin:
+    	<span class="code">Plugin:/foo/bar</span>
+    	If the plugin is in the workspace, the workspace folder is used, if the plugin is not in the workspace, 
+    	the installed plugin-folder is used. In the latter case, the Wiki file is copied to a local project (wiki_temp) 
+    	and accessed by the Wiki editor (read only).</li>
+    <li>Fully qualified Java types in the current project</li>
+    </ul>
+    <br/><img src="links.jpg" alt="Links"/>
+    <p>See also <a href="wikispace.html">WikiSpace</a>
+    </p>
+  </body>
+</html>
+

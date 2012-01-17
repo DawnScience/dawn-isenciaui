@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Twiki Browser Content Renderer Test</title>
+<style type="text/css"><!--
+body {
+	text-align:justify;
+	font: 10pt verdana, sans-serif; 
+	color: #000000; 
+	background: #ffffff;
+}
+
+.monospace {font-family:monospace;}
+
+.quote {
+	padding: 0.5em;
+	margin: 0 0 0.5em 0.5em;	
+	border: 1px solid #ccc;	
+	background: #eee;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-variant: small-caps;
+	color: #111;
+}
+
+li {
+	text-align: left
+}
+
+table {
+	border-size:0;
+}
+
+th {
+	vertical-align: top;
+	color: #FFFF99;
+	background: #0c2577;
+}
+
+td {
+	vertical-align: top;
+	padding: 1px;
+	margin; 2px;
+	font: 10pt verdana, sans-serif;
+}
+
+.twikiToc {
+	margin:1em 0;
+	padding:.3em 0 .6em 0;
+}
+.twikiToc ul {
+	list-style:none;
+	padding:0 0 0 .5em;
+	margin:0;
+}
+.twikiToc li {
+	margin-left:1em;
+	padding-left:1em;
+	background-repeat:no-repeat;
+	background-position:0 .5em;
+}
+.twikiToc .twikiTocTitle {
+	margin:0;
+	padding:0;
+	font-weight:bold;
+}
+
+.twikiToc .twikiTocTitle {
+	color:#666;
+}
+
+--></style>
+  </head>
+  <body>
+<h1>Twiki Browser Content Renderer Test</h1>
+<div class="twikiToc">
+<ul>
+<li><a href="#Header_1">Header 1</a></li>
+<li><a href="#Header_2">Header 2</a></li>
+<li><a href="#Header_3">Header 3</a></li>
+<li><a href="#Header_4">Header 4</a></li>
+<li><a href="#Header_5">Header 5</a></li>
+<li><a href="#Header_6">Header 6</a></li>
+<li><a href="#Header_7">Header 7</a></li>
+<li><a href="#Bug:_[_1490333_]_!WikiWord_in_heading_not_recognized_-_TwikiBrowserContentRendererTest">Bug: [ 1490333 ] !WikiWord in heading not recognized - TwikiBrowserContentRendererTest</a></li>
+</ul>
+</div>
+<p>
+</p>
+<a name="#Header_1"/><h1>Header 1</h1>
+<a name="#Header_2"/><h2>Header 2</h2>
+<a name="#Header_3"/><h3>Header 3</h3>
+<a name="#Header_4"/><h4>Header 4</h4>
+<a name="#Header_5"/><h5>Header 5</h5>
+<a name="#Header_6"/><h6>Header 6</h6>
+<a name="#Header_7"/><h6>Header 7</h6>
+<p>
+</p>
+<p>
+<strong>bold</strong> <em>italic</em>  <strong><em>bold italic</em></strong> <code>fixed font</code> <code><b>bold fixed font</b></code></p>
+<p>
+</p>
+<p>
+<strong>bold*bold</strong> <em>italic_italic</em>  <strong><em>bold italic__bold italic</em></strong> <code>fixed font=fixed font</code> <code><b>bold fixed font==bold fixed font</b></code></p>
+<p>
+</p>
+<pre>Verbatim!
+	public static final ...
+	public class ..</pre><p>
+</p>
+<hr>
+<p>
+</p>
+<ul><li>bullet list</li>
+<ol type="A"><li>Uppercase list item</li>
+<ol type="1"><li>numeric list</li>
+<ol type="i"><li>roman lower case list item</li>
+<ol type="a"><li>lower case list item</li>
+<ol type="I"><li>roman upper case list item</li>
+</ol></ol></ol></ol></ol></ol><p>
+</p>
+<table ><tr><th>A</th><th>Big</th><th>Table</th></tr>
+<tr><td>very</td><td>cool</td><td>indeed</td></tr>
+<tr><td>WardsBrowserContentRendererTest<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></td><td>SnipSnapContentRendererTest<a href="http://--wiki/SnipSnapContentRendererTest">?</a></td><td><a href="http://--wiki/TwikiBrowserContentRendererTest">TwikiBrowserContentRendererTest</a></td></tr>
+<tr><td><a href="http://www.acronymfinder.com/af-query.asp?Acronym=WTF">Acronym:WTF</a> </td><td><a href="http://www.google.com">http://www.google.com</a> </td><td><a href="http://eclipsewiki.free.fr/index.php?page=license.html">EclipseWiki:license.html</a> </td></tr>
+<tr><td>an</td><td>image</td><td><img alt="http://www.eclipse.org/images/EclipseBannerPic.jpg" src="http://www.eclipse.org/images/EclipseBannerPic.jpg"/> </td></tr>
+</table>
+<p>
+</p>
+<p>
+Text with Java types <a href="http://--wiki/Java:com.teaminabox.foo.BigClass">com.teaminabox.foo.BigClass</a> and an inner class <a href="http://--wiki/Java:com.teaminabox.foo.BigClass$InnerClass">com.teaminabox.foo.BigClass.InnerClass</a></p>
+<p>
+</p>
+<p>
+<a href="http://--wiki/TwikiBrowserContentRendererTest">TwikiBrowserContentRendererTest</a> links and <a href="http://--wiki/TwikiBrowserContentRendererTest">TwikiBrowserContentRendererTest</a></p>
+<p>
+</p>
+<p>
+Bug: [ 1490342 ] URL in brackets detected incorrectly: I am sure you have heard of Google (<a href="http://www.google.com">http://www.google.com</a>).</p>
+<p>
+Bug: [ 1487063 ] Some WikiWords not recognized: TipsJ2ME<a href="http://--wiki/TipsJ2ME">?</a> EclipseME<a href="http://--wiki/EclipseME">?</a> MyVPN<a href="http://--wiki/MyVPN">?</a> MeetingNotes2006x03x25<a href="http://--wiki/MeetingNotes2006x03x25">?</a> blah</p>
+<p>
+Bug: [ 1181020 ] Escape WikiWords such as WardsBrowserContentRendererTest TipsJ2ME MeetingNotes2006x03x25 TwikiBrowserContentRendererTest</p>
+<p>
+Bug: [ 2014771 ] %-encoded URLs like this <a href="http://abc.def.se/WEBLINK/ViewDocs?DocumentName=EAB%2FOEP-07%3A0518&amp;Latest=true">http://abc.def.se/WEBLINK/ViewDocs?DocumentName=EAB%2FOEP-07%3A0518&amp;Latest=true</a></p>
+<p>
+</p>
+<a name="#Bug:_[_1490333_]_!WikiWord_in_heading_not_recognized_-_TwikiBrowserContentRendererTest"/><h3>Bug: [ 1490333 ] WikiWord in heading not recognized - <a href="http://--wiki/TwikiBrowserContentRendererTest">TwikiBrowserContentRendererTest</a></h3>
+<p>
+</p>
+<p>
+<p>
+Embedded content with a link to WardsBrowserContentRendererTest<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></p>
+ here</p>
+<p>
+</p>
+<p>
+<p>
+Embedded content with a link to WardsBrowserContentRendererTest<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></p>
+ forced link</p>
+<p>
+</p>
+<p>
+
+
+<!-- ======================================================== -->
+<!-- = Java Sourcecode to HTML automatically converted code = -->
+<!-- =   Java2Html Converter V4.1 2004 by Markus Gebhard  markus@jave.de   = -->
+<!-- =     Further information: http://www.java2html.de     = -->
+<div align="left" class="java">
+<table border="0" cellpadding="3" cellspacing="0" bgcolor="#ffffff">
+   <tr>
+  <!-- start source code -->
+   <td nowrap="nowrap" valign="top" align="left">
+    <code>
+<font color="#808080">1</font>&nbsp;<font color="#7f0055"><b>package&nbsp;</b></font><font color="#000000">com.teaminabox.foo;</font><br/>
+<font color="#808080">2</font>&nbsp;<font color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font color="#000000">BigClass&nbsp;</font><font color="#000000">{&nbsp;</font><font color="#7f0055"><b>class&nbsp;</b></font><font color="#000000">InnerClass&nbsp;</font><font color="#000000">{}&nbsp;}</font></code>
+    
+   </td>
+  <!-- end source code -->
+   </tr>
+  <!-- start Java2Html link -->
+   <tr>
+    <td align="right">
+<small>
+<a href="http://www.java2html.de" target="_blank">Java2html</a>
+</small>
+    </td>
+   </tr>
+  <!-- end Java2Html link -->
+</table>
+</div>
+<!-- =       END of automatically generated HTML code       = -->
+<!-- ======================================================== -->
+
+</p>
+<p>
+</p>
+<p>
+<a href="http://--wiki/Eclipse:TEST_PROJECT_NAME/com/teaminabox/foo/BigClass.java">Eclipse:TEST_PROJECT_NAME/com/teaminabox/foo/BigClass.java</a> should be a link</p>
+<p>
+<a href="http://--wiki/Eclipse:/com/teaminabox/foo/BigClass.java">Eclipse:/com/teaminabox/foo/BigClass.java</a> should be a link</p>
+  </body>
+</html>

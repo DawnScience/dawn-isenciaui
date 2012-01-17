@@ -1,0 +1,40 @@
+'''WikiLinks'''
+
+WikiLinks are formed in the usual way for a wiki.
+Other links are:
+* URLs: for example http://www.stateofflow.com mailto:channing@mac.com ftp://ftp.foo.com
+* Eclipse Resources: Eclipse:/eclipsewiki/ChangeLog.txt
+* Java Types: com.teaminabox.eclipse.wiki.WikiPlugin
+* Files file:///Users/channing/file.txt
+
+'''WikiSpace'''
+
+WikiSpace Links, defined in Preferences allow links to be made to any other Wiki or website. Here are some defaults:
+* Acronym:ISP
+* Apache:general will link to http://wiki.apache.org/general
+* Wiki:ExtremeProgramming will link to http://c2.com/cgi/wiki?ExtremeProgramming
+* Google:eclipse will do a search for eclipse on Google
+* ISBN:0920129234 will link to Amazon books
+
+Users can define their own WikiSpace links:
+for example, WikiSrc:WikiConstants.java is a local link defined in preferences, equivalent to Eclipse:/eclipsewiki/src/com/teaminabox/eclipse/wiki/WikiConstants.java
+
+'''Excludes'''
+You can exclude words from being linked to by putting them in a file called wiki.excludes in your wiki directory (one word per line).
+
+'''Links'''
+WikiLinks can be opened in three ways:
+* From the Wiki menu pull down
+* Place your cursor on a link and press F3
+* Place your cursor on a link, open the pop-up menu and select 'Open Wiki Link'
+
+'''Headers and Footers'''
+* The files footer.wiki and header.wiki are automatically included in the Browser view and exported documents.
+
+'''Other'''
+* Opening a wiki link which does not exist will create a new page.
+* Navigate to next/previous links using CTRL+SHIFT UP/DOWN arrows respectively.
+* Hovering over a link will pop up a preview.
+* CTRL+SPACE will open completion.
+
+Back to HomePage

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Snip Snap Content Renderer Test</title>
+<style type="text/css"><!--
+body {
+	text-align:justify;
+	font: 10pt verdana, sans-serif; 
+	color: #000000; 
+	background: #ffffff;
+}
+
+.monospace {font-family:monospace;}
+
+/**
+ * Wiki text stylesheet definitions.
+ * @author Matthias L. Jugel
+ */
+
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+
+/************************************************/
+/* image positioning                            */
+img {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  vertical-align: middle;
+}
+
+img.left {
+  display: block;
+  left: 0px;
+}
+
+img.right {
+  display: block;
+  right: 0px;
+}
+
+img.center {
+  text-align: center;
+}
+
+img.float-left {
+  float: left;
+  margin-top: 3px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+
+img.float-right {
+  float: right;
+  margin-top: 3px;
+  margin-left: 3px;
+  margin-bottom: 3px;
+}
+
+.heading-1 {
+  font-weight: bold;
+  font-size: 14px;
+  font-variant: small-caps;
+}
+
+.heading-1-1 {
+  font-size: 12px;
+  font-variant: small-caps;
+}
+
+.heading-1-1-1 {
+  font-size: 12px;
+}
+
+.quote {
+  font-style: italic;
+  color: inherit;
+  background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+
+/* special formatting of a wiki table */
+.wiki-table {
+  border-style: solid;
+  border-color: black;
+  border-width: 0px 1px 1px 1px;
+  empty-cells: show;
+}
+
+.wiki-table td {
+  border-top: 1px solid black;
+  padding: 4px 4px 4px 4px;
+}
+
+.wiki-table th {
+  border-top: 1px solid black;
+  text-align: left;
+  color: inherit;
+  font-weight: bold;
+  /* background-color: #DDEEFF; */
+  background-color: #d9e4f9;
+}
+
+.wiki-table .table-odd {
+  color: inherit;
+  background-color: #F8F8F8;
+}
+
+.wiki-table .table-even {
+}
+
+/************************************************/
+/* list formatting                              */
+
+.list {
+}
+
+.list-title {
+  font-weight: bold;
+}
+
+.list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+  list-style-type: none;
+}
+
+/* wiki lists */
+
+ul.minus { list-style-type: square; }
+ul.star { list-style-type: circle; }
+ol.roman { list-style-type: lower-roman; }
+ol.ROMAN { list-style-type: upper-roman; }
+ol.alpha { list-style-type: lower-alpha; }
+ol.ALPHA { list-style-type: upper-alpha; }
+ol.greek { list-style-type: lower-greek; }
+ol.GREEK { list-style-type: upper-greek; }
+ol.hiragana { list-style-type: hiragana; }
+ol.HIRAGANA { list-style-type: hiragana-iroha; }
+ol.katakana { list-style-type: katakana; }
+ol.KATAKANA { list-style-type: katakana-iroha; }
+ol.HEBREW { list-style-type: hebrew; }
+
+
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ */
+
+/* error messages and error positions should be marked red */
+.error { color: #ff0000; font-weight: bold;	background-color: inherit;}
+.error-position { background-color: #ffaaaa; color: inherit;}
+
+/* inactive buttons are greyed out */
+.inactive { color: #aaaaaa; background-color: inherit;}
+
+/************************************************/
+/* ANCHOR tag                                   */
+a {
+	color:#09c;
+	background-color: inherit;
+	text-decoration: none;
+	font-weight: 400;
+}
+a:link {
+  color:#09c;
+  background-color: inherit;
+}
+a:visited {
+  color:#07a;
+  background-color: inherit;
+}
+a:hover {
+  color: inherit;
+  background-color: #eeeeee;
+}
+
+/************************************************/
+/* table tag                                    */
+table {
+	empty-cells: show;
+	font-size: 100%;
+	border-collapse: separate;
+}
+
+/************************************************/
+/* input tag                                    */
+
+input[type=submit] {
+  color: inherit;
+  background-color: #eeeeee;
+	font-family: inherit;
+}
+
+input, select, textarea {
+  line-height: inherit;
+  /*vertical-align: middle; a bug in IE5.2-mac crashes with this*/
+	border: 1px dashed #999999;
+  font-size: inherit;
+  font-family: courier, courier new, monospaced;
+}
+
+textarea {
+  width: 100%;
+  overflow: auto;
+  wrap: virtual;
+}
+
+/* page css */
+body {
+  background-color: #ffffff;
+  color: #4c4c4c;
+  width: 820px;
+  font-size: 70%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+  margin: 20px;
+  padding: 0px;
+}
+--></style>
+  </head>
+  <body>
+<h1>Snip Snap Content Renderer Test</h1>
+<h1 class="heading-1">Header</h1>
+<h1 class="heading-1-1">smaller Header</h1>
+<p>
+</p>
+<p>
+</p>
+<ul><li>list</li>
+<li>list</li>
+<ul><li>indent</li>
+</ul><li>list</li>
+</ul><p>
+</p>
+<hr>
+<p>
+</p>
+<p>
+a line with <b>bold</b> and <i>italic</i> and <strike>strike</strike></p>
+<p>
+</p>
+<p>
+ some plain text (actually set to Text Font in Eclipse preferences)</p>
+<p>
+</p>
+<p>
+ a line break<br><br>here and another<br><br>here</p>
+<p>
+</p>
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0">
+<tr><th>A</th><th>Big</th><th>Table</th></tr>
+<tr><td>very</td><td>cool</td><td>indeed</td></tr>
+<tr><td>WardsBrowserContentRendererTest<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></td><td><a href="http://--wiki/SnipSnapContentRendererTest">SnipSnapContentRendererTest</a></td><td>TwikiBrowserContentRendererTest<a href="http://--wiki/TwikiBrowserContentRendererTest">?</a></td></tr>
+<tr><td><a href="http://www.acronymfinder.com/af-query.asp?Acronym=WTF">Acronym:WTF</a> </td><td><a href="http://www.google.com">http://www.google.com</a> </td><td><a href="http://eclipsewiki.free.fr/index.php?page=license.html">EclipseWiki:license.html</a></td></tr>
+</table>
+<p>
+</p>
+<p>
+</p>
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0">
+<tr><th>Mnemonic </th><th> Rendering </th><th> Comment</th></tr>
+<tr><td>1 Title </td><td></td><td> a style 1 heading (major heading)</td></tr>
+<tr><td>1.1 Title </td><td></td><td> a style 1.1 heading (minor heading)</td></tr>
+</table>
+<p>
+</p>
+<p>
+</p>
+<p>
+Text with Java types <a href="http://--wiki/Java:com.teaminabox.foo.BigClass">com.teaminabox.foo.BigClass</a> and an inner class <a href="http://--wiki/Java:com.teaminabox.foo.BigClass$InnerClass">com.teaminabox.foo.BigClass.InnerClass</a></p>
+<p>
+</p>
+<p>
+A [forced link]<a href="http://--wiki/forcedlink">?</a> and one to an existing page: [Wards Browser Content Renderer Test]<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></p>
+<p>
+</p>
+<p>
+Bug: 1490342 URL in brackets detected incorrectly: I am sure you have heard of Google (<a href="http://www.google.com">http://www.google.com</a>).</p>
+<p>
+</p>
+<p>
+Bug: 2014771 %-encoded URLs like this <a href="http://abc.def.se/WEBLINK/ViewDocs?DocumentName=EAB%2FOEP-07%3A0518&amp;Latest=true">http://abc.def.se/WEBLINK/ViewDocs?DocumentName=EAB%2FOEP-07%3A0518&amp;Latest=true</a></p>
+<p>
+</p>
+<p>
+<p>
+Embedded content with a link to WardsBrowserContentRendererTest<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></p>
+ here</p>
+<p>
+</p>
+<p>
+<p>
+Embedded content with a link to WardsBrowserContentRendererTest<a href="http://--wiki/WardsBrowserContentRendererTest">?</a></p>
+ forced link</p>
+<p>
+</p>
+<p>
+
+
+<!-- ======================================================== -->
+<!-- = Java Sourcecode to HTML automatically converted code = -->
+<!-- =   Java2Html Converter V4.1 2004 by Markus Gebhard  markus@jave.de   = -->
+<!-- =     Further information: http://www.java2html.de     = -->
+<div align="left" class="java">
+<table border="0" cellpadding="3" cellspacing="0" bgcolor="#ffffff">
+   <tr>
+  <!-- start source code -->
+   <td nowrap="nowrap" valign="top" align="left">
+    <code>
+<font color="#808080">1</font>&nbsp;<font color="#7f0055"><b>package&nbsp;</b></font><font color="#000000">com.teaminabox.foo;</font><br/>
+<font color="#808080">2</font>&nbsp;<font color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font color="#000000">BigClass&nbsp;</font><font color="#000000">{&nbsp;</font><font color="#7f0055"><b>class&nbsp;</b></font><font color="#000000">InnerClass&nbsp;</font><font color="#000000">{}&nbsp;}</font></code>
+    
+   </td>
+  <!-- end source code -->
+   </tr>
+  <!-- start Java2Html link -->
+   <tr>
+    <td align="right">
+<small>
+<a href="http://www.java2html.de" target="_blank">Java2html</a>
+</small>
+    </td>
+   </tr>
+  <!-- end Java2Html link -->
+</table>
+</div>
+<!-- =       END of automatically generated HTML code       = -->
+<!-- ======================================================== -->
+
+</p>
+<p>
+</p>
+<p>
+<a href="http://--wiki/Eclipse:TEST_PROJECT_NAME/com/teaminabox/foo/BigClass.java">Eclipse:TEST_PROJECT_NAME/com/teaminabox/foo/BigClass.java</a> should be a link</p>
+<p>
+<a href="http://--wiki/Eclipse:/com/teaminabox/foo/BigClass.java">Eclipse:/com/teaminabox/foo/BigClass.java</a> should be a link</p>
+  </body>
+</html>
