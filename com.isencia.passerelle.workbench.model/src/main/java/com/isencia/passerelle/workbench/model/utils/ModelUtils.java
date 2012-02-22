@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -448,7 +449,7 @@ public class ModelUtils {
 	 * @param dataExportTransformer
 	 * @throws Exception 
 	 */
-	public static String substitute(final String sub, final NamedObj actor) throws Exception {
+	public static String substitute(String stringValue, final NamedObj actor) throws Exception {
 
 		final Map<String, Object> variables = new HashMap<String, Object>(3);
 		variables.put("project_name", getProject(actor).getName());
@@ -459,7 +460,13 @@ public class ModelUtils {
 		// Create a substitutor with the expander
 		VariableSubstitutor substitutor = new VariableSubstitutor(expander);
 
-		return substitutor.substitute(sub);
+		try {
+			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+		} catch (Throwable ignored) {
+			// We just try any eclipse vars
+		}
+		return substitutor.substitute(stringValue);
 	}
 	
 	/**

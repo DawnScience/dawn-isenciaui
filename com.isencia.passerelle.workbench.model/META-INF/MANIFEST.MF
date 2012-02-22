@@ -22,6 +22,7 @@ Bundle-ClassPath: config/,
  .
 Import-Package: com.isencia.passerelle.domain.cap,
  org.apache.commons.digester.substitution,
+ org.eclipse.core.variables,
  org.eclipse.gef,
  org.eclipse.ui.plugin,
  org.slf4j;version="1.5.0",
