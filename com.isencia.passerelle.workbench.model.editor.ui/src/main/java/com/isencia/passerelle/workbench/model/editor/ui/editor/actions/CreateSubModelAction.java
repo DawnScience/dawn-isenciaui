@@ -27,6 +27,7 @@ import com.isencia.passerelle.actor.gui.PasserelleEditorPaneFactory;
 import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.model.FlowManager;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.WizardWorkflowEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
@@ -114,11 +115,8 @@ public class CreateSubModelAction extends SelectionAction implements NameChecker
                     
 					// Open the editor for the composite.
 					final IFile modelMoml = pass.getFile(name + ".moml");
-                    final IEditorPart part = EclipseUtils.openEditor(modelMoml);
-                    if (part != null && part instanceof WizardWorkflowEditor) {
-                    	WizardWorkflowEditor ed = (WizardWorkflowEditor)part;
-                    	ed.setActivePage(1);
-                    }
+                    EclipseUtils.openEditor(modelMoml, PasserelleModelMultiPageEditor.ID);
+                    
                     
                     SubModelViewUtils.refreshPallette();
 				}

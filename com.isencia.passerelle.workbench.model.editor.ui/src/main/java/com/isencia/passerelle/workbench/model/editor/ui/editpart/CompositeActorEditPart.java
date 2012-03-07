@@ -46,6 +46,7 @@ import ptolemy.moml.Vertex;
 
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.WorkbenchUtility;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.WizardWorkflowEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.ActorEditPolicy;
@@ -105,11 +106,8 @@ public class CompositeActorEditPart extends ContainerEditPart implements
 				final IProject pass = ModelUtils.getPasserelleProject();
 				final IResource res = pass.findMember(name+".moml");
 				if (res instanceof IFile) {
-					final IEditorPart part = EclipseUtils.openEditor((IFile)res);
-					if (part != null && part instanceof WizardWorkflowEditor) {
-                    	WizardWorkflowEditor ed = (WizardWorkflowEditor)part;
-                    	ed.setActivePage(1);
-                    }
+                   EclipseUtils.openEditor((IFile)res, PasserelleModelMultiPageEditor.ID);
+
 				}
 			}
 			
