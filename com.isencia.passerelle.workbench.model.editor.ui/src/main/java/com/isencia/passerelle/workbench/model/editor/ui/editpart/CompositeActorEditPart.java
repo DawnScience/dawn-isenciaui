@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
@@ -23,6 +26,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +44,10 @@ import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.moml.Vertex;
 
-import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.WorkbenchUtility;
-import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.WizardWorkflowEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.ActorEditPolicy;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.ComponentNodeDeletePolicy;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.ActorFigure;
@@ -52,6 +55,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.figure.CompositeActorFig
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
 import com.isencia.passerelle.workbench.model.ui.command.CreateComponentCommand;
 import com.isencia.passerelle.workbench.model.ui.command.DeleteComponentCommand;
+import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 import com.isencia.passerelle.workbench.model.utils.ModelChangeRequest;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils.ConnectionType;
@@ -83,40 +87,36 @@ public class CompositeActorEditPart extends ContainerEditPart implements
 
 	}
 
-	private void initPage(TypedCompositeActor actor) {
-//		if (! (actor instanceof Flow && multiPageEditorPart.getSelectedContainer().getClassName().equals(actor.getClassName()))) {
-			PasserelleModelMultiPageEditor multiPageEditor = (PasserelleModelMultiPageEditor) searchPasserelleModelSampleEditor(getParent());
-			CompositeActor mainFlow = multiPageEditor.getModel();
-			try {
-				mainFlow.initialize();
-			} catch (Exception e1) {
-			}
-			try {
-				if (multiPageEditor != null) {
+	private void openSubModelEditor(TypedCompositeActor actor) {
+		
+		PasserelleModelMultiPageEditor multiPageEditor = (PasserelleModelMultiPageEditor) searchPasserelleModelSampleEditor(getParent());
+		CompositeActor                 mainFlow        = multiPageEditor.getModel();
+		try {
+			mainFlow.initialize();
+		} catch (Exception e1) {
+			logger.error("Cannot open composite!", e1);
+		}
+		try {
 
-					TypedCompositeActor model = (TypedCompositeActor) getModel();
+			TypedCompositeActor model = (TypedCompositeActor) getModel();
 
-					PasserelleModelEditor editor = new PasserelleModelEditor(
-							multiPageEditor, model, multiPageEditor.getEditor()
-									.getDiagram());
-					int index = multiPageEditor.getPageIndex(model);
-					if (index == -1) {
-
-						index = multiPageEditor.addPage(model, editor,
-								multiPageEditor.getEditorInput());
-						multiPageEditor.setText(index, WorkbenchUtility
-								.getPath(model));
-						multiPageEditor.setActiveEditor(editor);
-						index = index - 1;
-
-					}
-					multiPageEditor.setActiveEditor(multiPageEditor
-							.getEditor(index + 1));
+			final String name = WorkbenchUtility.getPath(model);	
+			if (name != null) {
+				final IProject pass = ModelUtils.getPasserelleProject();
+				final IResource res = pass.findMember(name+".moml");
+				if (res instanceof IFile) {
+					final IEditorPart part = EclipseUtils.openEditor((IFile)res);
+					if (part != null && part instanceof WizardWorkflowEditor) {
+                    	WizardWorkflowEditor ed = (WizardWorkflowEditor)part;
+                    	ed.setActivePage(1);
+                    }
 				}
-
-			} catch (Exception e) {
 			}
-//		}
+			
+		} catch (Exception e) {
+			logger.error("Cannot open composite!", e);
+		}
+
 	}
 
 	public MultiPageEditorPart searchPasserelleModelSampleEditor(EditPart child) {
@@ -221,7 +221,7 @@ public class CompositeActorEditPart extends ContainerEditPart implements
 
 			@Override
 			public void mouseDoubleClicked(MouseEvent e) {
-				initPage((TypedCompositeActor) getModel());
+				openSubModelEditor((TypedCompositeActor) getModel());
 
 			}
 

@@ -201,13 +201,6 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 		return super.getEditor(index);
 	}
 
-	public int addPage(TypedCompositeActor model, IEditorPart editor,
-			IEditorInput input) throws PartInitException {
-		int index = super.addPage(editor, input);
-		pages.add(editor);
-		return index;
-	}
-
 	/** The text editor used in page 0 or 1 */
 	private PasserelleModelEditor editor;
 

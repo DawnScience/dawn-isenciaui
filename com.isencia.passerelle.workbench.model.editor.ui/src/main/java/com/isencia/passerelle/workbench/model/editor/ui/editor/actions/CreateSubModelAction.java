@@ -6,12 +6,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.gef.ui.actions.SelectionAction;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +28,8 @@ import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.model.FlowManager;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.WizardWorkflowEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
-import com.isencia.passerelle.workbench.model.editor.ui.views.ActorTreeView;
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 import com.isencia.passerelle.workbench.model.ui.utils.FileUtils;
 import com.isencia.passerelle.workbench.model.ui.wizards.NameChecker;
@@ -111,7 +111,15 @@ public class CreateSubModelAction extends SelectionAction implements NameChecker
 					flow.setName(name);
 					factory.addSubModel(flow);
 					SubModelUtils.addSubModel(flow);
-
+                    
+					// Open the editor for the composite.
+					final IFile modelMoml = pass.getFile(name + ".moml");
+                    final IEditorPart part = EclipseUtils.openEditor(modelMoml);
+                    if (part != null && part instanceof WizardWorkflowEditor) {
+                    	WizardWorkflowEditor ed = (WizardWorkflowEditor)part;
+                    	ed.setActivePage(1);
+                    }
+                    
                     SubModelViewUtils.refreshPallette();
 				}
 			}
