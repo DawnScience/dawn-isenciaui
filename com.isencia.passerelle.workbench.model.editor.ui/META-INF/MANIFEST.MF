@@ -35,7 +35,7 @@ Export-Package: com.isencia.passerelle.workbench.model.editor.ui.dnd,
  com.isencia.passerelle.workbench.model.editor.ui.figure,
  com.isencia.passerelle.workbench.model.editor.ui.properties
 DynamicImport-Package: *
-Import-Package: com.teaminabox.eclipse.wiki.editors,
+Import-Package: com.teaminabox.eclipse.wiki.editors;resolution:=optional,
  org.eclipse.core.filesystem,
  org.eclipse.debug.core,
  org.eclipse.debug.core.model,
