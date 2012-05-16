@@ -49,8 +49,13 @@ public class CommentEditPart extends AbstractNodeEditPart {
 	protected IFigure createFigure() {
 		
 		final Object model = getModel();
-		final String label = getText(model);
+		String label = getText(model);
 		
+		/**
+		 * BODGE WARNING: to avoid text appearing incorrectly in Workbench diagram we look for the
+		 * default attribute text coming from the ptolemy class which incorrectly says 'Double click'.
+		 */
+		if ("Double click to edit text.".equals(label)) label = "Click to edit in 'Actor Attributes'";
 		ImageDescriptor imageDescriptor = PaletteItemFactory.getInstance().getIcon(TextAttribute.class);
 		
 		return new CommentFigure(label, createImage(imageDescriptor));
