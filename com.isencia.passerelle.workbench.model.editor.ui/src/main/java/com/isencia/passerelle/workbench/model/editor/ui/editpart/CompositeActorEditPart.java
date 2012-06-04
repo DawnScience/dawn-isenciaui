@@ -101,7 +101,7 @@ public class CompositeActorEditPart extends ContainerEditPart implements
 
 			TypedCompositeActor model = (TypedCompositeActor) getModel();
 
-			final String name = WorkbenchUtility.getPath(model);	
+			final String name = model.getClassName();	
 			if (name != null) {
 				final IProject pass = ModelUtils.getPasserelleProject();
 				final IResource res = pass.findMember(name+".moml");
