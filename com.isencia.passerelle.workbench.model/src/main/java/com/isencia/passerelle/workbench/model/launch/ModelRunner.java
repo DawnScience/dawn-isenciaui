@@ -8,6 +8,7 @@ import java.util.List;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.slf4j.Logger;
@@ -78,7 +79,10 @@ public class ModelRunner implements IApplication {
             if (workspacePath==null) workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 			
             System.setProperty("eclipse.workspace.home", workspacePath);
-			System.setProperty("be.isencia.home",        workspacePath);		
+			System.setProperty("be.isencia.home",        workspacePath);	
+			final String rpcPort = getRpcPort();
+			if (rpcPort!=null) System.setProperty("SCISOFT_RPC_PORT", rpcPort);
+			
 			logger.info("Workspace folder set to: "+workspacePath);
 			
 			Reader             reader     = null;
@@ -189,6 +193,16 @@ public class ModelRunner implements IApplication {
 				throw exceptions.get(0);
 			}
 		} 
+	}
+
+	private String getRpcPort() {
+	    String scisoftRpcPort; 
+	    try {
+	    	scisoftRpcPort = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution("${scisoft_rpc_port}");
+	    } catch (Exception ne) {
+	    	scisoftRpcPort = null;
+	    }
+	    return scisoftRpcPort;
 	}
 
 	/**
