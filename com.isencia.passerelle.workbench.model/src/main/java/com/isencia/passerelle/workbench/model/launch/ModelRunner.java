@@ -185,7 +185,7 @@ public class ModelRunner implements IApplication {
 				// We have to do this in case daemons are started.
 				// We must exit this vm once the model is finished.
 				logger.info("Passerelle shut down.");
-				System.exit(1);
+				System.exit(0);
 			}
 
 
