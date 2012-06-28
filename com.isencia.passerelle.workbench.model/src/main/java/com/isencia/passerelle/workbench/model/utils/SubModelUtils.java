@@ -74,8 +74,7 @@ public class SubModelUtils {
 		final IProject pass = ModelUtils.getPasserelleProject();
 		pass.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		final Properties models = PropUtils.loadProperties(getModelStore()
-				.getContents());
+		final Properties models = PropUtils.loadProperties(getModelStore().getContents());
 
 		final Set<Object> sorted = new TreeSet<Object>();
 		sorted.addAll(models.keySet());

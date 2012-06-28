@@ -65,6 +65,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -84,7 +85,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ptolemy.actor.CompositeActor;
-import ptolemy.actor.TypedCompositeActor;
 
 import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.model.FlowManager;
@@ -351,7 +351,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 				}
 			});
 
-			getEditor(0).doSave(monitor);
+			//getEditor(0).doSave(monitor);
 			for (Object page : pages) {
 				if (page instanceof PasserelleModelEditor) {
 					CompositeActor actor = ((PasserelleModelEditor) page).getContainer();
@@ -374,20 +374,6 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 	 */
 	public void doSaveAs() {
 		performSaveAs();
-		for (Object page : pages) {
-			if (page instanceof PasserelleModelEditor) {
-				CompositeActor actor = ((PasserelleModelEditor) page)
-						.getContainer();
-				int index = getPageIndex(actor);
-				if (index != -1 && index != 0) {
-					IEditorPart editor = getEditor(index);
-					editor.doSaveAs();
-					setPageText(0, editor.getTitle());
-					setInput(editor.getEditorInput());
-				}
-			}
-		}
-
 	}
 
 	/*
@@ -416,14 +402,12 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 
 	protected boolean performSaveAs() {
 
-		SaveAsDialog dialog = new SaveAsDialog(getSite().getWorkbenchWindow()
-				.getShell());
+		SaveAsDialog dialog = new SaveAsDialog(getSite().getWorkbenchWindow().getShell());
 		dialog.setOriginalFile(((IFileEditorInput) getEditorInput()).getFile());
 		dialog.open();
+		
 		IPath path = dialog.getResult();
-
-		if (path == null)
-			return false;
+		if (path == null) return false;
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IFile file = workspace.getRoot().getFile(path);
@@ -436,13 +420,13 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 					StringWriter writer = new StringWriter();
 					diagram.exportMoML(writer);
 
-					final ByteArrayInputStream contents = new ByteArrayInputStream(
-							writer.toString().getBytes());
+					final ByteArrayInputStream contents = new ByteArrayInputStream(writer.toString().getBytes());
 					if (!file.exists()) {
 						file.create(contents, true, monitor);
 					} else {
 						file.setContents(contents, true, true, monitor);
 					}
+					
 
 				} catch (Exception e) {
 					getLogger().error(
@@ -451,8 +435,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 			}
 		};
 		try {
-			new ProgressMonitorDialog(getSite().getWorkbenchWindow().getShell())
-					.run(false, true, op);
+			new ProgressMonitorDialog(getSite().getWorkbenchWindow().getShell()).run(false, true, op);
 		} catch (Exception e) {
 			getLogger().error(
 					"Error showing progress monitor during saving of model file : "
@@ -460,7 +443,15 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 		}
 
 		try {
-			superSetInput(new FileEditorInput(file));
+			setInput(new FileEditorInput(file));
+			
+			for (Object page : pages) {
+				if (page instanceof IReusableEditor) {
+					((IReusableEditor)page).setInput(getEditorInput());
+			}
+		}
+
+
 
 		} catch (Exception e) {
 			getLogger().error(
@@ -527,6 +518,9 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 
 	private void setDiagram(CompositeActor diagram) {
 		model = diagram;
+		if (editor!=null) this.editor.setDiagram(diagram);
+		//if (outlinePage!=null) outlinePage.initializeOutlineViewer();
+
 	}
 
 	// public void createPartControl(Composite parent) {
@@ -581,7 +575,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 			this.parseError = false;
 
 			setDiagram(compositeActor);
-
+			
 		} catch (Exception e) {
 			this.parseError = true;
 			logger.error("Error during reading/parsing of model file", e);
