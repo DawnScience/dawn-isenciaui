@@ -79,9 +79,7 @@ public class ModelRunner implements IApplication {
             if (workspacePath==null) workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 			
             System.setProperty("eclipse.workspace.home", workspacePath);
-			System.setProperty("be.isencia.home",        workspacePath);	
-			final String rpcPort = getRpcPort();
-			if (rpcPort!=null) System.setProperty("SCISOFT_RPC_PORT", rpcPort);
+			System.setProperty("be.isencia.home",        workspacePath);
 			
 			logger.info("Workspace folder set to: "+workspacePath);
 			
@@ -193,16 +191,6 @@ public class ModelRunner implements IApplication {
 				throw exceptions.get(0);
 			}
 		} 
-	}
-
-	private String getRpcPort() {
-	    String scisoftRpcPort; 
-	    try {
-	    	scisoftRpcPort = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution("${scisoft_rpc_port}");
-	    } catch (Exception ne) {
-	    	scisoftRpcPort = null;
-	    }
-	    return scisoftRpcPort;
 	}
 
 	/**
