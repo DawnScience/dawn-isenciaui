@@ -152,11 +152,11 @@ public class ModelRunner implements IApplication {
 				
 				if (modelAgent!=null) {
 					modelAgent.stop();
-					logger.info("Closed model agent");
+					if (logger.isDebugEnabled()) logger.debug("Closed model agent");
 				}
 				if (reader != null) {
 					reader.close();
-					logger.info("Closed reader");
+					if (logger.isDebugEnabled()) logger.debug("Closed reader");
 				}
 			
 				manager         = null;
