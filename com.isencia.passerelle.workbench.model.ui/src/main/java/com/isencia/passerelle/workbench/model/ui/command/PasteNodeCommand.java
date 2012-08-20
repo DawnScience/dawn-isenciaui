@@ -65,8 +65,11 @@ public class PasteNodeCommand extends Command {
 	public void execute() {
 		if (!canExecute())
 			return;
-		ArrayList clipboardList = (ArrayList) Clipboard.getDefault()
-				.getContents();
+		
+		// External code to passerelle can set the contents to external
+		// actors...
+		List clipboardList = (List) Clipboard.getDefault().getContents();
+		
 		CompositeActor selectedContainer = editor.getSelectedContainer();
 
 		Iterator<Object> it = clipboardList.iterator();
