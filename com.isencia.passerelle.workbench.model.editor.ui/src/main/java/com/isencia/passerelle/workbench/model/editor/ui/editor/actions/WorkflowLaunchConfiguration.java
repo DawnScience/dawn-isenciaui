@@ -57,11 +57,18 @@ public class WorkflowLaunchConfiguration extends LaunchConfiguration {
 			final StringBuilder buf = new StringBuilder();
 			if (vmArgs!=null) buf.append(vmArgs);
 			if (systemProperties!=null) for (String name : systemProperties.keySet()) {
-				buf.append(" -D");
-				buf.append(name);
-				buf.append("=");
-				buf.append(systemProperties.get(name));
-				buf.append(" ");
+				if (name.equals("workflow.logback.configurationFile")) {
+					// Translate 'workflow.logback.configurationFile' to 'logback.configurationFile'
+					buf.append(" -Dlogback.configurationFile=");
+					buf.append(systemProperties.get(name));
+					buf.append(" ");
+				} else {
+					buf.append(" -D");
+					buf.append(name);
+					buf.append("=");
+					buf.append(systemProperties.get(name));
+					buf.append(" ");
+				}
 			}
 			logger.debug("Changed vmArgs are: "+buf.toString());
 			return buf.toString();

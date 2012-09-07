@@ -535,7 +535,9 @@ public class ModelUtils {
 		
 		IFile projFile = ModelUtils.getProjectFile(modelPath);
 		if (projFile!=null) {
-		    logger.info("Running project file "+projFile);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Running project file "+projFile);
+			}
 		    return new Workspace(projFile.getProject().getName());
 		}
 		
@@ -545,8 +547,10 @@ public class ModelUtils {
 		String relPath = modelPath.substring(workspacePath.length());
 		projFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(relPath);
 		if (projFile!=null) {
-		    logger.info("Running project file "+projFile);
-	        return new Workspace(projFile.getProject().getName());
+			if (logger.isDebugEnabled()) {
+				logger.debug("Running project file "+projFile);
+			}
+			return new Workspace(projFile.getProject().getName());
 		}
 		
 		if (relPath.startsWith("/")) relPath = relPath.substring(1);

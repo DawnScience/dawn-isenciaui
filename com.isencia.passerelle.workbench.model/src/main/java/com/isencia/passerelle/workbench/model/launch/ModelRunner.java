@@ -8,7 +8,6 @@ import java.util.List;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.slf4j.Logger;
@@ -154,11 +153,11 @@ public class ModelRunner implements IApplication {
 				
 				if (modelAgent!=null) {
 					modelAgent.stop();
-					logger.info("Closed model agent");
+					if (logger.isDebugEnabled()) logger.debug("Closed model agent");
 				}
 				if (reader != null) {
 					reader.close();
-					logger.info("Closed reader");
+					if (logger.isDebugEnabled()) logger.debug("Closed reader");
 				}
 			
 				manager         = null;
