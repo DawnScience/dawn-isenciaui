@@ -26,6 +26,7 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import ptolemy.actor.Actor;
 import ptolemy.actor.CompositeActor;
 import ptolemy.actor.IOPort;
@@ -428,14 +429,16 @@ public class ModelUtils {
 		while (comp.getContainer() != null) {
 			comp = (CompositeActor) comp.getContainer();
 		}
-
 		String name = comp.workspace().getName();
-		IProject project  = (IProject) ResourcesPlugin.getWorkspace().getRoot().findMember(name);
-		
+		IProject project=null;
+		if (!name.equals("")) {
+			project  = (IProject) ResourcesPlugin.getWorkspace().getRoot().findMember(name);
+		}
 		if (project == null) {
 			// If this .moml is in .passerelle we return that project
 			project = ModelUtils.getPasserelleProject();
 		}
+		
 		
 		return project;
 	}
