@@ -34,8 +34,14 @@ import ptolemy.actor.IOPort;
 import ptolemy.actor.IORelation;
 import ptolemy.actor.TypedIOPort;
 import ptolemy.actor.TypedIORelation;
+import ptolemy.data.BooleanToken;
+import ptolemy.data.Token;
+import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.Port;
 import ptolemy.kernel.Relation;
+import ptolemy.kernel.util.Attribute;
+import ptolemy.kernel.util.ChangeListener;
+import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.moml.Vertex;
 
@@ -107,13 +113,12 @@ public class ActorEditPart extends AbstractNodeEditPart implements
 		if (imageDescriptor == null) {
 			imageDescriptor = IMAGE_DESCRIPTOR_ACTOR;
 		}
-		ActorFigure actorFigure = getActorFigure(actorModel.getDisplayName(),
+		final ActorFigure actorFigure = getActorFigure(actorModel.getDisplayName(),
 				createImage(imageDescriptor), new Clickable[] {  });
 		List<TypedIOPort> inputPortList = actorModel.inputPortList();
 		if (inputPortList != null) {
 			for (TypedIOPort inputPort : inputPortList) {
-				PortFigure portFigure = actorFigure.addInput(inputPort
-						.getName(), inputPort.getDisplayName());
+				PortFigure portFigure = actorFigure.addInput(inputPort.getName(), inputPort.getDisplayName());
 				if (inputPort instanceof ErrorPort) {
 					portFigure.setFillColor(COLOR_ERROR_PORT);
 				} else if (inputPort instanceof ControlPort) {
@@ -134,9 +139,42 @@ public class ActorEditPart extends AbstractNodeEditPart implements
 				}
 			}
 		}
+		
+		// Listen to break point status if there is a break point attribute.
+		if (actorModel instanceof com.isencia.passerelle.actor.Actor) {
+			com.isencia.passerelle.actor.Actor pactor = (com.isencia.passerelle.actor.Actor)actorModel;
+			final Attribute att = pactor.getAttribute("_break_point");
+            final boolean isBreak = getBooleanValue(att, false);
+            actorFigure.setBreakPoint(isBreak);
+			if (att!=null) {
+				att.addChangeListener(new ChangeListener() {				
+					@Override
+					public void changeFailed(ChangeRequest change, Exception exception) {
+					}				
+					@Override
+					public void changeExecuted(ChangeRequest change) {
+				        final boolean isBreak = getBooleanValue(att, false);
+				        actorFigure.setBreakPoint(isBreak);
+					}
+				});
+			}
+		}
+		
 		return actorFigure;
 	}
-
+	
+	private static boolean getBooleanValue(Attribute att, boolean defaultValue) {
+		try {
+			if (att==null) return defaultValue;
+			if (!(att instanceof Parameter)) return defaultValue;
+			Token tok = ((Parameter)att).getToken();
+			if (!(tok instanceof BooleanToken)) return defaultValue;
+			return ((BooleanToken)tok).booleanValue();
+		} catch (Throwable ne) {
+			return defaultValue;
+		}
+	}
+	
 	/**
 	 * Overide to return alternative actor figures
 	 * 

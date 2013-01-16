@@ -11,19 +11,27 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+
+import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 
 public abstract class ActorFigure extends AbstractNodeFigure {
 
 	public final static Color ACTOR_BACKGROUND_COLOR = ColorConstants.lightGray;
 
 	private IFigure body = null;
+	private CompositeFigure composite;
 	private Ports inputPorts = null;
 	private Ports outputPorts = null;
 	private HashMap<String, PortFigure> inputPortMap = new HashMap<String, PortFigure>();
@@ -38,12 +46,12 @@ public abstract class ActorFigure extends AbstractNodeFigure {
 
 	private HashMap<String, PortFigure> outputPortMap = new HashMap<String, PortFigure>();
 
-	public ActorFigure(String name, Class type, Image image,
-			Clickable[] clickables) {
-		super(name, type);
-		add(new CompositeFigure(image, clickables));
-	}
 
+	public ActorFigure(String name, Class type, Image image, Clickable[] clickables) {
+		super(name, type);
+		this.composite = new CompositeFigure(image, clickables);
+		add(composite);
+	}
 
 	protected abstract IFigure generateBody(Image image, Clickable[] clickables);
 
@@ -65,7 +73,7 @@ public abstract class ActorFigure extends AbstractNodeFigure {
 			add(outputPorts, BorderLayout.RIGHT);
 			
 		}
-
+		
 		@Override
 		public Dimension getMaximumSize() {
 			return getPreferredSize(-1, -1);
@@ -212,6 +220,21 @@ public abstract class ActorFigure extends AbstractNodeFigure {
 		if (port==null) return;
 		
 		port.setSelectedColor(isSelected, colorCode);
+		repaint();
+	}
+
+	private Image breakPointImage;
+	public void setBreakPoint(boolean isBreak) {
+		if (isBreak) {
+			if (breakPointImage==null) {
+				breakPointImage = Activator.getImageDescriptor("icons/break_point.png").createImage();
+			}
+			nameLabel.setIcon(breakPointImage);
+			nameLabel.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_DARK_MAGENTA));
+		} else {
+			nameLabel.setIcon(null);
+			nameLabel.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		}
 		repaint();
 	}
 
