@@ -147,6 +147,7 @@ public class ActorEditPart extends AbstractNodeEditPart implements
             final boolean isBreak = getBooleanValue(att, false);
             actorFigure.setBreakPoint(isBreak);
 			if (att!=null) {
+				isDebuggable = true;
 				att.addChangeListener(new ChangeListener() {				
 					@Override
 					public void changeFailed(ChangeRequest change, Exception exception) {
@@ -161,6 +162,10 @@ public class ActorEditPart extends AbstractNodeEditPart implements
 		}
 		
 		return actorFigure;
+	}
+    private boolean isDebuggable = false;
+	public boolean isDebuggable() {
+		return isDebuggable;
 	}
 	
 	private static boolean getBooleanValue(Attribute att, boolean defaultValue) {

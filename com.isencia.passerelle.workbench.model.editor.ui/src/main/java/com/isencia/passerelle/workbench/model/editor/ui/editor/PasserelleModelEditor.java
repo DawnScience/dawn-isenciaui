@@ -95,6 +95,7 @@ import ptolemy.kernel.ComponentEntity;
 import com.isencia.passerelle.workbench.model.editor.ui.WorkbenchUtility;
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.FileTransferDropTargetListener;
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.PasserelleTemplateTransferDropTargetListener;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.BreakpointAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CloseEditorAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CopyNodeAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CreateSubModelAction;
@@ -528,6 +529,10 @@ public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 		registry.registerAction(renameAction);
 		getSelectionActions().add(renameAction.getId());
 		
+		BreakpointAction breakAction = new BreakpointAction(this, getParent());
+		registry.registerAction(breakAction);
+		getSelectionActions().add(breakAction.getId());
+		
 //		ViewAttributesAction viewAttributes = new ViewAttributesAction(this);
 //		registry.registerAction(viewAttributes);
 //		getSelectionActions().add(viewAttributes.getId());
@@ -535,6 +540,7 @@ public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 		HelpAction helpAction = new HelpAction(this, getParent());
 		registry.registerAction(helpAction);
 		getSelectionActions().add(helpAction.getId());
+		
 		DynamicHelpAction dynamicHelpAction = new DynamicHelpAction(this, getParent());
 		registry.registerAction(dynamicHelpAction);
 		getSelectionActions().add(dynamicHelpAction.getId());
