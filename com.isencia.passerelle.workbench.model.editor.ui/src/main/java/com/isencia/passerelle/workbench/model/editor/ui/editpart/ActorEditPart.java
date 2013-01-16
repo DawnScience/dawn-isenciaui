@@ -2,6 +2,7 @@ package com.isencia.passerelle.workbench.model.editor.ui.editpart;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -12,20 +13,19 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.MarginBorder;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.AccessibleAnchorProvider;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewSite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +37,7 @@ import ptolemy.actor.TypedIORelation;
 import ptolemy.data.BooleanToken;
 import ptolemy.data.Token;
 import ptolemy.data.expr.Parameter;
+import ptolemy.kernel.Entity;
 import ptolemy.kernel.Port;
 import ptolemy.kernel.Relation;
 import ptolemy.kernel.util.Attribute;
@@ -54,16 +55,12 @@ import com.isencia.passerelle.workbench.model.editor.ui.figure.ActorFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.PortFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.RectangularActorFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
-import com.isencia.passerelle.workbench.model.editor.ui.properties.ActorDialog;
-import com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView;
-import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
+import com.isencia.passerelle.workbench.model.ui.command.AttributeCommand;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public class ActorEditPart extends AbstractNodeEditPart implements
-		IActorNodeEditPart {
+public class ActorEditPart extends AbstractNodeEditPart implements IActorNodeEditPart {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ActorEditPart.class);
+	private final static Logger logger = LoggerFactory.getLogger(ActorEditPart.class);
 
 	public final static ImageDescriptor IMAGE_DESCRIPTOR_PROPERTIES = Activator
 			.getImageDescriptor("icons/input.gif");
@@ -102,19 +99,18 @@ public class ActorEditPart extends AbstractNodeEditPart implements
 	 * @return Figure of this EditPart
 	 */
 	protected IFigure createFigure() {
+		
 		Actor actorModel = getActor();
-		ImageFigure drillDownImageFigure = new ImageFigure(
-				createImage(IMAGE_DESCRIPTOR_ACTOR));
+		ImageFigure drillDownImageFigure = new ImageFigure(createImage(IMAGE_DESCRIPTOR_ACTOR));
 		drillDownImageFigure.setAlignment(PositionConstants.SOUTH);
 		drillDownImageFigure.setBorder(new MarginBorder(0, 0, 5, 0));
 
-		ImageDescriptor imageDescriptor = PaletteItemFactory.getInstance().getIcon(
-				actorModel.getClass());
+		ImageDescriptor imageDescriptor = PaletteItemFactory.getInstance().getIcon(actorModel.getClass());
 		if (imageDescriptor == null) {
 			imageDescriptor = IMAGE_DESCRIPTOR_ACTOR;
 		}
-		final ActorFigure actorFigure = getActorFigure(actorModel.getDisplayName(),
-				createImage(imageDescriptor), new Clickable[] {  });
+		final ActorFigure actorFigure = getActorFigure(actorModel.getDisplayName(), createImage(imageDescriptor), new Clickable[] {  });
+		
 		List<TypedIOPort> inputPortList = actorModel.inputPortList();
 		if (inputPortList != null) {
 			for (TypedIOPort inputPort : inputPortList) {
@@ -130,8 +126,7 @@ public class ActorEditPart extends AbstractNodeEditPart implements
 		List<TypedIOPort> outputPortList = actorModel.outputPortList();
 		if (outputPortList != null) {
 			for (TypedIOPort outputPort : outputPortList) {
-				PortFigure portFigure = actorFigure.addOutput(outputPort
-						.getName(), outputPort.getDisplayName());
+				PortFigure portFigure = actorFigure.addOutput(outputPort.getName(), outputPort.getDisplayName());
 				if (outputPort instanceof ErrorPort) {
 					portFigure.setFillColor(COLOR_ERROR_PORT);
 				} else if (outputPort instanceof ControlPort) {
@@ -141,31 +136,65 @@ public class ActorEditPart extends AbstractNodeEditPart implements
 		}
 		
 		// Listen to break point status if there is a break point attribute.
-		if (actorModel instanceof com.isencia.passerelle.actor.Actor) {
-			com.isencia.passerelle.actor.Actor pactor = (com.isencia.passerelle.actor.Actor)actorModel;
-			final Attribute att = pactor.getAttribute("_break_point");
-            final boolean isBreak = getBooleanValue(att, false);
-            actorFigure.setBreakPoint(isBreak);
-			if (att!=null) {
-				isDebuggable = true;
-				att.addChangeListener(new ChangeListener() {				
-					@Override
-					public void changeFailed(ChangeRequest change, Exception exception) {
-					}				
-					@Override
-					public void changeExecuted(ChangeRequest change) {
-				        final boolean isBreak = getBooleanValue(att, false);
-				        actorFigure.setBreakPoint(isBreak);
-					}
-				});
+		if (actorModel instanceof Entity) {
+			
+			if (isDebuggable()) {
+				updateBreakPoint(actorFigure);
+
+				if (getParent() instanceof DiagramEditPart) {
+					final DiagramEditPart dep = (DiagramEditPart)getParent();
+					dep.getMultiPageEditorPart().getEditor().getEditDomain().getCommandStack().addCommandStackListener(new DebugStackNotifier(dep, actorFigure));
+				}
 			}
 		}
 		
 		return actorFigure;
 	}
-    private boolean isDebuggable = false;
+	
+	private final class DebugStackNotifier implements CommandStackListener {
+		
+		private DiagramEditPart dep;
+		private ActorFigure actorFigure;
+
+		public DebugStackNotifier(DiagramEditPart dep, ActorFigure actorFigure) {
+			this.dep         = dep;
+			this.actorFigure = actorFigure;
+		}
+
+		@Override
+		public void commandStackChanged(EventObject event) {
+			
+			CommandStack stack = (CommandStack)event.getSource();
+			Command last = stack.getUndoCommand();
+			if (!(last instanceof AttributeCommand)) return;
+			
+			if (dep.getMultiPageEditorPart().isDisposed()) {
+				stack.removeCommandStackListener(this);
+				return;
+			}
+			if (actorFigure.getParent()==null) {
+				stack.removeCommandStackListener(this);
+				return;
+			}
+			updateBreakPoint(actorFigure);
+		}
+	}
+ 
+	private void updateBreakPoint(ActorFigure figure) {
+		final Entity entity = (Entity)getActor();
+		final Attribute att = entity.getAttribute("_break_point");
+        final boolean isBreak = getBooleanValue(att, false);
+        figure.setBreakPoint(isBreak);		
+	}
+
 	public boolean isDebuggable() {
-		return isDebuggable;
+		try {
+			final Entity entity = (Entity)getActor();
+			final Attribute att = entity.getAttribute("_break_point");
+            return att!=null;
+		} catch (Throwable ne) {
+			return false;
+		}
 	}
 	
 	private static boolean getBooleanValue(Attribute att, boolean defaultValue) {

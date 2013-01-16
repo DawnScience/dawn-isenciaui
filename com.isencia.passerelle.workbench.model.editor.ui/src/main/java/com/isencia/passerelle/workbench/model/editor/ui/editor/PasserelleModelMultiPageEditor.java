@@ -665,6 +665,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 				save);
 	}
 
+	private boolean isDisposed = false;
 	public void dispose() {
 
 		MoMLParser.purgeAllModelRecords();
@@ -680,6 +681,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 		
 		
 		super.dispose();
+		this.isDisposed = true;
 	}
 
 	private IPartListener partListener = new IPartListener() {
@@ -994,6 +996,10 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 	@Override
 	public void setPasserelleEditorActive() {
 		setActivePage(0);
+	}
+
+	public boolean isDisposed() {
+		return isDisposed;
 	}
 
 }

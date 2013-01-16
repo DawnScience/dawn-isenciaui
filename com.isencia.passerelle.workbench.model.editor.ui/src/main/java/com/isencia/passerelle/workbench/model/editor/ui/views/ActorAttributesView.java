@@ -11,6 +11,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -384,15 +385,17 @@ public class ActorAttributesView extends ViewPart implements
 		}
 	}
 
-	public void setAttributeValue(Object element, Object value)
-			throws IllegalActionException {
+	public void setAttributeValue(Object element, Object value) throws IllegalActionException {
 
 		final PasserelleModelMultiPageEditor ed = (PasserelleModelMultiPageEditor) this.part;
-		final AttributeCommand cmd = new AttributeCommand(viewer, element,
-				value);
+		final AttributeCommand cmd = new AttributeCommand(viewer, element, value);
 		ed.getEditor().getEditDomain().getCommandStack().execute(cmd);
 		ed.refreshActions();
-    ed.getEditor().refresh();
+        ed.getEditor().refresh();
+	}
+
+	public ColumnViewer getViewer() {
+		return this.viewer;
 	}
 
 }

@@ -17,6 +17,10 @@ import com.isencia.passerelle.actor.Actor;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.ActorEditPart;
+import com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView;
+import com.isencia.passerelle.workbench.model.ui.command.AttributeCommand;
+import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
+import com.isencia.passerelle.workbench.model.utils.ModelChangeRequest;
 
 public class BreakpointAction extends SelectionAction {
 	
@@ -56,23 +60,34 @@ public class BreakpointAction extends SelectionAction {
 	@Override
 	public void run() {
 
+		Actor actor = (Actor)editorPart.getActor();
+
+		final Attribute att = actor.getAttribute("_break_point");
+		if (att == null) return;
+		
 		try {
-			Actor actor = (Actor)editorPart.getActor();
-			
-			final Attribute att = actor.getAttribute("_break_point");
-			if (!(att instanceof Parameter)) return;
-
-			Token tok = ((Parameter)att).getToken();
-			if (tok==null || !(tok instanceof BooleanToken)) return;
-			
-			BooleanToken bTok = (BooleanToken)tok;
-			((Parameter)att).setToken(new BooleanToken(!bTok.booleanValue()));
-
+			ActorAttributesView view = (ActorAttributesView)EclipseUtils.getActivePage().findView("com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView");
+			AttributeCommand cmd = new AttributeCommand(view!=null?view.getViewer():null, att, !getBooleanValue(att,false));
+			parent.getEditor().getEditDomain().getCommandStack().execute(cmd);
+			parent.refreshActions();
+			editorPart.refresh();
 			
 		} catch (IllegalActionException e) {
-			logger.error("Cannot toggle break point!", e);
+			logger.error("Cannot set debug attribute!", e);
 		}
 
+	}
+	
+	private static Boolean getBooleanValue(Attribute att, boolean defaultValue) {
+		try {
+			if (att==null) return defaultValue;
+			if (!(att instanceof Parameter)) return defaultValue;
+			Token tok = ((Parameter)att).getToken();
+			if (!(tok instanceof BooleanToken)) return defaultValue;
+			return ((BooleanToken)tok).booleanValue();
+		} catch (Throwable ne) {
+			return defaultValue;
+		}
 	}
 
 	@Override

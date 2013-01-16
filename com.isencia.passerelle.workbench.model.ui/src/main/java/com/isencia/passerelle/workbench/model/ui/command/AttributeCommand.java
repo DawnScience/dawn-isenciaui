@@ -122,7 +122,7 @@ public class AttributeCommand extends Command {
 			EclipseUtils.logError(ne, "Cannot set variable value " + value,
 					IStatus.ERROR);
 		} finally {
-			if (!viewer.getControl().isDisposed()) {
+			if (viewer!=null && !viewer.getControl().isDisposed()) {
 				viewer.cancelEditing();
 				viewer.refresh(attribute);
 			}
