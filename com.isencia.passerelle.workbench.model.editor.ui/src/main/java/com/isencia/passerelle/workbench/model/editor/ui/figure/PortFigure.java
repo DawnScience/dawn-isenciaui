@@ -3,9 +3,13 @@ package com.isencia.passerelle.workbench.model.editor.ui.figure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 public class PortFigure extends RectangleFigure {
+	
 	private Color fillColor;
+	private Color selectedColor;
+	private boolean selected = false;
 	private String name;
 	protected int width;
 	protected int height;
@@ -39,11 +43,33 @@ public class PortFigure extends RectangleFigure {
 	}
 
 	public Color getFillColor() {
+		if (selected&&selectedColor!=null) {
+			return selectedColor;
+		}
 		return fillColor;
 	}
 
 	public void setFillColor(Color fillColor) {
 		this.fillColor = fillColor;
+	}
+	
+	/**
+	 * 
+	 * @param isSelected
+	 * @param colorCode one of SWT.COLOR_XXX or -1.
+	 */
+	public void setSelectedColor(boolean isSelected, int colorCode) {
+		selected = isSelected;
+		if (colorCode>-1 && isSelected) {
+			try {
+				selectedColor = Display.getDefault().getSystemColor(colorCode);
+			} catch (Throwable ne) {
+				System.out.println("Internal error, the color code '"+colorCode+" is not allowed!");
+				ne.printStackTrace();
+				selectedColor = null;
+			}
+		}
+		
 	}
 
 }

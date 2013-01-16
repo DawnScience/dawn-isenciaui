@@ -108,6 +108,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.RouterFac
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.ScreenshotAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.AbstractBaseEditPart;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.EditPartFactory;
+import com.isencia.passerelle.workbench.model.editor.ui.figure.ActorFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 import com.isencia.passerelle.workbench.model.editor.ui.views.DropFavouriteListener;
 import com.isencia.passerelle.workbench.model.ui.IPasserelleEditor;
@@ -825,6 +826,26 @@ public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 			}
 		}
 	}
+	
+
+	public void setPortSelected(String actorName, String portName, boolean isSelected, int colorCode) {
+		
+		if (actorName==null) {
+			return;
+		}
+
+		final ComponentEntity sel = ModelUtils.findEntityByName(getContainer(), actorName);
+		GraphicalViewer gv = getGraphicalViewer();
+		final Map<?, ?> reg = gv.getEditPartRegistry();
+		final AbstractGraphicalEditPart part = (AbstractGraphicalEditPart)reg.get(sel);
+		if (part!=null && part.getFigure() instanceof ActorFigure) {
+			ActorFigure actorFig = (ActorFigure)part.getFigure();
+			actorFig.setPortColor(portName, isSelected, colorCode);
+			actorFig.repaint();
+		}
+	}
+
+
 	
 	private static class SpecialLineBorder extends LineBorder {
 

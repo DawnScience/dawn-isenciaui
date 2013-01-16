@@ -965,6 +965,11 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 			final int colorCode) {
 		editor.setActorSelected(actorName, isSelected, colorCode);
 	}
+	
+
+	public void setPortSelected(String actorName, String portName, boolean selected, int colorCode) {
+		editor.setPortSelected(actorName, portName, selected, colorCode);
+	}
 
 	public void clearActorSelections() {
 		editor.clearActorSelections();
@@ -990,4 +995,5 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart
 	public void setPasserelleEditorActive() {
 		setActivePage(0);
 	}
+
 }

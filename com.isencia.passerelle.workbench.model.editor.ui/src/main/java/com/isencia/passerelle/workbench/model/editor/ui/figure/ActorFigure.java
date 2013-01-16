@@ -206,5 +206,14 @@ public abstract class ActorFigure extends AbstractNodeFigure {
 		return outputPortMap.get(name);
 	}
 
+	public void setPortColor(String portName, boolean isSelected, int colorCode) {
+		PortFigure port = inputPortMap.get(portName);
+		if (port==null) port = outputPortMap.get(portName);
+		if (port==null) return;
+		
+		port.setSelectedColor(isSelected, colorCode);
+		repaint();
+	}
+
 
 }
