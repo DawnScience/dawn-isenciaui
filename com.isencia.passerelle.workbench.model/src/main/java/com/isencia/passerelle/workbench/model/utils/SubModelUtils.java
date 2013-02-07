@@ -82,8 +82,6 @@ public class SubModelUtils {
 		// Use map that retains order
 		final Map<String, Flow> modelList = new LinkedHashMap<String, Flow>();
 
-		List<String> modelNames = initializeSubmodels(sorted, pass);
-
 		for (Object modelOb : sorted) {
 
 			final String modelName = (String)modelOb;
@@ -113,44 +111,6 @@ public class SubModelUtils {
 		return modelList;
 	}
 
-	// This is hack to make all models known to modelparser so it's possible to
-	// use a submodel in other submodels
-	private static List<String> initializeSubmodels(final Set<Object> sorted,
-			final IProject pass) {
-		List<String> modelNames = new ArrayList<String>();
-		for (Object modelOb : sorted) {
-
-			final String modelName = (String) modelOb;
-			if (modelName == null || "".equals(modelName))
-				continue;
-
-			final IFile file = pass.getFile(modelName + ".moml");
-			try {
-				if (file.exists()) {
-
-					InputStreamReader reader = new InputStreamReader(
-							createEmptySubModel(modelName));
-					try {
-						Flow flow = FlowManager.readMoml(reader);
-						MoMLParser.putActorClass(modelName, flow);
-					} catch (Exception e) {
-					}
-					modelNames.add(modelName);
-				}
-			} catch (Exception e1) {
-				logger.error("Cannot read moml file!", e1);
-			}
-		}
-		return modelNames;
-	}
-
-	private static InputStream createEmptySubModel(String subModel) {
-		String contents = "<?xml version=\"1.0\" standalone=\"no\"?> \r\n"
-				+ "<!DOCTYPE entity PUBLIC \"-//UC Berkeley//DTD MoML 1//EN\" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd\"> \r\n"
-				+ "<class name=\"" + subModel
-				+ "\" extends=\"ptolemy.actor.TypedCompositeActor\"> </class>";
-		return new ByteArrayInputStream(contents.getBytes());
-	}
 
 	private static IFile getModelStore() throws Exception {
 		final IFile file = ModelUtils.getPasserelleProject().getFile(
