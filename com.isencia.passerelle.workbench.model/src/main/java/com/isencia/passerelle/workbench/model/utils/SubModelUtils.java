@@ -84,16 +84,27 @@ public class SubModelUtils {
 
 		List<String> modelNames = initializeSubmodels(sorted, pass);
 
-		for (String modelName : modelNames) {
+		for (Object modelOb : sorted) {
 
-			final IFile file = pass.getFile(modelName + ".moml");
-			Flow flow = FlowManager.readMoml(new InputStreamReader(file
-					.getContents()));
-			// flow.setSource(file.getLocation().toOSString());
-			if (flow.isClassDefinition()) {
-				MoMLParser.putActorClass(modelName, flow);
-				flow.setName(modelName);
-				modelList.put(modelName, flow);
+			final String modelName = (String)modelOb;
+			if (modelName==null||"".equals(modelName)) continue;
+			
+			final IFile file = pass.getFile(modelName+".moml");
+			try {
+				if (file.exists()) {
+
+					Flow flow = FlowManager.readMoml(new InputStreamReader(file.getContents()));
+//					flow.setSource(file.getLocation().toOSString());
+					if (flow.isClassDefinition()) {
+						MoMLParser.putActorClass(modelName, flow);
+						flow.setName(modelName);
+						modelList.put(modelName, flow);
+					}
+
+				}
+
+			} catch (Exception e1) {
+				logger.error("Cannot read moml file!", e1);
 			}
 		}
 
