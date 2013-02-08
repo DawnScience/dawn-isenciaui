@@ -146,7 +146,7 @@ public class SubModelUtils {
 				"submodels.properties");
 		if (!file.exists()) {
 			file.create(
-					new ByteArrayInputStream("# Passerelle Properties".getBytes()),
+					new ByteArrayInputStream("# DAWB Properties".getBytes()),
 					true, null);
 		}
 		return file;
