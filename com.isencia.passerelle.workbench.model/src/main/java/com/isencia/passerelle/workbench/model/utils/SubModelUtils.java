@@ -71,18 +71,43 @@ public class SubModelUtils {
 
 	public static Map<String, Flow> readSubModels() throws Exception {
 
-		final IProject pass = ModelUtils.getPasserelleProject();
-		pass.refreshLocal(IResource.DEPTH_INFINITE, null);
-
 		final Properties models = PropUtils.loadProperties(getModelStore().getContents());
 
-		final Set<Object> sorted = new TreeSet<Object>();
-		sorted.addAll(models.keySet());
+		Set<Object> modelSet = new TreeSet<Object>();
+		modelSet.addAll(models.keySet());
 
 		// Use map that retains order
 		final Map<String, Flow> modelList = new LinkedHashMap<String, Flow>();
 
-		for (Object modelOb : sorted) {
+		// Iterate loadSubModels till all subModels have been loaded. This iteration is necessary
+		// because of dependencies between subModels: if a subModle cannot be loaded because it's
+		// dependent on a subModel not yet loaded it's stored in a set of models not yet loaded
+		// and this set is then loaded in the next iteration.
+		boolean continueToIterate = true;
+		while (continueToIterate) {
+			int noModelsBeforeLoad = modelSet.size();
+//			logger.debug("Number of composite models to load: " + noModelsBeforeLoad);
+			modelSet = loadSubModels(modelSet, modelList, false);
+			int noModelsAfterLoad = modelSet.size();
+//			logger.debug("Number of composite models not loaded in this iteration: " + noModelsAfterLoad);
+			if ((noModelsAfterLoad == 0) || (noModelsAfterLoad == noModelsBeforeLoad)) {
+				continueToIterate = false;
+			}
+			
+		}
+		// If there are remaining models load them with exception enabled in order to expose error message
+		if (modelSet.size() != 0) {
+			modelSet = loadSubModels(modelSet, modelList, true);
+		}
+		return modelList;
+	}
+
+
+	public static Set<Object> loadSubModels(Set<Object> subModels,  Map<String, Flow> modelList, boolean throwException) throws Exception {
+		final IProject pass = ModelUtils.getPasserelleProject();
+		pass.refreshLocal(IResource.DEPTH_INFINITE, null);
+		final Set<Object> subModelsNotLoaded = new TreeSet<Object>();
+		for (Object modelOb : subModels) {
 
 			final String modelName = (String)modelOb;
 			if (modelName==null||"".equals(modelName)) continue;
@@ -90,6 +115,7 @@ public class SubModelUtils {
 			final IFile file = pass.getFile(modelName+".moml");
 			try {
 				if (file.exists()) {
+//					logger.debug("Loading composite: " + modelName);
 
 					Flow flow = FlowManager.readMoml(new InputStreamReader(file.getContents()));
 //					flow.setSource(file.getLocation().toOSString());
@@ -102,22 +128,25 @@ public class SubModelUtils {
 				}
 
 			} catch (Exception e1) {
-				logger.error("Cannot read moml file!", e1);
+				if (throwException) {
+					throw(e1);
+				}
+				subModelsNotLoaded.add(modelOb);
+//				logger.debug("Failed to load composite (might be non-fatal, could be loaded in next iteration): "+modelName, e1.getMessage());
 			}
 		}
-
 		pass.refreshLocal(IResource.DEPTH_INFINITE, null);
+		return subModelsNotLoaded;
 
-		return modelList;
 	}
-
-
+	
+	
 	private static IFile getModelStore() throws Exception {
 		final IFile file = ModelUtils.getPasserelleProject().getFile(
 				"submodels.properties");
 		if (!file.exists()) {
 			file.create(
-					new ByteArrayInputStream("# DAWB Properties".getBytes()),
+					new ByteArrayInputStream("# Passerelle Properties".getBytes()),
 					true, null);
 		}
 		return file;
