@@ -555,9 +555,9 @@ public class ModelUtils {
 			}
 			return new Workspace(projFile.getProject().getName());
 		}
-		
-		if (relPath.startsWith("/")) relPath = relPath.substring(1);
-		final String projectName = relPath.substring(0, relPath.indexOf("/"));
+		String fileSep = System.getProperty("file.separator");
+		if (relPath.startsWith(fileSep)) relPath = relPath.substring(1);
+		String projectName = relPath.substring(0, relPath.indexOf(fileSep));
 
 	    logger.info("Using project "+projectName);
 	    return new Workspace(projectName);
