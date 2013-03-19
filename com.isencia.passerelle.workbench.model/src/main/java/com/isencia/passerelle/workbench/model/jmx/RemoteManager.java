@@ -43,7 +43,7 @@ public class RemoteManager extends StandardMBean implements RemoteManagerMBean {
 		this.manager = manager;
 	}
 	
-	@Override
+
 	public void stop() {
 		if (manager!=null) {
 			manager.stop();
@@ -63,7 +63,7 @@ public class RemoteManager extends StandardMBean implements RemoteManagerMBean {
 		}	
 	}
 
-	@Override
+
 	public void pause() {
 		if (manager!=null) {
 			manager.pause();
@@ -71,7 +71,7 @@ public class RemoteManager extends StandardMBean implements RemoteManagerMBean {
 		}
 	}
 
-	@Override
+
 	public void pauseOnBreakpoint(String breakpointMessage) {
 		if (manager!=null) {
 		    this.manager.pauseOnBreakpoint(breakpointMessage);
@@ -79,7 +79,7 @@ public class RemoteManager extends StandardMBean implements RemoteManagerMBean {
 		}
 	}
 
-	@Override
+
 	public void addNotificationListener(NotificationListener listener, NotificationFilter filter, Object handback) throws IllegalArgumentException {
 		
 		if (generalBroadcaster == null)  generalBroadcaster = new NotificationBroadcasterSupport();
@@ -87,7 +87,7 @@ public class RemoteManager extends StandardMBean implements RemoteManagerMBean {
 		generalBroadcaster.addNotificationListener(listener, filter, handback);
 	}
 
-	@Override
+
 	public MBeanNotificationInfo[] getNotificationInfo() {
 		return new MBeanNotificationInfo[] {
 				new MBeanNotificationInfo(
@@ -98,7 +98,7 @@ public class RemoteManager extends StandardMBean implements RemoteManagerMBean {
 		};
 	}
 
-	@Override
+
 	public void removeNotificationListener(NotificationListener listener) throws ListenerNotFoundException {
 		
 		if (generalBroadcaster == null) throw new ListenerNotFoundException("No notification listeners registered");

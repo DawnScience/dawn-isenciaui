@@ -9,40 +9,34 @@ import com.isencia.passerelle.workbench.model.editor.ui.editpart.AbstractBaseEdi
 
 public class ActorLabelProvider implements ILabelProvider {
 
-	@Override
-	public Image getImage(Object arg0) {
-		return null;
-	}
+  public Image getImage(Object arg0) {
+    return null;
+  }
 
-	@Override
-	public String getText(Object selection) {
-		if( selection instanceof IStructuredSelection ) {
-			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
-			Object element = structuredSelection.getFirstElement();
-			if( element instanceof AbstractBaseEditPart ) {
-				AbstractBaseEditPart editPart = (AbstractBaseEditPart) element;
-				return editPart.getEntity().getName();
-			}
-		}
-		
-		return "";
-	}
+  public String getText(Object selection) {
+    if (selection instanceof IStructuredSelection) {
+      IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+      Object element = structuredSelection.getFirstElement();
+      if (element instanceof AbstractBaseEditPart) {
+        AbstractBaseEditPart editPart = (AbstractBaseEditPart) element;
+        return editPart.getEntity().getName();
+      }
+    }
 
-	@Override
-	public void addListener(ILabelProviderListener arg0) {
-	}
+    return "";
+  }
 
-	@Override
-	public void dispose() {
-	}
+  public void addListener(ILabelProviderListener arg0) {
+  }
 
-	@Override
-	public boolean isLabelProperty(Object arg0, String arg1) {
-		return false;
-	}
+  public void dispose() {
+  }
 
-	@Override
-	public void removeListener(ILabelProviderListener arg0) {
-	}
+  public boolean isLabelProperty(Object arg0, String arg1) {
+    return false;
+  }
+
+  public void removeListener(ILabelProviderListener arg0) {
+  }
 
 }

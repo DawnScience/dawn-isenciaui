@@ -41,7 +41,7 @@ public class RegularExpressionDescriptor extends PropertyDescriptor {
 		
 		final TextCellEditor editor = new TextCellEditor(parent);
 		editor.setValidator(new ICellEditorValidator() {
-			@Override
+		
 			public String isValid(Object value) {
 				final Text control = (Text)editor.getControl();
 				control.setForeground(control.getDisplay().getSystemColor(SWT.COLOR_BLACK));

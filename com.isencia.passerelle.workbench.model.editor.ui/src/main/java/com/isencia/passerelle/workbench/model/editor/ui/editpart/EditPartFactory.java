@@ -1,6 +1,5 @@
 package com.isencia.passerelle.workbench.model.editor.ui.editpart;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,179 +18,188 @@ import ptolemy.actor.Director;
 import ptolemy.actor.IOPort;
 import ptolemy.actor.TypedAtomicActor;
 import ptolemy.actor.TypedCompositeActor;
-import ptolemy.kernel.Relation;
 import ptolemy.moml.Vertex;
 import ptolemy.vergil.kernel.attributes.TextAttribute;
 
 import com.isencia.passerelle.actor.Sink;
 import com.isencia.passerelle.actor.Source;
-import com.isencia.passerelle.model.Flow;
+import com.isencia.passerelle.editor.common.model.Link;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
-import com.isencia.passerelle.workbench.model.ui.VertexLink;
+import com.isencia.passerelle.workbench.model.opm.LinkWithBendPoints;
 
 public class EditPartFactory implements org.eclipse.gef.EditPartFactory {
-	
-	private Set<AbstractBaseEditPart> parts = new HashSet<AbstractBaseEditPart>();
-	public Set<AbstractBaseEditPart> getParts() {
-		return parts;
-	}
+  Map<Object, EditPart> componentsMap = new HashMap<Object, EditPart>();
+  Map<EditPart, Object> modelObjMap = new HashMap<EditPart, Object>();
+ 
+  public Link getLink(EditPart id) {
+    Object mo = getModelObj(id);
+    if (mo instanceof LinkWithBendPoints) {
+      return (Link) mo;
+    }
+    return null;
+  }
+  
 
-	public MultiPageEditorPart getParent() {
-		return parent;
-	}
+  public Object getModelObj(EditPart id) {
+    return modelObjMap.get(id);
+  }
 
-	private static Logger logger = LoggerFactory.getLogger(EditPartFactory.class);
-	
-	protected PasserelleModelMultiPageEditor parent;
-	private CompositeActor actor;
+  private Set<AbstractBaseEditPart> parts = new HashSet<AbstractBaseEditPart>();
 
-	public EditPartFactory(PasserelleModelMultiPageEditor parent) {
-		super();
-		this.parent = parent;
-	}
+  public Set<AbstractBaseEditPart> getParts() {
+    return parts;
+  }
 
-	public EditPartFactory(PasserelleModelMultiPageEditor parent,
-			               CompositeActor actor) {
-		super();
-		this.parent = parent;
-		this.actor = actor;
-	}
+  public MultiPageEditorPart getParent() {
+    return parent;
+  }
 
-	private Logger getLogger() {
-		return logger;
-	}
+  private static Logger logger = LoggerFactory.getLogger(EditPartFactory.class);
 
-	/**
-	 * Create an EditPart based on the type of the model
-	 */
-	public EditPart createEditPart(EditPart context, Object model) {
-		
-		EditPart child = null;
+  protected PasserelleModelMultiPageEditor parent;
+  private CompositeActor actor;
 
-		// TODO Check what happens when we have sub-models !!!!
-		if (model instanceof Director) {
-			child = new DirectorEditPart();
-		} else if (model instanceof TextAttribute) {
-			child = new CommentEditPart();
-		} else if (model instanceof Vertex) {
-			child =new VertexEditPart();
-			
-		} else if (model instanceof IOPort) {
-			if (((IOPort) model).isInput())
-				child = new PortEditPart(true);
-			else
-				child = new PortEditPart(false);
-		} else if (model instanceof Relation) {
-				child = new RelationEditPart();
-		} else if (model instanceof VertexLink) {
-			child = new VertexLinkEditPart();
-		} else if (model instanceof TypedCompositeActor) {
-			// TODO Check if this is the correct check to make the distinction
-			// between this and child Composites. Check also how to go more then
-			// 1 level deeper
-			if (((TypedCompositeActor) model).getContainer() == null) {
-				child = new DiagramEditPart(parent, actor);
-			} else {
-				TypedCompositeActor composite = (TypedCompositeActor)model;
-				String className = composite.getClassName();
-				if (className.equals("ptolemy.actor.TypedCompositeActor")){
-					child = new CompositeActorEditPart(!(context != null && context
-							.getParent() != null), parent);
+  public EditPartFactory(PasserelleModelMultiPageEditor parent) {
+    super();
+    this.parent = parent;
+  }
 
-				}else{
-					child = new SubModelEditPart(!(context != null && context
-							.getParent() != null), parent);
-					
-				}
-			
+  public EditPartFactory(PasserelleModelMultiPageEditor parent, CompositeActor actor) {
+    super();
+    this.parent = parent;
+    this.actor = actor;
+  }
 
-			}
-		} else if (model instanceof TypedAtomicActor) {
-			
-			try {
-			    child = getEditPartFromExtensionPoint(model);
-			} catch (Exception e) {
-				logger.error("Cannot load editorClass for "+model.getClass().getName(), e);
-			}
-			
-			if (child==null) {
-				try {
-				    IActorFigureProvider prov = getFigureProviderFromExtensionPoint(model);
-				    if (prov != null) {
-				    	child = new CustomFigureEditPart(prov);
-				    }
-				} catch (Exception e) {
-					logger.error("Cannot load editorClass for "+model.getClass().getName(), e);
-				}
-				
-				if (child==null) {
-					if (model instanceof Source)
-						child = new ActorSourceEditPart();
-					else if (model instanceof Sink)
-						child = new ActorSinkEditPart();
-					else
-						child = new ActorEditPart();
-				}
-			}
-		}
+  private Logger getLogger() {
+    return logger;
+  }
 
-		if (child != null) {
-			child.setModel(model);
-		} else {
-			getLogger().error("Unable to create EditPart, requested model not supported");
-		}
-		if (child instanceof AbstractBaseEditPart) {
-			parts.add((AbstractBaseEditPart) child);
-		}
-		return child;
-	}
-	
-	private Map<String, IConfigurationElement> extensionParts;
-	private void createExtensionParts() {
-		if (extensionParts == null) {
-			extensionParts = new HashMap<String,IConfigurationElement>(7);
-			final IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("com.isencia.passerelle.engine.actors");
-            for (int i = 0; i < elements.length; i++) {
-				final String clazz     = elements[i].getAttribute("class");
-				final String editClass = elements[i].getAttribute("editorClass");
-				final String figProv   = elements[i].getAttribute("figureCustomizer");
-				if (clazz!=null&& (editClass!=null || figProv!=null)) {
-					extensionParts.put(clazz, elements[i]);
-				}
-			}
-		}
-	}
-	
-	private EditPart getEditPartFromExtensionPoint(Object model) throws CoreException {
-		
-		createExtensionParts();
-		if (extensionParts.containsKey(model.getClass().getName())) {
-            if (extensionParts.get(model.getClass().getName()).getAttribute("editorClass") == null) return null;
-			return (EditPart)extensionParts.get(model.getClass().getName()).createExecutableExtension("editorClass");
-		}
-		return null;
-	}
-	
-	private IActorFigureProvider getFigureProviderFromExtensionPoint(Object model) throws CoreException {
+  /**
+   * Create an EditPart based on the type of the model
+   */
+  public EditPart createEditPart(EditPart context, Object model) {
+    EditPart editPart = createInnerEditPart(context, model);
+    if (editPart != null) {
+      componentsMap.put(model, editPart);
+      modelObjMap.put(editPart, model);
+    }
+    return editPart;
+  }
+  public EditPart createInnerEditPart(EditPart context, Object model) {
 
-		createExtensionParts();
-		if (extensionParts.containsKey( model.getClass().getName())) {
-			if (extensionParts.get(model.getClass().getName()).getAttribute("figureCustomizer") == null) return null;
-			return (IActorFigureProvider)extensionParts.get(model.getClass().getName()).createExecutableExtension("figureCustomizer");
-		}
-		return null;
-	}
+    EditPart child = null;
 
-	private Vertex getVertex(Relation model) {
-		Enumeration attributes = model.getAttributes();
-		while (attributes.hasMoreElements()) {
-			Object temp = attributes.nextElement();
-			if (temp instanceof Vertex) {
-				return (Vertex)temp;
-			}
-		}
-		return null;
-	}
+    // TODO Check what happens when we have sub-models !!!!
+    if (model instanceof Director) {
+      child = new DirectorEditPart();
+    } else if (model instanceof TextAttribute) {
+      child = new CommentEditPart();
+    } else if (model instanceof Vertex) {
+      child = new VertexEditPart();
 
+    } else if (model instanceof IOPort) {
+      if (((IOPort) model).isInput())
+        child = new PortEditPart(true);
+      else
+        child = new PortEditPart(false);
+    } else if (model instanceof LinkWithBendPoints) {
+      
+      child = new LinkEditPart();
+    } else if (model instanceof TypedCompositeActor) {
+      // TODO Check if this is the correct check to make the distinction
+      // between this and child Composites. Check also how to go more then
+      // 1 level deeper
+      if (((TypedCompositeActor) model).getContainer() == null) {
+        child = new DiagramEditPart(parent, actor);
+      } else {
+        TypedCompositeActor composite = (TypedCompositeActor) model;
+        String className = composite.getClassName();
+        if (className.equals("ptolemy.actor.TypedCompositeActor")) {
+          child = new CompositeActorEditPart(!(context != null && context.getParent() != null), parent);
+
+        } else {
+          child = new SubModelEditPart(!(context != null && context.getParent() != null), parent);
+
+        }
+
+      }
+    } else if (model instanceof TypedAtomicActor) {
+
+      try {
+        child = getEditPartFromExtensionPoint(model);
+      } catch (Exception e) {
+        logger.error("Cannot load editorClass for " + model.getClass().getName(), e);
+      }
+
+      if (child == null) {
+        try {
+          IActorFigureProvider prov = getFigureProviderFromExtensionPoint(model);
+          if (prov != null) {
+            child = new CustomFigureEditPart(prov);
+          }
+        } catch (Exception e) {
+          logger.error("Cannot load editorClass for " + model.getClass().getName(), e);
+        }
+
+        if (child == null) {
+          if (model instanceof Source)
+            child = new ActorSourceEditPart();
+          else if (model instanceof Sink)
+            child = new ActorSinkEditPart();
+          else
+            child = new ActorEditPart();
+        }
+      }
+    }
+
+    if (child != null) {
+      child.setModel(model);
+    } else {
+      getLogger().error("Unable to create EditPart, requested model not supported");
+    }
+    if (child instanceof AbstractBaseEditPart) {
+      parts.add((AbstractBaseEditPart) child);
+    }
+    return child;
+  }
+
+  private Map<String, IConfigurationElement> extensionParts;
+
+  private void createExtensionParts() {
+    if (extensionParts == null) {
+      extensionParts = new HashMap<String, IConfigurationElement>(7);
+      final IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("com.isencia.passerelle.engine.actors");
+      for (int i = 0; i < elements.length; i++) {
+        final String clazz = elements[i].getAttribute("class");
+        final String editClass = elements[i].getAttribute("editorClass");
+        final String figProv = elements[i].getAttribute("figureCustomizer");
+        if (clazz != null && (editClass != null || figProv != null)) {
+          extensionParts.put(clazz, elements[i]);
+        }
+      }
+    }
+  }
+
+  private EditPart getEditPartFromExtensionPoint(Object model) throws CoreException {
+
+    createExtensionParts();
+    if (extensionParts.containsKey(model.getClass().getName())) {
+      if (extensionParts.get(model.getClass().getName()).getAttribute("editorClass") == null)
+        return null;
+      return (EditPart) extensionParts.get(model.getClass().getName()).createExecutableExtension("editorClass");
+    }
+    return null;
+  }
+
+  private IActorFigureProvider getFigureProviderFromExtensionPoint(Object model) throws CoreException {
+
+    createExtensionParts();
+    if (extensionParts.containsKey(model.getClass().getName())) {
+      if (extensionParts.get(model.getClass().getName()).getAttribute("figureCustomizer") == null)
+        return null;
+      return (IActorFigureProvider) extensionParts.get(model.getClass().getName()).createExecutableExtension("figureCustomizer");
+    }
+    return null;
+  }
 
 }

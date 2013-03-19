@@ -17,70 +17,68 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.ui.actions.ActionFactory;
 
+import com.isencia.passerelle.editor.common.model.PaletteGroup;
+import com.isencia.passerelle.editor.common.model.SubModelPaletteItemDefinition;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CreateSubModelAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.DeleteSubmodelAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.EditSubmodelAction;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteGroup;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.SubModelPaletteItemDefinition;
 
 /**
- * This class provides the context menu for the single selection and multiple
- * selection
+ * This class provides the context menu for the single selection and multiple selection
  * 
  * 
  */
 public class ActorTreeMenuProvider extends ContextMenuProvider {
 
-	/**
-	 * constructor
-	 * 
-	 * @param viewer
-	 *            the viewer
-	 * @param registry
-	 *            the registry
-	 */
-	public ActorTreeMenuProvider(ISelectionProvider viewer) {
-		super(viewer);
-	}
+  /**
+   * constructor
+   * 
+   * @param viewer
+   *          the viewer
+   * @param registry
+   *          the registry
+   */
+  public ActorTreeMenuProvider(ISelectionProvider viewer) {
+    super(viewer);
+  }
 
-	/**
-	 * Builds the context menu. Single selection menu and multiple selection
-	 * menu are created while selecting just single element or multiple elements
-	 * 
-	 * 
-	 * @param menu
-	 *            the menu
-	 */
-	public void buildContextMenu(IMenuManager menu) {
+  /**
+   * Builds the context menu. Single selection menu and multiple selection menu are created while selecting just single
+   * element or multiple elements
+   * 
+   * 
+   * @param menu
+   *          the menu
+   */
+  public void buildContextMenu(IMenuManager menu) {
 
-		menu.add(new Separator(GEFActionConstants.GROUP_EDIT));
+    menu.add(new Separator(GEFActionConstants.GROUP_EDIT));
 
-		// IAction action = getActionRegistry().getAction(
-		// ActionFactory.DELETE.getId());
-		// if (action != null && action.isEnabled())
-		TreeViewer tree = (TreeViewer) getViewer();
-		TreeSelection treeSelection = (TreeSelection) tree.getSelection();
-		Object element = treeSelection.getFirstElement();
-		if (element instanceof SubModelPaletteItemDefinition) {
-			createCompositeMenu(menu, element);
-		} else if (element instanceof PaletteGroup) {
-			if (((PaletteGroup)element).getName().equals("Composites")) {
-				createCompositeMenu(menu, element);
-			}
-		}
+    // IAction action = getActionRegistry().getAction(
+    // ActionFactory.DELETE.getId());
+    // if (action != null && action.isEnabled())
+    TreeViewer tree = (TreeViewer) getViewer();
+    TreeSelection treeSelection = (TreeSelection) tree.getSelection();
+    Object element = treeSelection.getFirstElement();
+    if (element instanceof SubModelPaletteItemDefinition) {
+      createCompositeMenu(menu, element);
+    } else if (element instanceof PaletteGroup) {
+      if (((PaletteGroup) element).getName().equals("Composites")) {
+        createCompositeMenu(menu, element);
+      }
+    }
 
-	}
+  }
 
-	private void createCompositeMenu(IMenuManager menu, Object actionOrGroup) {
-		
-		CreateSubModelAction emptySubModelAction = new CreateSubModelAction();
-		emptySubModelAction.setText("Create new empty composite");
-		menu.appendToGroup(GEFActionConstants.GROUP_EDIT, emptySubModelAction);	
-		
-		menu.appendToGroup(GEFActionConstants.GROUP_EDIT, new EditSubmodelAction(actionOrGroup));	
-		menu.appendToGroup(GEFActionConstants.GROUP_EDIT, new DeleteSubmodelAction(actionOrGroup));	
-	}
+  private void createCompositeMenu(IMenuManager menu, Object actionOrGroup) {
+
+    CreateSubModelAction emptySubModelAction = new CreateSubModelAction();
+    emptySubModelAction.setText("Create new empty composite");
+    menu.appendToGroup(GEFActionConstants.GROUP_EDIT, emptySubModelAction);
+
+    menu.appendToGroup(GEFActionConstants.GROUP_EDIT, new EditSubmodelAction(actionOrGroup));
+    menu.appendToGroup(GEFActionConstants.GROUP_EDIT, new DeleteSubmodelAction(actionOrGroup));
+  }
 
 }

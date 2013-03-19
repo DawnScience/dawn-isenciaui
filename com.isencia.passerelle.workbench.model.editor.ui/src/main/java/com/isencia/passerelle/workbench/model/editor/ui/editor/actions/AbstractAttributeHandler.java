@@ -21,12 +21,11 @@ public abstract class AbstractAttributeHandler extends AbstractHandler implement
 	private static Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
 	private IViewPart view;
 	
-	@Override
+
 	public void run(IAction action) {
         doAction();		
 	}
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
         doAction();		
 		return Boolean.TRUE;
@@ -35,12 +34,10 @@ public abstract class AbstractAttributeHandler extends AbstractHandler implement
 	protected abstract void doAction() ;
 
 
-	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		selectionChanged(selection);
 	}
 	
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		selectionChanged(selection);
 	}
@@ -52,7 +49,7 @@ public abstract class AbstractAttributeHandler extends AbstractHandler implement
 		}
 	}
 
-	@Override
+
 	public void init(IViewPart view) {
 		this.view = view;
 		view.getViewSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);

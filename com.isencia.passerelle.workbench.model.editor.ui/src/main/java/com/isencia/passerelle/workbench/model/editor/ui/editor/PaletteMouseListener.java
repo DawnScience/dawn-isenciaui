@@ -9,79 +9,64 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.isencia.passerelle.editor.common.model.SubModelPaletteItemDefinition;
 import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemDefinition;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.SubModelPaletteItemDefinition;
 
 public class PaletteMouseListener implements MouseMotionListener {
-	
-	private static Logger logger = LoggerFactory.getLogger(PaletteMouseListener.class);
-	
-	private DrawerEditPart drawerFigure;
-	private PaletteViewer paletteViewer;
 
-	public PaletteMouseListener(DrawerEditPart drawerFigure,
-			PaletteViewer paletteViewer) {
-		super();
-		this.drawerFigure = drawerFigure;
-		this.paletteViewer = paletteViewer;
-	}
+  private static Logger logger = LoggerFactory.getLogger(PaletteMouseListener.class);
 
-	@Override
-	public void mouseDragged(MouseEvent me) {
+  private DrawerEditPart drawerFigure;
+  private PaletteViewer paletteViewer;
 
-	}
+  public PaletteMouseListener(DrawerEditPart drawerFigure, PaletteViewer paletteViewer) {
+    super();
+    this.drawerFigure = drawerFigure;
+    this.paletteViewer = paletteViewer;
+  }
 
-	@Override
-	public void mouseEntered(MouseEvent me) {
-		try {
-			addFavorite();
-		} catch (Exception e) {
-			logger.error("Cannot add favourite!", e);
-		}
+  public void mouseDragged(MouseEvent me) {
 
-	}
+  }
 
-	private void addFavorite() throws Exception {
-		
-		PaletteItemFactory paletteItemFactory = PaletteItemFactory.getInstance();
-		CreationFactory config = paletteItemFactory.getSelectedItem();
-		if (config != null) {
-			Class  type = (Class) config.getObjectType();
-			drawerFigure.getDrawer().getLabel();
-			if (type.equals(Flow.class)) {
-				SubModelPaletteItemDefinition item = (SubModelPaletteItemDefinition) config.getNewObject();			
-				paletteItemFactory.addFavorite(item.getName(),
-												(PaletteContainer) PaletteBuilder
-														.getFavoriteGroup(drawerFigure.getDrawer()
-																.getLabel()));
-				
+  public void mouseEntered(MouseEvent me) {
+    try {
+      addFavorite();
+    } catch (Exception e) {
+      logger.error("Cannot add favourite!", e);
+    }
 
-			} else {
-				paletteItemFactory.addFavorite(type.getName(),
-						(PaletteContainer) PaletteBuilder
-								.getFavoriteGroup(drawerFigure.getDrawer()
-										.getLabel()));
-			}
-			PaletteBuilder.synchFavorites(paletteViewer);
-			paletteItemFactory.setSelectedItem(null);
-		}
-	}
+  }
 
-	@Override
-	public void mouseExited(MouseEvent me) {
+  private void addFavorite() throws Exception {
 
-	}
+    PaletteBuilder builder = PaletteBuilder.getInstance();
+    CreationFactory config = builder.getSelectedItem();
+    if (config != null) {
+      Class type = (Class) config.getObjectType();
+      drawerFigure.getDrawer().getLabel();
+      if (type.equals(Flow.class)) {
+        SubModelPaletteItemDefinition item = (SubModelPaletteItemDefinition) config.getNewObject();
+        builder.addFavorite(item.getName(), (PaletteContainer) builder.getFavoriteGroup(drawerFigure.getDrawer().getLabel()));
 
-	@Override
-	public void mouseHover(MouseEvent me) {
+      } else {
+        builder.addFavorite(type.getName(), (PaletteContainer) builder.getFavoriteGroup(drawerFigure.getDrawer().getLabel()));
+      }
+      builder.synchFavorites(paletteViewer);
+      builder.setSelectedItem(null);
+    }
+  }
 
-	}
+  public void mouseExited(MouseEvent me) {
 
-	@Override
-	public void mouseMoved(MouseEvent me) {
-	}
+  }
+
+  public void mouseHover(MouseEvent me) {
+
+  }
+
+  public void mouseMoved(MouseEvent me) {
+  }
 
 }

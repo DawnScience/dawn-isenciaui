@@ -12,22 +12,21 @@
 package com.isencia.passerelle.workbench.model.editor.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.SortedSet;
 
-import org.eclipse.gef.ui.actions.GEFActionConstants;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
+import com.isencia.passerelle.editor.common.model.PaletteGroup;
+import com.isencia.passerelle.editor.common.model.PaletteItemDefinition;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
-import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.EditSubmodelAction;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteGroup;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemDefinition;
+import com.isencia.passerelle.workbench.model.editor.ui.editpart.ActorEditPart;
 
 /**
  * The provider class used by views
@@ -35,104 +34,90 @@ import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemDefin
 
 public class ActorTreeProvider implements ITreeContentProvider, ILabelProvider {
 
+  public Object[] getChildren(Object parentElement) {
 
-	@Override
-	public Object[] getChildren(Object parentElement) {
+    if (parentElement instanceof PaletteGroup) {
+      SortedSet<PaletteItemDefinition> paletteItems = ((PaletteGroup) parentElement).getPaletteItems();
+      Collection<PaletteGroup> groups = ((PaletteGroup) parentElement).getChildren();
+      List allItems = new ArrayList();
+      allItems.addAll(paletteItems);
+      allItems.addAll(groups);
+      return allItems.toArray();
+    }
+    return new Object[] {};
+  }
 
-		if (parentElement instanceof PaletteGroup) {
-			List<PaletteItemDefinition> paletteItems = ((PaletteGroup) parentElement).getPaletteItems();
-			List<PaletteGroup> groups = ((PaletteGroup) parentElement).getPaletteGroups();
-			List allItems = new ArrayList();
-			allItems.addAll(paletteItems);
-			allItems.addAll(groups);
-			return allItems.toArray();
-		}
-		return new Object[] {};
-	}
+  public Object getParent(Object element) {
+    if (element instanceof PaletteItemDefinition) {
+      ((PaletteItemDefinition) element).getGroup();
+    }
+    if (element instanceof PaletteGroup) {
+      ((PaletteGroup) element).getParent();
+    }
+    return null;
+  }
 
-	@Override
-	public Object getParent(Object element) {
-		if (element instanceof PaletteItemDefinition) {
-			((PaletteItemDefinition) element).getGroup();
-		}
-		if (element instanceof PaletteGroup) {
-			((PaletteGroup) element).getParent();
-		}
-		return null;
-	}
+  public boolean hasChildren(Object element) {
+    // TODO Auto-generated method stub
+    return element instanceof PaletteGroup && (((PaletteGroup) element).hasPaletteItems() || ((PaletteGroup) element).hasChildren());
+  }
 
-	@Override
-	public boolean hasChildren(Object element) {
-		// TODO Auto-generated method stub
-		return element instanceof PaletteGroup
-				&& (((PaletteGroup) element).hasPaletteItems() || ((PaletteGroup) element)
-						.hasPaletteGroups());
-	}
+  public Object[] getElements(Object inputElement) {
+    if (inputElement instanceof Object[]) {
+      return (Object[]) inputElement;
 
-	@Override
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof Object[]) {
-			return (Object[]) inputElement;
+    }
+    return getChildren(inputElement);
+  }
 
-		}
-		return getChildren(inputElement);
-	}
+  public void dispose() {
+    // TODO Auto-generated method stub
 
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
+  }
 
-	}
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    // TODO Auto-generated method stub
 
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
+  }
 
-	}
+  public Image getImage(Object element) {
+    if (element instanceof PaletteItemDefinition) {
+      ImageDescriptor icon = (ImageDescriptor) ((PaletteItemDefinition) element).getIcon();
+      if (icon == null) {
+        return ActorEditPart.IMAGE_DESCRIPTOR_ACTOR.createImage();
+      }
+      return icon.createImage();
+    }
+    if (element instanceof PaletteGroup) {
 
-	@Override
-	public Image getImage(Object element) {
-		if (element instanceof PaletteItemDefinition) {
-			return ((PaletteItemDefinition) element).getIcon().createImage();
-		}
-		if (element instanceof PaletteGroup) {
-			
-			if (((PaletteGroup)element).getIcon()!=null) {
-			    return ((PaletteGroup)element).getIcon().createImage();
-			} else {
-			    Activator.getImageDescriptor("icons/folder.gif").createImage();
-			}
-		}
-		return null;
-	}
+      if (((PaletteGroup) element).getIcon() != null) {
+        return ((ImageDescriptor) ((PaletteGroup) element).getIcon()).createImage();
+      } else {
+        Activator.getImageDescriptor("icons/folder.gif").createImage();
+      }
+    }
+    return null;
+  }
 
-	@Override
-	public String getText(Object element) {
-		if (element instanceof PaletteItemDefinition) {
-			return ((PaletteItemDefinition) element).getName();
-		}
-		if (element instanceof PaletteGroup) {
-			return ((PaletteGroup) element).getName();
-		}
-		return null;
-	}
+  public String getText(Object element) {
+    if (element instanceof PaletteItemDefinition) {
+      return ((PaletteItemDefinition) element).getName();
+    }
+    if (element instanceof PaletteGroup) {
+      return ((PaletteGroup) element).getName();
+    }
+    return null;
+  }
 
-	@Override
-	public void addListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
+  public void addListener(ILabelProviderListener listener) {
 
-	}
+  }
 
-	@Override
-	public boolean isLabelProperty(Object element, String property) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+  public boolean isLabelProperty(Object element, String property) {
+    return false;
+  }
 
-	@Override
-	public void removeListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-
-	}
+  public void removeListener(ILabelProviderListener listener) {
+  }
 
 }

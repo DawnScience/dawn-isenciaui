@@ -26,7 +26,7 @@ public class CheckableActionGroup implements IPropertyChangeListener {
 	}
 
 	private boolean off = false;
-	@Override
+
 	public void propertyChange(PropertyChangeEvent event) {
 		if (off) return;
 		try {

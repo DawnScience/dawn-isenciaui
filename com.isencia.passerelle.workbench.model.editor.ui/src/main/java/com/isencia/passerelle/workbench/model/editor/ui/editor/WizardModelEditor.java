@@ -189,7 +189,7 @@ public class WizardModelEditor extends EditorPart implements ExecuteActionListen
 		btnStop.setEnabled(false);
 	}
 
-	@Override
+
 	public void buttonRefreshRequested(final ExecuteActionEvent evt) {
 		btnStart.setEnabled(runAction.isEnabled());
 		btnStop.setEnabled(stopAction.isEnabled());
@@ -212,12 +212,12 @@ public class WizardModelEditor extends EditorPart implements ExecuteActionListen
 
 	}
 
-	@Override
+
 	public void executionRequested(ExecuteActionEvent evt) {
 		actorText.setText("");
 	}
 
-	@Override
+
 	public void stopRequested(ExecuteActionEvent evt) {
 		actorText.append("Workflow stopped");
 	}

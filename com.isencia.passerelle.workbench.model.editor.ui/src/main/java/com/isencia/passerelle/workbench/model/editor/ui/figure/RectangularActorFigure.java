@@ -61,7 +61,6 @@ public class RectangularActorFigure extends ActorFigure {
 			graphics.setBackgroundColor(getBackgroundColor());
 			final Rectangle bounds = getBounds();
 			graphics.fillGradient(bounds.x+1, bounds.y+1, bounds.width-2, bounds.height-2, false);
-
 			graphics.popState();
 		}
 		protected void outlineShape(Graphics graphics) {

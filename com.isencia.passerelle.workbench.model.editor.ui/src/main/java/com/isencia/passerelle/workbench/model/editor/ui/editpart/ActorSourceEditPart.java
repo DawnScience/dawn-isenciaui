@@ -8,6 +8,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.figure.PortFigure;
 
 public class ActorSourceEditPart extends ActorEditPart {
 	
+	public final static Color PORT_FILL_COLOR = new Color(null,255,225,20);
 	public final static Color ACTOR_BACKGROUND_COLOR = new Color(null,138,226,52);
 
 	@Override
@@ -18,7 +19,7 @@ public class ActorSourceEditPart extends ActorEditPart {
 		// Make trigger yellow
 		final PortFigure trigger = createFigure.getInputPort("trigger");
 		if (trigger!=null) {
-			trigger.setFillColor(new Color(null,255,225,20));
+			trigger.setFillColor(PORT_FILL_COLOR);
 		}
 		
 		return createFigure;

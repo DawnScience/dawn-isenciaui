@@ -5,14 +5,11 @@ import org.eclipse.gef.dnd.TemplateTransfer;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemDefinition;
+import com.isencia.passerelle.editor.common.model.PaletteItemDefinition;
 
 public class DragTargetListener extends ViewerDragAdapter {
 	public static PaletteItemDefinition data;

@@ -92,7 +92,7 @@
          name="Workflow Preferences"
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.dawnsci.preferences.workflow"
+            category="org.edna.workbench.preferences.root"
             class="com.isencia.passerelle.workbench.model.editor.ui.PasserellePreferencePage"
             id="com.isencia.passerelle.workbench.model.editor.ui.PasserellePreferences"
             name="Workflow Preferences">
@@ -113,6 +113,13 @@
    </extension>
    <extension
          point="org.eclipse.ui.views">
+     <view
+            class="com.isencia.passerelle.workbench.model.editor.ui.views.execTrace.ExecutionTracesView"
+            icon="icons/attributes.gif"
+            id="com.isencia.passerelle.workbench.model.editor.ui.views.execTrace.ExecutionTracesView"
+            name="Execution traces">
+      </view>
+      
          <view
             icon="icons/tree.gif"
             class="com.isencia.passerelle.workbench.model.editor.ui.views.ActorTreeView"

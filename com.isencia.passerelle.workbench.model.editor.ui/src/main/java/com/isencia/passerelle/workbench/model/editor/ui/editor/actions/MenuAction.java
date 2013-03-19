@@ -25,7 +25,7 @@ public class MenuAction extends Action implements IMenuCreator {
 	}
 
 
-	@Override
+
 	public void dispose() {
 		if (fMenu != null)  {
 			fMenu.dispose();
@@ -34,7 +34,7 @@ public class MenuAction extends Action implements IMenuCreator {
 	}
 
 
-	@Override
+
 	public Menu getMenu(Menu parent) {
 		return null;
 	}
@@ -43,7 +43,7 @@ public class MenuAction extends Action implements IMenuCreator {
 		actions.add(action);
 	}
 
-	@Override
+
 	public Menu getMenu(Control parent) {
 		if (fMenu != null) fMenu.dispose();
 

@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -26,28 +24,28 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.kernel.util.StringAttribute;
 import ptolemy.vergil.kernel.attributes.TextAttribute;
-
 import com.isencia.passerelle.actor.Actor;
 import com.isencia.passerelle.actor.gui.PasserelleConfigurer;
-import com.isencia.passerelle.domain.cap.Director;
+import com.isencia.passerelle.editor.common.utils.ParameterUtils;
+
+import ptolemy.actor.Director;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.HelpUtils;
+import com.isencia.passerelle.workbench.model.editor.ui.PreferenceConstants;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.DeleteAttributeHandler;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.AbstractBaseEditPart;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
+import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 import com.isencia.passerelle.workbench.model.editor.ui.properties.NamedObjComparator;
 import com.isencia.passerelle.workbench.model.ui.GeneralAttribute;
 import com.isencia.passerelle.workbench.model.ui.command.AttributeCommand;
@@ -88,7 +86,6 @@ public class ActorAttributesView extends ViewPart implements
 
 	private VariableEditingSupport valueColumnEditor;
 
-	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part instanceof PasserelleModelMultiPageEditor) {
 			this.part = part;
@@ -122,10 +119,11 @@ public class ActorAttributesView extends ViewPart implements
 					filter = Parameter.class;
 				}
 				Iterator parameterIterator = actor.attributeList(filter).iterator();
+				boolean expert = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EXPERT);
 				while (parameterIterator.hasNext()) {
 					Attribute parameter = (Attribute) parameterIterator.next();
-
-					if (!(parameter instanceof Parameter) || (PasserelleConfigurer.isVisible(actor,(Parameter) parameter))) {
+					
+					if (!(parameter instanceof Parameter) || (ParameterUtils.isVisible(actor,(Parameter) parameter,expert))) {
 						parameterList.add(parameter);
 					}
 				}
@@ -143,17 +141,14 @@ public class ActorAttributesView extends ViewPart implements
 			Collections.sort(parameterList, new NamedObjComparator());
 		try {
 			viewer.setContentProvider(new IStructuredContentProvider() {
-				@Override
 				public void dispose() {
 
 				}
 
-				@Override
 				public void inputChanged(Viewer viewer, Object oldInput,
 						Object newInput) {
 				}
 
-				@Override
 				public Object[] getElements(Object inputElement) {
 					if (parameterList == null) return new Parameter[] {};
 					final List<Object> ret = new ArrayList<Object>(parameterList.size() + 1);
@@ -162,12 +157,12 @@ public class ActorAttributesView extends ViewPart implements
 					                        ? (Director)((Actor)actor).getDirector()
 					                        : null;
 					if (actor instanceof Actor)
-						ret.add(new GeneralAttribute( GeneralAttribute.ATTRIBUTE_TYPE.TYPE,PaletteItemFactory.getInstance().getType(actor.getClass())));
+						ret.add(new GeneralAttribute( GeneralAttribute.ATTRIBUTE_TYPE.TYPE,PaletteBuilder.getInstance().getType(actor.getClass())));
 
-					if (actor instanceof Actor && director!=null && director.isExpertMode())
+					if (actor instanceof Actor && director!=null )
 						ret.add(new GeneralAttribute(GeneralAttribute.ATTRIBUTE_TYPE.CLASS, actor.getClass().getName()));
 
-					ret.add(new GeneralAttribute(GeneralAttribute.ATTRIBUTE_TYPE.NAME,PaletteItemFactory.getInstance().getType(actor.getName())));
+					ret.add(new GeneralAttribute(GeneralAttribute.ATTRIBUTE_TYPE.NAME,PaletteBuilder.getInstance().getType(actor.getName())));
 					ret.addAll(parameterList);
 					return ret.toArray(new Object[ret.size()]);
 				}
@@ -218,11 +213,9 @@ public class ActorAttributesView extends ViewPart implements
 
 		viewer.getTable().addKeyListener(new KeyListener() {
 
-			@Override
 			public void keyReleased(KeyEvent e) {
 			}
 
-			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F1) {
 					try {
@@ -321,7 +314,6 @@ public class ActorAttributesView extends ViewPart implements
 		super.dispose();
 	}
 
-	@Override
 	public void stackChanged(CommandStackEvent event) {
 		viewer.refresh();
 	}
@@ -379,23 +371,23 @@ public class ActorAttributesView extends ViewPart implements
 			final Object o = s.getFirstElement();
 			String contextId = HelpUtils.getContextId(o);
 			if (contextId != null) {
-				WorkbenchHelp.displayHelp(contextId);
+// TODO revert this when using context specific help				
+//				WorkbenchHelp.displayHelp(contextId);
+				WorkbenchHelpSystem.getInstance().displayHelpResource(contextId);
 			}
 
 		}
 	}
 
-	public void setAttributeValue(Object element, Object value) throws IllegalActionException {
+	public void setAttributeValue(Object element, Object value)
+			throws IllegalActionException {
 
 		final PasserelleModelMultiPageEditor ed = (PasserelleModelMultiPageEditor) this.part;
-		final AttributeCommand cmd = new AttributeCommand(viewer, element, value);
+		final AttributeCommand cmd = new AttributeCommand(viewer, element,
+				value);
 		ed.getEditor().getEditDomain().getCommandStack().execute(cmd);
 		ed.refreshActions();
-        ed.getEditor().refresh();
-	}
-
-	public ColumnViewer getViewer() {
-		return this.viewer;
+    ed.getEditor().refresh();
 	}
 
 }

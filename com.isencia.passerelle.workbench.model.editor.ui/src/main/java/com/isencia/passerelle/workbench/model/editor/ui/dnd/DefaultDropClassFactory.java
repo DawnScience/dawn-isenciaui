@@ -14,12 +14,11 @@ import ptolemy.kernel.util.NamedObj;
  */
 public class DefaultDropClassFactory implements IDropClassFactory {
 
-	@Override
 	public Class<? extends NamedObj> getClassForPath(IResource source, String filePath) {
 		return FileReader.class;
 	}
 
-	@Override
+	
 	public void setConfigurableParameters(CreateComponentCommand cmd,
 			String filePath) {
 		// Nothing to do

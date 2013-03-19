@@ -51,7 +51,6 @@ public class EditorUtils {
   public static Logger logger = LoggerFactory.getLogger(EditorUtils.class);;
 
   public static Class<?> loadClass(String className) {
-	logger.info("Trying to load class: "+className);
     try {
       return MoMLParser.getClassLoadingStrategy().loadJavaClass(className, null);
     } catch (ClassNotFoundException e3) {

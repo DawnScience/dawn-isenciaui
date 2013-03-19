@@ -7,7 +7,7 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.swt.graphics.Color;
 
 import com.isencia.passerelle.workbench.model.editor.ui.INameable;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
+import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 
 public class AbstractBaseFigure extends Figure implements INameable {
 	public final static int DEFAULT_WIDTH = 60;
@@ -25,7 +25,7 @@ public class AbstractBaseFigure extends Figure implements INameable {
 		return DEFAULT_BACKGROUND_COLOR;
 	}
 	public Color getColor() {
-		Color color = PaletteItemFactory.getInstance().getColor(type);
+		Color color = PaletteBuilder.getInstance().getColor(type);
 		if (color != null){
 			return color;
 		}
@@ -53,8 +53,8 @@ public class AbstractBaseFigure extends Figure implements INameable {
 		}
 		setToolTip(new Label(name));
 		this.type = type;
-		if (type != null && PaletteItemFactory.getInstance().getType(type) != null){
-			setToolTip(new Label(PaletteItemFactory.getInstance().getType(type)));
+		if (type != null && PaletteBuilder.getInstance().getType(type) != null){
+			setToolTip(new Label(PaletteBuilder.getInstance().getType(type)));
 		}
 		setOpaque(false);
 

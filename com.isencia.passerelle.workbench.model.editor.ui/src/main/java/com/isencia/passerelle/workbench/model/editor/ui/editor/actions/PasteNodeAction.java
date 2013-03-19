@@ -15,44 +15,40 @@ import com.isencia.passerelle.workbench.model.ui.command.PasteNodeCommand;
 
 public class PasteNodeAction extends SelectionAction {
 
-	private PasteNodeCommand getPasteNodeCommand() {
-		return new PasteNodeCommand(
-				((PasserelleModelEditor) getWorkbenchPart()).getParent());
-	}
+  private PasteNodeCommand getPasteNodeCommand() {
+    PasserelleModelEditor workbenchPart = (PasserelleModelEditor) getWorkbenchPart();
+    return new PasteNodeCommand(workbenchPart.getParent());
+  }
 
-	public PasteNodeAction(PasserelleModelEditor part, CompositeActor actor) {
-		super(part);
-		setLazyEnablementCalculation(true);
-	}
+  public PasteNodeAction(PasserelleModelEditor part, CompositeActor actor) {
+    super(part);
+    setLazyEnablementCalculation(true);
+  }
 
-	protected void init() {
-		super.init();
-		ISharedImages sharedImages = PlatformUI.getWorkbench()
-				.getSharedImages();
-		setText("Paste");
-		setId(ActionFactory.PASTE.getId());
-		setHoverImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		setImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
-		setDisabledImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
-		setEnabled(false);
-	}
+  protected void init() {
+    super.init();
+    ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+    setText("Paste");
+    setId(ActionFactory.PASTE.getId());
+    setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+    setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+    setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
+    setEnabled(false);
+  }
 
-	private Command createPasteCommand(List<Object> selectedObjects) {
-		return getPasteNodeCommand();
-	}
+  private Command createPasteCommand(List<Object> selectedObjects) {
+    return getPasteNodeCommand();
+  }
 
-	@Override
-	protected boolean calculateEnabled() {
-		return true;
-	}
+  @Override
+  protected boolean calculateEnabled() {
+    return true;
+  }
 
-	@Override
-	public void run() {
-		Command command = createPasteCommand(getSelectedObjects());
-		if (command != null && command.canExecute())
-			execute(command);
-	}
+  @Override
+  public void run() {
+    Command command = createPasteCommand(getSelectedObjects());
+    if (command != null && command.canExecute())
+      execute(command);
+  }
 }

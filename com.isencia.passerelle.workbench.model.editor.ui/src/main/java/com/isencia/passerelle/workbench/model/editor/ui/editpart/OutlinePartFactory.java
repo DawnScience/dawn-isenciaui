@@ -27,7 +27,8 @@ public class OutlinePartFactory implements EditPartFactory {
 		OutlineEditPart editPart = null;
 		if (model instanceof CompositeActor)
 			editPart = new OutlineContainerEditPart(context, model, editor);
-		editPart = new OutlineEditPart(model);
+		else
+		  editPart = new OutlineEditPart(model);
 		parts.add(editPart);
 		return editPart;
 	}

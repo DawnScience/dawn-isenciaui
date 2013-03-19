@@ -1,7 +1,5 @@
 package com.isencia.passerelle.workbench.model.editor.ui.dnd;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -93,18 +91,10 @@ public class FileTransferDropTargetListener  extends AbstractTransferDropTargetL
 	   } else {
 		   
 		   final IResource res = getSelected();
-		   String fullPath = null;
-		   if (res==null) {
-			   File file = getSelectedFile();
-			   if (!file.isDirectory()) file = file.getParentFile();
-			   fullPath = file.getAbsolutePath();
-		   } else {
-			   fullPath = res.getRawLocation().toOSString();
-		   } 
-		   
-		   if (fullPath!=null) {
-			   isFullPath = res!=null ? res.isLinked(IResource.CHECK_ANCESTORS) : true;
-			   isFolder   = res!=null ? res instanceof IContainer               : true;
+		   if (res!=null) {
+			   final String fullPath = res.getRawLocation().toOSString();
+			   isFullPath = res.isLinked(IResource.CHECK_ANCESTORS);
+			   isFolder   = res instanceof IContainer;
 			   if (isFullPath) {
 				   return fullPath;
 			   } else {
@@ -132,19 +122,6 @@ public class FileTransferDropTargetListener  extends AbstractTransferDropTargetL
 	   }
        return null;
    }
-   
-   private File getSelectedFile() {
-	   final ISelection sel = EclipseUtils.getPage().getSelection();
-	   if (!(sel instanceof IStructuredSelection)) return null;
-
-	   final IStructuredSelection ss = (IStructuredSelection) sel;
-	   final Object          element = ss.getFirstElement();
-	   if (element instanceof File) {
-		   return (File)element;
-	   }
-       return null;
-   }
-
    
    private String getFileName() {
 	   final String filePath = getFilePath();

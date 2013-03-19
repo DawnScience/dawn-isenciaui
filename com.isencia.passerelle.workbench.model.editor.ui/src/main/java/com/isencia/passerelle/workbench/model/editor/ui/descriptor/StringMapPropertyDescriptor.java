@@ -139,13 +139,13 @@ public class StringMapPropertyDescriptor extends PropertyDescriptor {
 			mapTable.setColumnProperties(new String[]{"key","value"});
 			mapTable.setCellEditors(new CellEditor[]{null, new TextCellEditor(mapTable.getTable())});
 			mapTable.setCellModifier(new DoubleClickModifier(mapTable) {
-				@Override
+				
 				public Object getValue(Object element, String property) {
 					if ("key".equals(property)) return ((Map.Entry<String,String>)element).getKey();
 					return ((Map.Entry<String,String>)element).getValue();
 				}
 
-				@Override
+				
 				public void modify(Object item, String property, Object value) {
 					if (!"value".equals(property)) return;
 					final Object element  = ((IStructuredSelection)mapTable.getSelection()).getFirstElement();
@@ -162,12 +162,12 @@ public class StringMapPropertyDescriptor extends PropertyDescriptor {
 
 			mapTable.setContentProvider(new IStructuredContentProvider() {
 
-				@Override
+				
 				public void dispose() {}
-				@Override
+				
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 
-				@Override
+				
 				public Object[] getElements(Object inputElement) {
 					return map.entrySet().toArray(new Map.Entry[map.size()]);
 				}

@@ -32,9 +32,11 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CommitFlowAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.RunAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.ScreenshotAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.StopAction;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.UpdateFlowAction;
 
 public class PasserelleActionBarContributor extends MultiPageEditorActionBarContributor {
 
@@ -78,6 +80,8 @@ public class PasserelleActionBarContributor extends MultiPageEditorActionBarCont
 		IWorkbenchWindow iww = getPage().getWorkbenchWindow();
 		addRetargetAction(new RetargetAction(ActionFactory.CLOSE.getId(), "Close editor"));
 		addRetargetAction(new RetargetAction(ActionFactory.NEW.getId(),    "Create empty composite"));
+//		addRetargetAction(new RetargetAction(CommitFlowAction.ID,    "Commit flow"));
+//		addRetargetAction(new RetargetAction(UpdateFlowAction.ID,    "Update flow"));
 		addRetargetAction(new RetargetAction(ActionFactory.EXPORT.getId(), "Create composite from workflow"));
 		
 		addRetargetAction((RetargetAction) ActionFactory.COPY.create(iww));

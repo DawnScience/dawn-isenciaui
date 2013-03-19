@@ -27,13 +27,13 @@ public class PaletteBuilder implements Serializable {
   public static final String SUBMODELS = "com.isencia.passerelle.actor.actorgroup.submodels";
   List<PaletteGroup> paletteGroups;
   List<PaletteGroup> editablePaletteGroups;
-  
+
   private Map<String, String> actorBundleMap = new HashMap<String, String>();
-  
+
   public String getBuildId(String className) {
     return actorBundleMap.get(className);
   }
-  
+
   private boolean rerender = false;
 
   public boolean isRerender() {
@@ -108,8 +108,9 @@ public class PaletteBuilder implements Serializable {
 
   public Object getIcon(String clazzName) {
     if (Flow.class.getName().equals(clazzName)) {
-      if (submodelDefinition != null)
+      if (submodelDefinition != null) {
         return submodelDefinition.getIcon();
+      }
     }
     PaletteItemDefinition itemDefinition = getPaletteItem(clazzName);
     if (itemDefinition != null) {
@@ -191,7 +192,7 @@ public class PaletteBuilder implements Serializable {
           }
           if (expandedAttribute != null) {
             try {
-              e.setExpanded(new Boolean(expandedAttribute));
+              e.setExpanded(Boolean.valueOf(expandedAttribute));
             } catch (Exception e2) {
 
             }
@@ -232,12 +233,12 @@ public class PaletteBuilder implements Serializable {
 
             Object icon = createIcon(null, iconLocationAttribute, iconAttribute, bundleId);
             if (group != null && submodels != null && submodels.getId().equals(group.getId())) {
-              submodelDefinition = new PaletteItemDefinition(icon, null, idAttribute, nameAttribute, colorAttribute, Flow.class,null);
+              submodelDefinition = new PaletteItemDefinition(icon, null, idAttribute, nameAttribute, colorAttribute, Flow.class, null);
             } else {
               final Class<?> clazz = loadClass(configurationElement, bundleId);
-              
+
               if (clazz != null && group != null) {
-                PaletteItemDefinition item = new PaletteItemDefinition(icon, group, idAttribute, nameAttribute, colorAttribute, clazz,bundleId);
+                PaletteItemDefinition item = new PaletteItemDefinition(icon, group, idAttribute, nameAttribute, colorAttribute, clazz, bundleId);
                 group.addPaletteItem(item);
                 actorBundleMap.put(clazz.getName(), bundleId);
                 paletteItemMap.put(item.getClazz().getName(), item);
@@ -252,11 +253,12 @@ public class PaletteBuilder implements Serializable {
       for (String actorClass : MomlClassRegistry.getAllActorClasses()) {
 
         SubModelPaletteItemDefinition item = addSubModel(actorClass);
-        if (submodels != null)
+        if (submodels != null) {
           submodels.addPaletteItem(item);
+        }
       }
     } catch (Exception e) {
-     // logError(e);
+      // logError(e);
     }
     return actorGroups;
   }
@@ -316,8 +318,9 @@ public class PaletteBuilder implements Serializable {
 
     }
     List<Attribute> attributes = model.attributeList(Locatable.class);
-    if (attributes == null)
+    if (attributes == null) {
       return;
+    }
     if (attributes.size() > 0) {
       Locatable locationAttribute = (Locatable) attributes.get(0);
       try {

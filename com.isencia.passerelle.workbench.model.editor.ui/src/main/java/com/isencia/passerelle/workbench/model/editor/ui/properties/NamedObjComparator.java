@@ -9,7 +9,7 @@ public class NamedObjComparator implements Comparator<NamedObj> {
 	/**
 	 * Sorts parameters by name alphabetically.
 	 */
-	@Override
+
 	public int compare(NamedObj o1, NamedObj o2) {
 		return o1.getDisplayName().compareTo(o2.getDisplayName());
 	}

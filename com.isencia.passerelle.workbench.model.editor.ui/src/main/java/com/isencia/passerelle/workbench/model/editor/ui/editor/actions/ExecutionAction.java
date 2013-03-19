@@ -51,7 +51,7 @@ public abstract class ExecutionAction extends Action {
 
 	private NotificationListener createRefreshListener() {
 		return new NotificationListener() {		
-			@Override
+
 			public void handleNotification(Notification notification, Object handback) {
 				updateActionsAvailable(1000);
 			}
@@ -72,7 +72,7 @@ public abstract class ExecutionAction extends Action {
 					final SubActionBars2 bars = (SubActionBars2)editor.getEditorSite().getActionBars();
 					logger.debug("Doing refresh of toolbar actions.");
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						@Override
+
 						public void run() {
 							// We try twice to refresh the buttons
 							try {

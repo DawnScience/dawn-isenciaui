@@ -11,16 +11,13 @@ import org.eclipse.gef.ConnectionEditPart;
 
 import ptolemy.actor.IOPort;
 import ptolemy.actor.TypedIOPort;
-import ptolemy.actor.TypedIORelation;
 import ptolemy.kernel.Port;
-import ptolemy.kernel.Relation;
 import ptolemy.kernel.util.NamedObj;
-import ptolemy.moml.Vertex;
 
+import com.isencia.passerelle.editor.common.model.Link;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.CompoundIOFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.CompoundInputFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.CompoundOutputFigure;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 /**
  * <code>PortEditPart</code> is the EditPart for the Port model objects
@@ -28,104 +25,86 @@ import com.isencia.passerelle.workbench.model.utils.ModelUtils;
  * @author Dirk Jacobs
  */
 public class PortEditPart extends ActorEditPart {
-	private boolean isInput;
+  private boolean isInput;
 
-	public PortEditPart(boolean isInput) {
-		super();
-		this.isInput = isInput;
-	}
+  public PortEditPart(boolean isInput) {
+    super();
+    this.isInput = isInput;
+  }
 
-	@Override
-	protected IFigure createFigure() {
-		if (isInput)
-			return new CompoundInputFigure(((IOPort) getModel()).getName(),getModel().getClass());
-		else
-			return new CompoundOutputFigure(((IOPort) getModel()).getName(),getModel().getClass());
-	}
+  @Override
+  protected IFigure createFigure() {
+    if (isInput)
+      return new CompoundInputFigure(((IOPort) getModel()).getName(), getModel().getClass());
+    else
+      return new CompoundOutputFigure(((IOPort) getModel()).getName(), getModel().getClass());
+  }
 
-	public CompoundIOFigure getComponentFigure() {
-		return (CompoundIOFigure) getFigure();
-	}
+  public CompoundIOFigure getComponentFigure() {
+    return (CompoundIOFigure) getFigure();
+  }
 
-	@Override
-	protected List getModelSourceConnections() {
-		if (isInput) {
-			return getPortSourceConnections();
-		}
-		return Collections.EMPTY_LIST;
-	}
+  @Override
+  protected List getModelSourceConnections() {
+    if (isInput) {
+      return getPortConnections();
+    }
+    return Collections.EMPTY_LIST;
+  }
 
-	@Override
-	protected List getModelTargetConnections() {
-		if (!isInput) {
-			return getPortTargetConnections();
-		}
-		return Collections.EMPTY_LIST;
-	}
+  @Override
+  protected List getModelTargetConnections() {
+    if (!isInput) {
+      return getPortConnections();
+    }
+    return Collections.EMPTY_LIST;
+  }
 
-	protected List getPortSourceConnections() {
-		Set<Relation> connectedRelations = ModelUtils.getConnectedRelations(
-				(NamedObj) getModel(), ModelUtils.ConnectionType.SOURCE);
-		List modelSourceConnections = new ArrayList();
-		for (Relation rel : connectedRelations) {
-			Vertex vertex = getVertex(rel);
-			if (vertex != null) {
-				Object relation = VertexEditPart.getRelation(
-						(TypedIORelation) rel, (IOPort) getModel(), vertex,
-						false);
-				modelSourceConnections.add(relation);
-			} else {
-				modelSourceConnections.add(rel);
-			}
-		}
-		return modelSourceConnections;
-	}
+  protected List getPortConnections() {
+    List allLinks = new ArrayList();
+    Set<Link> links = getDiagram().getLinkHolder().getLinks(getModel());
+    if (links != null) {
+      for (Link link : links) {
+        NamedObj container = ((IOPort) getModel()).getContainer();
+        NamedObj relContainer = link.getRelation().getContainer();
+        if (container != null && container.equals(relContainer)) {
+          allLinks.add(link);
+        }
+      }
 
-	protected List getPortTargetConnections() {
-		Set<Relation> connectedRelations = ModelUtils.getConnectedRelations(
-				(NamedObj) getModel(), ModelUtils.ConnectionType.TARGET);
-		List modelTargetConnections = new ArrayList();
-		for (Relation rel : connectedRelations) {
-			Vertex vertex = getVertex(rel);
-			if (vertex != null) {
-					Object relation = VertexEditPart.getRelation(
-							(TypedIORelation) rel, (IOPort) getModel(), vertex,
-							false);
-					modelTargetConnections.add(relation);
-			} else {
-				modelTargetConnections.add(rel);
-			}
-		}
-		return modelTargetConnections;
-	}
+    }
+    return allLinks;
+  }
 
-	public Port getSourcePort(ConnectionAnchor anchor) {
-		getLogger().trace("Get Source port  based on anchor");
-		IOPort port = ((TypedIOPort) getModel());
-		if (port.isInput()) {
-			return port;
-		}
-		return null;
 
-	}
 
-	public Port getTargetPort(ConnectionAnchor anchor) {
-		getLogger().trace("Get Target port  based on anchor");
+  public Port getSourcePort(ConnectionAnchor anchor) {
+    getLogger().trace("Get Source port  based on anchor");
+    IOPort port = ((TypedIOPort) getModel());
+    if (port.isInput()) {
+      return port;
+    }
+    return null;
 
-		IOPort port = ((TypedIOPort) getModel());
-		if (!port.isInput()) {
-			return port;
-		}
-		return null;
-	}
+  }
 
-	public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connEditPart) {
-		return getComponentFigure().getConnectionAnchor(CompoundInputFigure.INPUT_PORT_NAME);
-	}
+  public Port getTargetPort(ConnectionAnchor anchor) {
+    getLogger().trace("Get Target port  based on anchor");
 
-	public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connEditPart) {
-		return getComponentFigure().getConnectionAnchor(CompoundOutputFigure.OUTPUT_PORT_NAME);
-		
-	}
+    IOPort port = ((TypedIOPort) getModel());
+    if (!port.isInput()) {
+      return port;
+    }
+    return null;
+  }
+
+  public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart connEditPart) {
+    return getComponentFigure().getConnectionAnchor(CompoundInputFigure.INPUT_PORT_NAME);
+  }
+
+  public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart connEditPart) {
+    return getComponentFigure().getConnectionAnchor(CompoundOutputFigure.OUTPUT_PORT_NAME);
+
+  }
 
 }

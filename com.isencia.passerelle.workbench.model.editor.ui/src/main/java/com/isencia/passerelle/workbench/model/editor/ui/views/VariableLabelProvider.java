@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import ptolemy.actor.gui.style.TextStyle;
 import ptolemy.data.BooleanToken;
 import ptolemy.data.expr.Variable;
 import ptolemy.kernel.util.Attribute;
@@ -90,11 +91,22 @@ public class VariableLabelProvider extends ColumnLabelProvider {
 					}
 					label = buf.toString();
 				}
+			} else {
+	      List txtStyleAttrs = attr.attributeList(TextStyle.class);
+	      if(txtStyleAttrs!=null && !txtStyleAttrs.isEmpty()) {
+	        label =  label.replace("\n", ", ");
+	      }
 			}
 			return label;
 		}
 		if (attr instanceof StringAttribute) {
-			return ((StringAttribute)attr).getExpression();
+		  String expr = ((StringAttribute)attr).getExpression();
+		  List txtStyleAttrs = attr.attributeList(TextStyle.class);
+		  if(txtStyleAttrs!=null && !txtStyleAttrs.isEmpty()) {
+		    return expr.replace("\n", ", ");
+		  } else {
+		    return expr;
+		  }
 		}
 		return "";
 

@@ -16,7 +16,7 @@ public class CommentFigure extends Label {
 		setForegroundColor(ColorConstants.black);
 		
 		setText(label);
-		//setIcon(image);
+		setIcon(image);
   	  	setOpaque(false);
   	  	
 	}

@@ -6,7 +6,7 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteItemFactory;
+import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 
 public class DropFavouriteListener extends DropTargetAdapter {
 	private PaletteViewer paletteViewer;
@@ -18,8 +18,8 @@ public class DropFavouriteListener extends DropTargetAdapter {
 
 	public void drop(DropTargetEvent event) {
 
-		PaletteItemFactory paletteItemFactory = PaletteItemFactory.getInstance();
-		paletteItemFactory.setSelectedItem(config);
+		PaletteBuilder builder = PaletteBuilder.getInstance();
+		builder.setSelectedItem(config);
 
 	}
 

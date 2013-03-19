@@ -27,7 +27,7 @@ class NamePage extends WizardPage {
 		setDescription("Name of composite");
 	}
 
-	@Override
+
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
@@ -37,7 +37,7 @@ class NamePage extends WizardPage {
 		nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		nameText.setText(oldName);
 		nameText.addModifyListener(new ModifyListener() {	
-			@Override
+
 			public void modifyText(ModifyEvent e) {
 				newName = nameText.getText();
 				getContainer().updateMessage();

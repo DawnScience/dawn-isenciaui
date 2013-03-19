@@ -8,153 +8,177 @@ import org.slf4j.LoggerFactory;
 import ptolemy.actor.TypedIOPort;
 import ptolemy.actor.TypedIORelation;
 import ptolemy.kernel.ComponentPort;
+import ptolemy.kernel.ComponentRelation;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.Relation;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.moml.Vertex;
 
+import com.isencia.passerelle.editor.common.business.ICommand;
+import com.isencia.passerelle.editor.common.model.Link;
 import com.isencia.passerelle.workbench.model.ui.IPasserelleMultiPageEditor;
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 import com.isencia.passerelle.workbench.model.utils.ModelChangeRequest;
+import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public class CreateConnectionCommand extends Command implements IRefreshConnections{
+public class CreateConnectionCommand extends Command implements IRefreshConnections, ICommand {
 
-	private IPasserelleMultiPageEditor editor;
+  private IPasserelleMultiPageEditor editor;
+  private Link link;
 
-	public CreateConnectionCommand(NamedObj source, NamedObj target,
-			IPasserelleMultiPageEditor editor) {
-		super();
-		this.source = source;
-		this.target = target;
-		this.editor = editor;
-	}
+  public Link getLink() {
+    return link;
+  }
 
-	public CreateConnectionCommand(IPasserelleMultiPageEditor editor) {
-		super();
-		this.editor = editor;
+  public CreateConnectionCommand(NamedObj source, NamedObj target, IPasserelleMultiPageEditor editor) {
+    super();
+    this.sourceNamedObj = source;
+    this.targetNamedObj = target;
+    this.editor = editor;
+    this.container = editor.getSelectedContainer();
+  }
 
-	}
+  public CreateConnectionCommand(IPasserelleMultiPageEditor editor) {
+    super();
+    this.editor = editor;
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(CreateConnectionCommand.class);
+  }
 
-	public Logger getLogger() {
-		return logger;
-	}
+  private final static Logger logger = LoggerFactory.getLogger(CreateConnectionCommand.class);
 
-	protected NamedObj container;
+  public Logger getLogger() {
+    return logger;
+  }
 
-	public void setContainer(CompositeEntity container) {
-		this.container = container;
-	}
+  protected CompositeEntity container;
 
-	protected TypedIORelation connection;
-	protected NamedObj source;
-	protected NamedObj target;
+  public void setContainer(CompositeEntity container) {
+    this.container = container;
+  }
 
-	public boolean canExecute() {
-		return (source != null && target != null);
-	}
+  protected TypedIORelation connection;
 
-	public void execute() {
-		doExecute();
-	}
+  protected NamedObj sourceNamedObj;
+  protected NamedObj targetNamedObj;
 
-	public void doExecute() {
-		if (source != null && target != null) {
-			NamedObj temp = getContainer(source, target);
-			if (temp != null) {
-				container = temp;
-			}
-			if (container == null) {
-				return;
-			}
-			// Perform Change in a ChangeRequest so that all Listeners are
-			// notified
-			container.requestChange(new ModelChangeRequest(this.getClass(),
-					container, "connection") {
-				@Override
-				protected void _execute() throws Exception {
-					try {
+  public boolean canExecute() {
+    return (sourceNamedObj != null && targetNamedObj != null);
+  }
 
-						if (source instanceof ComponentPort
-								&& target instanceof ComponentPort)
-							connection = (TypedIORelation) ((CompositeEntity)container).connect(
-									(ComponentPort) source,
-									(ComponentPort) target);
-						if (source instanceof Vertex
-								&& target instanceof ComponentPort) {
-							((ComponentPort) target)
-									.link((Relation) ((Vertex) source)
-											.getContainer());
-						}
-						if (target instanceof Vertex
-								&& source instanceof ComponentPort) {
-							((ComponentPort) source)
-									.link((Relation) ((Vertex) target)
-											.getContainer());
-						}
-						if (target instanceof Vertex
-								&& source instanceof Vertex) {
-							
-							((TypedIORelation)((Vertex) source).getContainer()).link((TypedIORelation)((Vertex) target).getContainer());
-						}
-					} catch (Exception e) {
-						logger.error("Unable to create connection",e);
+  public void execute() {
+    doExecute();
+  }
 
-						EclipseUtils.logError(e, "Unable to create connection", IStatus.ERROR);
-					}
-				}
-			});
-		}
-	}
+  public void doExecute() {
+    if (sourceNamedObj != null && targetNamedObj != null) {
+      CompositeEntity temp = getContainer(sourceNamedObj, targetNamedObj);
+      if (temp != null) {
+        container = temp;
+      }
+      if (container == null) {
+        return;
+      }
+      // Perform Change in a ChangeRequest so that all Listeners are
+      // notified
+      ModelChangeRequest modelChangeRequest = new ModelChangeRequest(this.getClass(), container, "connection") {
+        /**
+         * @return the link
+         */
 
-	private NamedObj getContainer(NamedObj source, NamedObj target) {
+        @Override
+        protected void _execute() throws Exception {
+          try {
+            if (sourceNamedObj == null || targetNamedObj == null) {
+              return;
+            }
+            ComponentRelation relation = null;
+            if ((targetNamedObj instanceof ComponentPort) && (sourceNamedObj instanceof ComponentPort)) {
+              relation = container.connect((ComponentPort) sourceNamedObj, (ComponentPort) targetNamedObj);
+            } else if (sourceNamedObj instanceof Vertex && targetNamedObj instanceof Vertex) {
+              relation = (TypedIORelation) ((Vertex) sourceNamedObj).getContainer();
+              relation.link((TypedIORelation) ((Vertex) targetNamedObj).getContainer());
 
-		if (editor != null
-				&& (source instanceof TypedIOPort || target instanceof TypedIOPort)) {
-			return editor.getSelectedPage().getContainer();
-		}
+              ((Relation) ((Vertex) targetNamedObj).getContainer()).link((Relation) ((Vertex) sourceNamedObj).getContainer());
+            } else {
+              if (targetNamedObj instanceof Vertex) {
+                relation = (ComponentRelation) ((Vertex) targetNamedObj).getContainer();
+                ((ComponentPort) sourceNamedObj).link(relation);
+              } else {
+                relation = (ComponentRelation) ((Vertex) sourceNamedObj).getContainer();
+                ((ComponentPort) targetNamedObj).link(relation);
+              }
+            }
+            Link generateLink = null;
+//            if (sourceNamedObj instanceof Vertex && targetNamedObj instanceof Vertex) {
+//              double[] otherVertexLocation = ModelUtils.getLocation(sourceNamedObj);
+//              double[] vertexLocation = ModelUtils.getLocation(targetNamedObj);
+//              if (vertexLocation[0] < otherVertexLocation[0]) {
+//                generateLink = editor.generateLink(relation, sourceNamedObj, targetNamedObj);
+//              } else {
+//                generateLink = editor.generateLink(relation, targetNamedObj, sourceNamedObj);
+//              }
+//
+//            } else {
+              generateLink = editor.generateLink(relation, sourceNamedObj, targetNamedObj);
+//            }
+            setLink(generateLink);
+          } catch (Exception e) {
+            if (link != null) {
+              editor.registerLink(link);
+            } else {
+              logger.error("Unable to create connection", e);
+              EclipseUtils.logError(e, "Unable to create connection", IStatus.ERROR);
+            }
+          }
 
-		return  source.getContainer();
-	}
+        }
+      };
+      container.requestChange(modelChangeRequest);
+      this.link = modelChangeRequest.getLink();
+    }
+  }
 
-	public String getLabel() {
-		return "";
-	}
+  private CompositeEntity getContainer(NamedObj source, NamedObj target) {
+    if (container != null)
+      return container;
+    // if (editor != null && (source instanceof TypedIOPort || target instanceof TypedIOPort)) {
+    // return editor.getSelectedPage().getContainer();
+    // }
 
-	public NamedObj getSource() {
-		return source;
-	}
+    return editor.getSelectedPage().getContainer();
+  }
 
-	public NamedObj getTarget() {
-		return target;
-	}
+  public String getLabel() {
+    return "";
+  }
 
-	public void redo() {
-		doExecute();
-	}
+  public NamedObj getSource() {
+    return sourceNamedObj;
+  }
 
-	public void setSource(NamedObj newSource) {
-		source = newSource;
-	}
+  public NamedObj getTarget() {
+    return targetNamedObj;
+  }
 
-	public void setTarget(NamedObj newTarget) {
-		target = newTarget;
-	}
+  public void redo() {
+    doExecute();
+  }
 
-	public void undo() {
-		if (connection != null) {
-			// Perform Change in a ChangeRequest so that all Listeners are
-			// notified
-			container.requestChange(new ModelChangeRequest(this.getClass(),
-					container, "connection") {
-				@Override
-				protected void _execute() throws Exception {
-					connection.setContainer(null);
-				}
-			});
-		}
-	}
+  public void setSource(NamedObj newSource) {
+    sourceNamedObj = newSource;
+  }
+
+  public void setTarget(NamedObj newTarget) {
+    targetNamedObj = newTarget;
+  }
+
+  public void undo() {
+    if (link != null) {
+      try {
+        new DeleteLinkCommand(container, link, editor).doExecute();
+      } catch (Exception e) {
+      }
+    }
+  }
 
 }

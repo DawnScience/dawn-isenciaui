@@ -129,12 +129,12 @@ public class StringChoicePropertyDescriptor extends PropertyDescriptor {
 			}
 			choiceTable.setContentProvider(new IStructuredContentProvider() {
 
-				@Override
+			
 				public void dispose() {}
-				@Override
+				
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
 
-				@Override
+				
 				public Object[] getElements(Object inputElement) {
 					return param.getChoices();
 				}
@@ -149,7 +149,7 @@ public class StringChoicePropertyDescriptor extends PropertyDescriptor {
 			choiceTable.addCheckStateListener(new ICheckStateListener() {
 				
 				boolean busy = false;
-				@Override
+			
 				public void checkStateChanged(CheckStateChangedEvent event) {
 					
 					if (busy) return;

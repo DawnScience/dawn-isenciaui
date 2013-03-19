@@ -18,13 +18,13 @@ public abstract class DoubleClickModifier implements ICellModifier {
 	
 	protected DoubleClickModifier(final ColumnViewer viewer) {
 		viewer.getControl().addListener(SWT.MouseDown, new Listener() {
-			@Override
+		
 			public void handleEvent(Event event) {
 				setEnabled(false);
 			}
 		});
 		viewer.getControl().addListener(SWT.MouseDoubleClick, new Listener() {
-			@Override
+			
 			public void handleEvent(Event event) {
 				IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
 				if (selection.toList().size() != 1) {
@@ -46,7 +46,7 @@ public abstract class DoubleClickModifier implements ICellModifier {
 		this.enabled = enabled;
 	}
 	
-	@Override
+
 	public boolean canModify(Object element, String property) {
 		return enabled;
 	}

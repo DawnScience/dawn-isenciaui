@@ -30,147 +30,136 @@ import org.eclipse.gef.tools.MarqueeDragTracker;
 import ptolemy.actor.CompositeActor;
 import ptolemy.kernel.util.ChangeRequest;
 
+import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.DiagramXYLayoutEditPolicy;
+import com.isencia.passerelle.workbench.model.ui.command.IRefreshConnections;
+import com.isencia.passerelle.workbench.model.utils.ModelChangeRequest;
 
 /**
- * Holds all other ModelEditParts under this. It is activated by ModelEditor, to
- * hold the entire model. It is sort of a blank board where all other EditParts
- * get added.
+ * Holds all other ModelEditParts under this. It is activated by ModelEditor, to hold the entire model. It is sort of a
+ * blank board where all other EditParts get added.
  */
-public class DiagramEditPart extends ContainerEditPart implements
-		LayerConstants {
+public class DiagramEditPart extends ContainerEditPart implements LayerConstants {
 
-	private PasserelleModelMultiPageEditor multiPageEditorPart;
+  private PasserelleModelMultiPageEditor multiPageEditorPart;
 
+  public DiagramEditPart(PasserelleModelMultiPageEditor parent, CompositeActor actor) {
+    super(parent,actor);
+    this.multiPageEditorPart = parent;
+  }
 
-	public DiagramEditPart(PasserelleModelMultiPageEditor parent,
-			CompositeActor actor) {
-		super(actor);
-		this.multiPageEditorPart = parent;
-	}
+  public PasserelleModelMultiPageEditor getMultiPageEditorPart() {
+    return multiPageEditorPart;
+  }
 
-	public PasserelleModelMultiPageEditor getMultiPageEditorPart() {
-		return multiPageEditorPart;
-	}
+  /**
+   * Installs EditPolicies specific to this.
+   */
+  protected void createEditPolicies() {
+    installEditPolicy(EditPolicy.NODE_ROLE, null);
+    installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, null);
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, null);
+    installEditPolicy(EditPolicy.COMPONENT_ROLE, new RootComponentEditPolicy());
+    installEditPolicy(EditPolicy.LAYOUT_ROLE, new DiagramXYLayoutEditPolicy((XYLayout) getContentPane().getLayoutManager(), multiPageEditorPart));
 
-	/**
-	 * Installs EditPolicies specific to this.
-	 */
-	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.NODE_ROLE, null);
-		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, null);
-		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, null);
-		installEditPolicy(EditPolicy.COMPONENT_ROLE,
-				new RootComponentEditPolicy());
-		installEditPolicy(EditPolicy.LAYOUT_ROLE,
-				new DiagramXYLayoutEditPolicy((XYLayout) getContentPane()
-						.getLayoutManager(), multiPageEditorPart));
+    installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
+  }
 
-		installEditPolicy("Snap Feedback", new SnapFeedbackPolicy()); //$NON-NLS-1$
-	}
+  /**
+   * Returns a Figure to represent this.
+   * 
+   * @return Figure.
+   */
+  protected IFigure createFigure() {
+    Figure f = new FreeformLayer();
+    f.setLayoutManager(new FreeformLayout());
+    f.setBorder(new MarginBorder(5));
+    return f;
+  }
 
-	/**
-	 * Returns a Figure to represent this.
-	 * 
-	 * @return Figure.
-	 */
-	protected IFigure createFigure() {
-		Figure f = new FreeformLayer();
-		f.setLayoutManager(new FreeformLayout());
-		f.setBorder(new MarginBorder(5));
-		return f;
-	}
+  public void repaint() {
+    getFigure().repaint();
+  }
 
-	public void repaint() {
-		getFigure().repaint();
-	}
+  @Override
+  public void changeExecuted(ChangeRequest changerequest) {
+    refreshChildren();
+  }
 
-	@Override
-	public void changeExecuted(ChangeRequest changerequest) {
-		refreshChildren();
-	}
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  public Object getAdapter(Class adapter) {
+    if (adapter == SnapToHelper.class) {
+      List snapStrategies = new ArrayList();
+      Boolean val = (Boolean) getViewer().getProperty(RulerProvider.PROPERTY_RULER_VISIBILITY);
+      if (val != null && val.booleanValue())
+        snapStrategies.add(new SnapToGuides(this));
+      val = (Boolean) getViewer().getProperty(SnapToGeometry.PROPERTY_SNAP_ENABLED);
+      if (val != null && val.booleanValue())
+        snapStrategies.add(new SnapToGeometry(this));
+      val = (Boolean) getViewer().getProperty(SnapToGrid.PROPERTY_GRID_ENABLED);
+      if (val != null && val.booleanValue())
+        snapStrategies.add(new SnapToGrid(this));
 
-	/**
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class adapter) {
-		if (adapter == SnapToHelper.class) {
-			List snapStrategies = new ArrayList();
-			Boolean val = (Boolean) getViewer().getProperty(
-					RulerProvider.PROPERTY_RULER_VISIBILITY);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGuides(this));
-			val = (Boolean) getViewer().getProperty(
-					SnapToGeometry.PROPERTY_SNAP_ENABLED);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGeometry(this));
-			val = (Boolean) getViewer().getProperty(
-					SnapToGrid.PROPERTY_GRID_ENABLED);
-			if (val != null && val.booleanValue())
-				snapStrategies.add(new SnapToGrid(this));
+      if (snapStrategies.size() == 0)
+        return null;
+      if (snapStrategies.size() == 1)
+        return snapStrategies.get(0);
 
-			if (snapStrategies.size() == 0)
-				return null;
-			if (snapStrategies.size() == 1)
-				return snapStrategies.get(0);
+      SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
+      for (int i = 0; i < snapStrategies.size(); i++)
+        ss[i] = (SnapToHelper) snapStrategies.get(i);
+      return new CompoundSnapToHelper(ss);
+    }
+    return super.getAdapter(adapter);
+  }
 
-			SnapToHelper ss[] = new SnapToHelper[snapStrategies.size()];
-			for (int i = 0; i < snapStrategies.size(); i++)
-				ss[i] = (SnapToHelper) snapStrategies.get(i);
-			return new CompoundSnapToHelper(ss);
-		}
-		return super.getAdapter(adapter);
-	}
+  public DragTracker getDragTracker(Request req) {
+    if (req instanceof SelectionRequest && ((SelectionRequest) req).getLastButtonPressed() == 3)
+      return new DeselectAllTracker(this);
+    return new MarqueeDragTracker();
+  }
 
-	public DragTracker getDragTracker(Request req) {
-		if (req instanceof SelectionRequest
-				&& ((SelectionRequest) req).getLastButtonPressed() == 3)
-			return new DeselectAllTracker(this);
-		return new MarqueeDragTracker();
-	}
+  /**
+   * Returns <code>NULL</code> as it does not hold any connections.
+   * 
+   * @return ConnectionAnchor
+   */
+  public ConnectionAnchor getSourceConnectionAnchor(ConnectionEditPart editPart) {
+    // Not source connection anchor for Diagram
+    return null;
+  }
 
-	/**
-	 * Returns <code>NULL</code> as it does not hold any connections.
-	 * 
-	 * @return ConnectionAnchor
-	 */
-	public ConnectionAnchor getSourceConnectionAnchor(
-			ConnectionEditPart editPart) {
-		// Not source connection anchor for Diagram
-		return null;
-	}
+  /**
+   * Returns <code>NULL</code> as it does not hold any connections.
+   * 
+   * @return ConnectionAnchor
+   */
+  public ConnectionAnchor getSourceConnectionAnchor(int x, int y) {
+    // Not source connection anchor for Diagram
+    return null;
+  }
 
-	/**
-	 * Returns <code>NULL</code> as it does not hold any connections.
-	 * 
-	 * @return ConnectionAnchor
-	 */
-	public ConnectionAnchor getSourceConnectionAnchor(int x, int y) {
-		// Not source connection anchor for Diagram
-		return null;
-	}
+  /**
+   * Returns <code>NULL</code> as it does not hold any connections.
+   * 
+   * @return ConnectionAnchor
+   */
+  public ConnectionAnchor getTargetConnectionAnchor(ConnectionEditPart editPart) {
+    // Not target connection anchor for Diagram
+    return null;
+  }
 
-	/**
-	 * Returns <code>NULL</code> as it does not hold any connections.
-	 * 
-	 * @return ConnectionAnchor
-	 */
-	public ConnectionAnchor getTargetConnectionAnchor(
-			ConnectionEditPart editPart) {
-		// Not target connection anchor for Diagram
-		return null;
-	}
-
-	/**
-	 * Returns <code>NULL</code> as it does not hold any connections.
-	 * 
-	 * @return ConnectionAnchor
-	 */
-	public ConnectionAnchor getTargetConnectionAnchor(int x, int y) {
-		// Not target connection anchor for Diagram
-		return null;
-	}
-
+  /**
+   * Returns <code>NULL</code> as it does not hold any connections.
+   * 
+   * @return ConnectionAnchor
+   */
+  public ConnectionAnchor getTargetConnectionAnchor(int x, int y) {
+    // Not target connection anchor for Diagram
+    return null;
+  }
 
 }

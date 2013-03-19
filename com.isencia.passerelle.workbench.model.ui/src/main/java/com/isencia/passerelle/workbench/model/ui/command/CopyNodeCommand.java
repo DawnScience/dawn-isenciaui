@@ -9,65 +9,55 @@ import org.eclipse.gef.ui.actions.Clipboard;
 
 import ptolemy.actor.Director;
 import ptolemy.actor.IOPort;
-import ptolemy.actor.IORelation;
-
-import com.isencia.passerelle.workbench.model.ui.Link;
-import com.isencia.passerelle.workbench.model.ui.VertexLink;
 
 public class CopyNodeCommand extends Command {
-	private ArrayList<Object> list = new ArrayList<Object>();
+  protected ArrayList<Object> list = new ArrayList<Object>();
 
-	public boolean addElement(Object NamedObj) {
-		if (!list.contains(NamedObj)) {
-			if (NamedObj instanceof IORelation) {
-				list.add(new Link(((IORelation)NamedObj)
-						.linkedSourcePorts(),((IORelation)NamedObj).linkedDestinationPorts()));
-				
-			} else {
-				return list.add(NamedObj);
-			}
+  public boolean addElement(Object NamedObj) {
+    if (!list.contains(NamedObj)) {
+      if (isCopyableNamedObj(NamedObj))
+        return list.add(NamedObj);
+    }
+    return false;
+  }
 
-		}
-		return false;
-	}
+  public void emptyElementList() {
+    list.clear();
+  }
 
-	public void emptyElementList() {
-		list.clear();
-	}
+  @Override
+  public boolean canExecute() {
+    if (list == null || list.isEmpty())
+      return false;
+    Iterator<Object> it = list.iterator();
+    while (it.hasNext()) {
+      if (!isCopyableNamedObj(it.next()))
+        return false;
+    }
+    return true;
+  }
 
-	@Override
-	public boolean canExecute() {
-		if (list == null || list.isEmpty())
-			return false;
-		Iterator<Object> it = list.iterator();
-		while (it.hasNext()) {
-			if (!isCopyableNamedObj(it.next()))
-				return false;
-		}
-		return true;
-	}
+  @Override
+  public void execute() {
+    if (canExecute())
+      Clipboard.getDefault().setContents(list);
+  }
 
-	@Override
-	public void execute() {
-		if (canExecute())
-			Clipboard.getDefault().setContents(list);
-	}
+  @Override
+  public boolean canUndo() {
+    return false;
+  }
 
-	@Override
-	public boolean canUndo() {
-		return false;
-	}
+  public boolean isCopyableNamedObj(Object NamedObj) {
+    if (NamedObj instanceof Director)
+      return false;
+    return true;
+  }
 
-	public boolean isCopyableNamedObj(Object NamedObj) {
-		if (NamedObj instanceof Director)
-			return false;
-		return true;
-	}
-
-	private IOPort searchPort(Enumeration enumeration) {
-		while (enumeration.hasMoreElements()) {
-			return (IOPort) enumeration.nextElement();
-		}
-		return null;
-	}
+  private IOPort searchPort(Enumeration enumeration) {
+    while (enumeration.hasMoreElements()) {
+      return (IOPort) enumeration.nextElement();
+    }
+    return null;
+  }
 }

@@ -7,19 +7,19 @@ import org.eclipse.jface.viewers.ICellEditorValidator;
 
 public class StringSelectionValidator implements ICellEditorValidator {
 
-	private List<String> choices;
+  private List<String> choices;
 
-	public StringSelectionValidator(String[] choices) {
-		this.choices = Arrays.asList(choices);
-	}
+  public StringSelectionValidator(String[] choices) {
+    this.choices = Arrays.asList(choices);
+  }
 
-	@Override
-	public String isValid(Object value) {
-		if (value==null) return null;
-		if (!choices.contains(value.toString())) {
-			return "Please select one from "+choices;
-		}
-		return null;
-	}
+  public String isValid(Object value) {
+    if (value == null)
+      return null;
+    if (!choices.contains(value.toString())) {
+      return "Please select one from " + choices;
+    }
+    return null;
+  }
 
 }

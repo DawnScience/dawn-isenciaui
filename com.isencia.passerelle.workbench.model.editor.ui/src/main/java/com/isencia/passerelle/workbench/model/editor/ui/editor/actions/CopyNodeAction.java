@@ -14,87 +14,82 @@ import org.eclipse.ui.actions.ActionFactory;
 
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.AbstractBaseEditPart;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.DiagramEditPart;
-import com.isencia.passerelle.workbench.model.editor.ui.editpart.RelationEditPart;
-import com.isencia.passerelle.workbench.model.editor.ui.editpart.VertexLinkEditPart;
+import com.isencia.passerelle.workbench.model.editor.ui.editpart.LinkEditPart;
 import com.isencia.passerelle.workbench.model.ui.command.CopyNodeCommand;
 
 public class CopyNodeAction extends SelectionAction {
-	public CopyNodeAction(IWorkbenchPart part) {
-		super(part);
-		setLazyEnablementCalculation(true);
-	}
-	private CopyNodeCommand CopyNodeCommand;
-	private CopyNodeCommand getCopyNodeCommand(){
-		if (CopyNodeCommand == null){
-			return CopyNodeCommand = new CopyNodeCommand();
-		}
-		return CopyNodeCommand;
-	}
+  public CopyNodeAction(IWorkbenchPart part) {
+    super(part);
+    setLazyEnablementCalculation(true);
+  }
 
-	@Override
-	protected void init() {
-		super.init();
-		ISharedImages sharedImages = PlatformUI.getWorkbench()
-				.getSharedImages();
-		setText("Copy");
-		setId(ActionFactory.COPY.getId());
-		setHoverImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		setImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		setDisabledImageDescriptor(sharedImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		setEnabled(false);
-	}
+  private CopyNodeCommand CopyNodeCommand;
 
-	private Command createCopyCommand(List<Object> selectedObjects) {
-		if (selectedObjects == null || selectedObjects.isEmpty()) {
-			return null;
-		}
-		CopyNodeCommand cmd = getCopyNodeCommand();
-		cmd.emptyElementList();
-		Iterator<Object> it = selectedObjects.iterator();
-		while (it.hasNext()) {
-			Object o = it.next();
-			if (!(o instanceof AbstractEditPart)) {
-				return null;
-			}
-			if (o instanceof AbstractBaseEditPart || o instanceof RelationEditPart || o  instanceof VertexLinkEditPart) {
-				AbstractEditPart ep = (AbstractEditPart) o;
+  private CopyNodeCommand getCopyNodeCommand() {
+    if (CopyNodeCommand == null) {
+      return CopyNodeCommand = new CopyNodeCommand();
+    }
+    return CopyNodeCommand;
+  }
 
-				Object NamedObj = ep.getModel();
+  @Override
+  protected void init() {
+    super.init();
+    ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+    setText("Copy");
+    setId(ActionFactory.COPY.getId());
+    setHoverImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+    setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+    setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
+    setEnabled(false);
+  }
 
-				if (!cmd.isCopyableNamedObj(NamedObj))
-					return null;
-				cmd.addElement(NamedObj);
-			}
-		}
-		return cmd;
-	}
+  private Command createCopyCommand(List<Object> selectedObjects) {
+    if (selectedObjects == null || selectedObjects.isEmpty()) {
+      return null;
+    }
+    CopyNodeCommand cmd = getCopyNodeCommand();
+    cmd.emptyElementList();
+    Iterator<Object> it = selectedObjects.iterator();
+    while (it.hasNext()) {
+      Object o = it.next();
+      if (!(o instanceof AbstractEditPart)) {
+        return null;
+      }
+      AbstractEditPart ep = (AbstractEditPart) o;
 
-	@Override
-	protected boolean calculateEnabled() {
-		boolean check = checkSelectedObjects();
-		return check;
-	}
+      Object NamedObj = ep.getModel();
 
-	private boolean checkSelectedObjects() {
-		if (getSelectedObjects()==null)
-			return false;
-		for (Object o:getSelectedObjects()){
-			if (o instanceof EditPart && !(o instanceof DiagramEditPart) ){
-				return true;
-			}
-		}
-		return false;
-	}
+      if (!cmd.isCopyableNamedObj(NamedObj))
+        return null;
+      cmd.addElement(NamedObj);
+    }
+    return cmd;
+  }
 
-	@Override
-	public void run() {
-		Command cmd = createCopyCommand(getSelectedObjects());
-		if (cmd != null && cmd.canExecute()) {
-			cmd.execute();
-		}
-	}
+  @Override
+  protected boolean calculateEnabled() {
+    boolean check = checkSelectedObjects();
+    return check;
+  }
+
+  private boolean checkSelectedObjects() {
+    if (getSelectedObjects() == null)
+      return false;
+    for (Object o : getSelectedObjects()) {
+      if (o instanceof AbstractEditPart && !(o instanceof DiagramEditPart)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void run() {
+    Command cmd = createCopyCommand(getSelectedObjects());
+    if (cmd != null && cmd.canExecute()) {
+      cmd.execute();
+    }
+  }
 
 }

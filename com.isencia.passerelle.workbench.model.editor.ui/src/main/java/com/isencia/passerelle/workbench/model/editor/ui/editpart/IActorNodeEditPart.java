@@ -6,6 +6,8 @@ import org.eclipse.gef.NodeEditPart;
 import ptolemy.kernel.Port;
 
 public interface IActorNodeEditPart extends NodeEditPart {
-	Port getSourcePort(ConnectionAnchor anchor);
-	Port getTargetPort(ConnectionAnchor anchor);
+  Port getSourcePort(ConnectionAnchor anchor);
+
+  Port getTargetPort(ConnectionAnchor anchor);
+
 }
