@@ -110,7 +110,9 @@ public class ActorTreeViewerPage extends ActorPalettePage implements IAdaptable 
     
     final List<PaletteGroup> grps = builder.getRootPaletteGroups();
     for (PaletteGroup grp : grps) {
-        getTreeViewer().expandToLevel(grp, 1);
+    	if (grp.isExpanded()) {
+    		getTreeViewer().expandToLevel(grp, 1);
+    	}
    
     }
 
