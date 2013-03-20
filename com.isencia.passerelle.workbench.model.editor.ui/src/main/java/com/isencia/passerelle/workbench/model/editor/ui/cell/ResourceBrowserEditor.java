@@ -86,7 +86,7 @@ public class ResourceBrowserEditor extends DialogBrowserEditor {
 
 		if (value==null) return textValue;
 		
-		final String fullPath = value.getRawLocation().toOSString();
+		final String fullPath = value.getLocation().toOSString();
 		if (value.isLinked(IResource.CHECK_ANCESTORS)) {
 			if (relative!=null) {
 				try {
