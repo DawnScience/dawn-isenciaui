@@ -11,7 +11,6 @@ import ptolemy.data.expr.Variable;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.StringAttribute;
-import ptolemy.vergil.kernel.attributes.TextAttribute;
 
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 import com.isencia.passerelle.workbench.model.utils.ModelChangeRequest;
@@ -122,7 +121,7 @@ public class AttributeCommand extends Command {
 			EclipseUtils.logError(ne, "Cannot set variable value " + value,
 					IStatus.ERROR);
 		} finally {
-			if (!viewer.getControl().isDisposed()) {
+			if (viewer!=null && !viewer.getControl().isDisposed()) {
 				viewer.cancelEditing();
 				viewer.refresh(attribute);
 			}

@@ -1,18 +1,19 @@
 package com.isencia.passerelle.workbench.model.editor.ui.editpart;
 
-import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.gef.AccessibleAnchorProvider;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CommandStack;
+import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.requests.DropRequest;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Color;
@@ -22,18 +23,25 @@ import org.slf4j.LoggerFactory;
 
 import ptolemy.actor.Actor;
 import ptolemy.actor.TypedIOPort;
+import ptolemy.data.BooleanToken;
+import ptolemy.data.Token;
+import ptolemy.data.expr.Parameter;
+import ptolemy.kernel.Entity;
 import ptolemy.kernel.Port;
+import ptolemy.kernel.util.Attribute;
+import ptolemy.kernel.util.ChangeListener;
+import ptolemy.kernel.util.ChangeRequest;
 
 import com.isencia.passerelle.core.ControlPort;
 import com.isencia.passerelle.core.ErrorPort;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.ActorEditPolicy;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.ComponentNodeDeletePolicy;
-import com.isencia.passerelle.workbench.model.editor.ui.figure.AbstractNodeFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.ActorFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.PortFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.figure.RectangularActorFigure;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
+import com.isencia.passerelle.workbench.model.ui.command.AttributeCommand;
 
 public class ActorEditPart extends AbstractNodeEditPart implements IActorNodeEditPart {
 
@@ -101,8 +109,81 @@ public class ActorEditPart extends AbstractNodeEditPart implements IActorNodeEdi
         }
       }
     }
+    
+	// Listen to break point status if there is a break point attribute.
+	if (actorModel instanceof Entity) {
+		
+		if (isDebuggable()) {
+			updateBreakPoint(actorFigure);
+
+			if (getParent() instanceof DiagramEditPart) {
+				final DiagramEditPart dep = (DiagramEditPart)getParent();
+				dep.getMultiPageEditorPart().getEditor().getEditDomain().getCommandStack().addCommandStackListener(new DebugStackNotifier(dep, actorFigure));
+			}
+		}
+	}
     return actorFigure;
   }
+  
+	
+	private final class DebugStackNotifier implements CommandStackListener {
+		
+		private DiagramEditPart dep;
+		private ActorFigure actorFigure;
+
+		public DebugStackNotifier(DiagramEditPart dep, ActorFigure actorFigure) {
+			this.dep         = dep;
+			this.actorFigure = actorFigure;
+		}
+
+		@Override
+		public void commandStackChanged(EventObject event) {
+			
+			CommandStack stack = (CommandStack)event.getSource();
+			Command last = stack.getUndoCommand();
+			if (!(last instanceof AttributeCommand)) return;
+			
+			if (dep.getMultiPageEditorPart().isDisposed()) {
+				stack.removeCommandStackListener(this);
+				return;
+			}
+			if (actorFigure.getParent()==null) {
+				stack.removeCommandStackListener(this);
+				return;
+			}
+			updateBreakPoint(actorFigure);
+		}
+	}
+
+	private void updateBreakPoint(ActorFigure figure) {
+		final Entity entity = (Entity)getActor();
+		final Attribute att = entity.getAttribute("_break_point");
+      final boolean isBreak = getBooleanValue(att, false);
+      figure.setBreakPoint(isBreak);		
+	}
+
+	public boolean isDebuggable() {
+		try {
+			final Entity entity = (Entity)getActor();
+			final Attribute att = entity.getAttribute("_break_point");
+          return att!=null;
+		} catch (Throwable ne) {
+			return false;
+		}
+	}
+	
+	private static boolean getBooleanValue(Attribute att, boolean defaultValue) {
+		try {
+			if (att==null) return defaultValue;
+			if (!(att instanceof Parameter)) return defaultValue;
+			Token tok = ((Parameter)att).getToken();
+			if (!(tok instanceof BooleanToken)) return defaultValue;
+			return ((BooleanToken)tok).booleanValue();
+		} catch (Throwable ne) {
+			return defaultValue;
+		}
+	}
+
 
   /**
    * Overide to return alternative actor figures
