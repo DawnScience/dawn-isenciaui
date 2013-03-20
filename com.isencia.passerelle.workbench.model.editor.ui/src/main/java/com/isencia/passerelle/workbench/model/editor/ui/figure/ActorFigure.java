@@ -16,8 +16,12 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+
+import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 
 public abstract class ActorFigure extends AbstractNodeFigure {
 
@@ -196,5 +200,28 @@ public abstract class ActorFigure extends AbstractNodeFigure {
   public PortFigure getOutputPort(String name) {
     return outputPortMap.get(name);
   }
+  public void setPortColor(String portName, boolean isSelected, int colorCode) {
+	  PortFigure port = inputPortMap.get(portName);
+	  if (port==null) port = outputPortMap.get(portName);
+	  if (port==null) return;
+
+	  port.setSelectedColor(isSelected, colorCode);
+	  repaint();
+  }
+  
+	private Image breakPointImage;
+	public void setBreakPoint(boolean isBreak) {
+		if (isBreak) {
+			if (breakPointImage==null) {
+				breakPointImage = Activator.getImageDescriptor("icons/break_point.png").createImage();
+			}
+			nameLabel.setIcon(breakPointImage);
+			nameLabel.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_DARK_MAGENTA));
+		} else {
+			nameLabel.setIcon(null);
+			nameLabel.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		}
+		repaint();
+	}
 
 }

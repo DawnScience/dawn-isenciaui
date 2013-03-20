@@ -961,6 +961,10 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
     editor.setActorSelected(actorName, isSelected, colorCode);
   }
 
+  public void setPortSelected(String actorName, String portName, boolean selected, int colorCode) {
+	  editor.setPortSelected(actorName, portName, selected, colorCode);
+  }
+
   public void clearActorSelections() {
     editor.clearActorSelections();
   }
