@@ -113,9 +113,12 @@ public class ActorTreeViewerPage extends ActorPalettePage implements IAdaptable 
     	if (grp.isExpanded()) {
     		getTreeViewer().expandToLevel(grp, 1);
     	}
-   
+    	for(PaletteGroup childGrp : grp.getChildren()) {
+            if (childGrp.isExpanded()) {
+              getTreeViewer().expandToLevel(childGrp, 1);
+            }
+        }
     }
-
   }
 
   private void createContextMenus() {
