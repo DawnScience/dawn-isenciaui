@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.gef.commands.CommandStackEvent;
 import org.eclipse.gef.commands.CommandStackEventListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -28,17 +30,17 @@ import org.eclipse.ui.internal.help.WorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ptolemy.actor.Director;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.kernel.util.StringAttribute;
 import ptolemy.vergil.kernel.attributes.TextAttribute;
-import com.isencia.passerelle.actor.Actor;
-import com.isencia.passerelle.actor.gui.PasserelleConfigurer;
-import com.isencia.passerelle.editor.common.utils.ParameterUtils;
 
-import ptolemy.actor.Director;
+import com.isencia.passerelle.actor.Actor;
+import com.isencia.passerelle.editor.common.utils.ParameterUtils;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.HelpUtils;
 import com.isencia.passerelle.workbench.model.editor.ui.PreferenceConstants;
@@ -390,4 +392,7 @@ public class ActorAttributesView extends ViewPart implements
     ed.getEditor().refresh();
 	}
 
+	public ColumnViewer getViewer() {
+		return this.viewer;
+	}
 }

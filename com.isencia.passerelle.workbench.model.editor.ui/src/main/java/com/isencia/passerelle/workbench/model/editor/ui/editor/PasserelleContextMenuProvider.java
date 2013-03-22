@@ -8,6 +8,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.BreakpointAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CommitFlowAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.OpenFileAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.ScreenshotAction;
@@ -55,6 +56,10 @@ public class PasserelleContextMenuProvider extends org.eclipse.gef.ContextMenuPr
 		
 		action = getActionRegistry().getAction(ActionFactory.RENAME.getId());
 		if (action != null ) manager.appendToGroup(GEFActionConstants.GROUP_VIEW,action);
+		
+		action = getActionRegistry().getAction(BreakpointAction.ID);
+		if (action != null && action.isEnabled()) manager.appendToGroup(GEFActionConstants.GROUP_VIEW,action);
+
 		action = getActionRegistry().getAction(ViewAttributesAction.ID);
 		if (action != null ) manager.appendToGroup(GEFActionConstants.GROUP_VIEW,action);
 

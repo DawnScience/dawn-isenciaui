@@ -94,6 +94,7 @@ import ptolemy.kernel.ComponentEntity;
 import com.isencia.passerelle.workbench.model.editor.ui.WorkbenchUtility;
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.FileTransferDropTargetListener;
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.PasserelleTemplateTransferDropTargetListener;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.BreakpointAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CloseEditorAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CopyNodeAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.CreateSubModelAction;
@@ -545,6 +546,9 @@ public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 		registry.registerAction(dynamicHelpAction);
 		getSelectionActions().add(dynamicHelpAction.getId());
 
+		BreakpointAction breakAction = new BreakpointAction(this, getParent());
+		registry.registerAction(breakAction);
+		getSelectionActions().add(breakAction.getId());
 		
 		ScreenshotAction screenshotAction = new ScreenshotAction(this);
 		screenshotAction.setText("Create screenshot from this workflow");

@@ -30,11 +30,8 @@ import org.eclipse.gef.tools.MarqueeDragTracker;
 import ptolemy.actor.CompositeActor;
 import ptolemy.kernel.util.ChangeRequest;
 
-import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.editpolicy.DiagramXYLayoutEditPolicy;
-import com.isencia.passerelle.workbench.model.ui.command.IRefreshConnections;
-import com.isencia.passerelle.workbench.model.utils.ModelChangeRequest;
 
 /**
  * Holds all other ModelEditParts under this. It is activated by ModelEditor, to hold the entire model. It is sort of a

@@ -676,19 +676,21 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
     getSite().getPage().closeEditor(PasserelleModelMultiPageEditor.this, save);
   }
 
+  private boolean isDisposed = false;
   public void dispose() {
 
-    MoMLParser.purgeAllModelRecords();
+	  MoMLParser.purgeAllModelRecords();
 
-    getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
-    partListener = null;
+	  getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
+	  partListener = null;
 
-    final IFile file = EclipseUtils.getIFile(getEditorInput());
-    if (file != null) {
-      file.getWorkspace().removeResourceChangeListener(resourceListener);
-    }
+	  final IFile file = EclipseUtils.getIFile(getEditorInput());
+	  if (file != null) {
+		  file.getWorkspace().removeResourceChangeListener(resourceListener);
+	  }
 
-    super.dispose();
+	  super.dispose();
+	  this.isDisposed = true;
   }
 
   private IPartListener partListener = new IPartListener() {
@@ -1124,6 +1126,10 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
     link.setTail(target);
     link.setRelation(relation);
     return link;
+  }
+
+  public boolean isDisposed() {
+	  return isDisposed;
   }
 
 }
