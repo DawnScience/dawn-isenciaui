@@ -48,7 +48,9 @@ public class Activator extends AbstractUIPlugin {
     IPreferenceStore store = Activator.getDefault().getPreferenceStore();
     String submodelPath = store.getString(RepositoryService.SUBMODEL_ROOT);
     if (submodelPath == null || submodelPath.trim().equals("")) {
-      submodelPath = System.getProperty(RepositoryService.SUBMODEL_ROOT, "C:/temp/submodel-repository");
+      File userHome = new File(System.getProperty("user.home"));
+      File defaultSubmodelPath = new File(userHome, ".passerelle/submodel-repository");
+      submodelPath = System.getProperty(RepositoryService.SUBMODEL_ROOT, defaultSubmodelPath.getAbsolutePath());
       store.setValue(RepositoryService.SUBMODEL_ROOT, submodelPath);
     } else {
       System.setProperty(RepositoryService.SUBMODEL_ROOT, submodelPath);
@@ -99,7 +101,9 @@ public class Activator extends AbstractUIPlugin {
       if (repositoryService == null){
         return null;
       }
-      File folder = new File(System.getProperty(RepositoryService.SUBMODEL_ROOT, "C:/temp/submodel-repository"));
+      File userHome = new File(System.getProperty("user.home"));
+      File defaultSubmodelPath = new File(userHome, ".passerelle/submodel-repository");
+      File folder = new File(System.getProperty(RepositoryService.SUBMODEL_ROOT, defaultSubmodelPath.getAbsolutePath()));
       if (!folder.exists()) {
         folder.mkdirs();
       }

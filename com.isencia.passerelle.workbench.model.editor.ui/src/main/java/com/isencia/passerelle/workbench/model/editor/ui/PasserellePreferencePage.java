@@ -1,5 +1,7 @@
 package com.isencia.passerelle.workbench.model.editor.ui;
 
+import java.io.File;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -36,7 +38,9 @@ public class PasserellePreferencePage extends FieldEditorPreferencePage implemen
     IPreferenceStore store = Activator.getDefault().getPreferenceStore();
     String submodelPath = store.getString(RepositoryService.SUBMODEL_ROOT);
     if (submodelPath == null || submodelPath.trim().equals("")) {
-      submodelPath = System.getProperty(RepositoryService.SUBMODEL_ROOT, "C:/temp/submodel-repository");
+      File userHome = new File(System.getProperty("user.home"));
+      File defaultSubmodelPath = new File(userHome, ".passerelle/submodel-repository");
+      submodelPath = System.getProperty(RepositoryService.SUBMODEL_ROOT, defaultSubmodelPath.getAbsolutePath());
       store.setValue(RepositoryService.SUBMODEL_ROOT, submodelPath);
 
     }
