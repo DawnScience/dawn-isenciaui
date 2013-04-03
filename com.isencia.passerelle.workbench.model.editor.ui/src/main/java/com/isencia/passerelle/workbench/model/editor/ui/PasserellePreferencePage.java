@@ -29,7 +29,7 @@ public class PasserellePreferencePage extends FieldEditorPreferencePage implemen
 
     final DirectoryFieldEditor subModelRoot = new DirectoryFieldEditor(RepositoryService.SUBMODEL_ROOT, "Submodel Root", getFieldEditorParent());
     addField(subModelRoot);
-    final BooleanFieldEditor submodelDrillDown = new BooleanFieldEditor(SUBMODEL_DRILLDOWN, "Open submodel in separate browser", getFieldEditorParent());
+    final BooleanFieldEditor submodelDrillDown = new BooleanFieldEditor(SUBMODEL_DRILLDOWN, "Open submodel in separate editor", getFieldEditorParent());
     addField(submodelDrillDown);
 
   }
