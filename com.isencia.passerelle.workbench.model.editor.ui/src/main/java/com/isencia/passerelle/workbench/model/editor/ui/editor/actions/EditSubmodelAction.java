@@ -6,6 +6,8 @@ import java.io.StringWriter;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PartInitException;
@@ -62,22 +64,38 @@ public class EditSubmodelAction extends Action {
     }
   }
 
-  public static void openFlowEditor(final String name) throws Exception, IOException, CoreException, PartInitException {
-    Flow flow = Activator.getDefault().getRepositoryService().getSubmodel(name);
-    final IProject pass = ModelUtils.getPasserelleProject();
+	public static void openFlowEditor(final String name) throws Exception,
+			IOException, CoreException, PartInitException {
+		// get object which represents the workspace
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
-    final IFile file = pass.getFile(name + ".moml");
-    StringWriter writer = new StringWriter();
-    flow.exportMoML(writer);
-
-    final ByteArrayInputStream contents = new ByteArrayInputStream(writer.toString().getBytes());
-    if (!file.exists()) {
-      file.create(contents, true, null);
-    } else {
-      file.setContents(contents, true, true, null);
-    }
-    final IPasserelleMultiPageEditor ed = (IPasserelleMultiPageEditor) EclipseUtils.openEditor(file, PasserelleModelMultiPageEditor.ID);
-    ed.setPasserelleEditorActive();
-  }
+		// get location of workspace sub model directory
+		String workspaceDirectoryPath = workspace.getRoot().getLocation().toFile().getAbsolutePath();
+		String subModelDirectoryPath  = Activator.getDefault().getRepositoryService().getSubmodelFolder().toString();
+		IFile file = null;
+		
+		// Check if the sub model directory is inside the workspace
+		if (subModelDirectoryPath.startsWith(workspaceDirectoryPath)) {
+			String[] subPaths = subModelDirectoryPath.split(workspaceDirectoryPath);
+			String subPath = subPaths[1]+"/"+name+".moml";
+			file = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(subPath);
+		} else {
+			Flow flow = Activator.getDefault().getRepositoryService().getSubmodel(name);
+			final IProject pass = ModelUtils.getPasserelleProject();
+	
+			file = pass.getFile(name + ".moml");
+			StringWriter writer = new StringWriter();
+			flow.exportMoML(writer);
+	
+			final ByteArrayInputStream contents = new ByteArrayInputStream(writer.toString().getBytes());
+			if (!file.exists()) {
+				file.create(contents, true, null);
+			} else {
+				file.setContents(contents, true, true, null);
+			}
+		}
+		final IPasserelleMultiPageEditor ed = (IPasserelleMultiPageEditor) EclipseUtils.openEditor(file, PasserelleModelMultiPageEditor.ID);
+		ed.setPasserelleEditorActive();
+	}
 
 }
