@@ -174,7 +174,7 @@ public class CompositeActorEditPart extends ContainerEditPart implements IActorN
         TypedCompositeActor model = (TypedCompositeActor) getModel();
         if (model instanceof Flow && Activator.getDefault().getPreferenceStore().getBoolean(PasserellePreferencePage.SUBMODEL_DRILLDOWN)) {
           try {
-            EditSubmodelAction.openFlowEditor(model.getName());
+            EditSubmodelAction.openFlowEditor(model.getClassName());
           } catch (Exception e1) {
             EclipseUtils.logError(e1, "Open submodel failed", Status.ERROR);
           }
