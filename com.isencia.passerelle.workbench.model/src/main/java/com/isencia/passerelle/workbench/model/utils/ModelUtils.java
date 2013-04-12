@@ -387,10 +387,9 @@ public class ModelUtils {
       logger.debug("Running project file {}", projFile);
       return new Workspace(projFile.getProject().getName());
     }
-
-    if (relPath.startsWith("/"))
-      relPath = relPath.substring(1);
-    final String projectName = relPath.substring(0, relPath.indexOf("/"));
+    String fileSep = System.getProperty("file.separator");
+    if (relPath.startsWith(fileSep)) relPath = relPath.substring(1);
+    final String projectName = relPath.substring(0, relPath.indexOf(fileSep));
 
     logger.debug("Using project {}", projectName);
     return new Workspace(projectName);
