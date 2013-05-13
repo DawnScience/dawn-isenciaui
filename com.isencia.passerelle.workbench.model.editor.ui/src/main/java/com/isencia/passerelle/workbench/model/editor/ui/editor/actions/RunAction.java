@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.action.IAction;
@@ -66,56 +65,61 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
   public void run(IAction action) {
     try {
       final IFile config = getModelRunner();
-      run(config);
+      run(config, true);
     } catch (Exception e) {
       logger.error("Cannot read configuration", e);
     }
   }
 
-  public void run(IFile config) {
+  public void run(IFile config, boolean fromEditor) {
 
+    IResource selection = config;
     try {
 
-      // We will ensure console view is selected
-      final IWorkbenchPage page = EclipseUtils.getPage();
-      page.showView("org.eclipse.ui.console.ConsoleView");
-
-      final boolean didSave = EclipseUtils.getPage().saveAllEditors(true);
-      if (!didSave)
-        return;
-
-      final IEditorPart editor = EclipseUtils.getPage().getActiveEditor();
-      if (editor != null)
-        EclipseUtils.getPage().activate(editor);
-
-      // Make sure that the current editor is the selected resource.
-      final IResource sel = getSelectedResource();
-      if (sel instanceof IFile)
-        EclipseUtils.openEditor((IFile) sel);
-
-      // Select any editor which is PasserelleModelMultiPageEditor.ID
-      if (sel == null && editor == null) {
-        final IEditorReference[] refs = EclipseUtils.getPage().getEditorReferences();
-        for (int i = 0; i < refs.length; i++) {
-          if (refs[i].getId().equals(PasserelleModelMultiPageEditor.ID)) {
-            EclipseUtils.getPage().activate(refs[i].getEditor(true));
-            break;
-          }
-        }
+      if (fromEditor) {
+	      // We will ensure console view is selected
+	      final IWorkbenchPage page = EclipseUtils.getPage();
+	      page.showView("org.eclipse.ui.console.ConsoleView");
+	
+	      final boolean didSave = EclipseUtils.getPage().saveAllEditors(true);
+	      if (!didSave)
+	        return;
+	
+	      final IEditorPart editor = EclipseUtils.getPage().getActiveEditor();
+	      if (editor != null)
+	        EclipseUtils.getPage().activate(editor);
+	
+	      // Make sure that the current editor is the selected resource.
+	      selection = getSelectedResource();
+	      if (selection instanceof IFile)
+	        EclipseUtils.openEditor((IFile) selection);
+	
+	      // Select any editor which is PasserelleModelMultiPageEditor.ID
+	      if (selection == null && editor == null) {
+	        final IEditorReference[] refs = EclipseUtils.getPage().getEditorReferences();
+	        for (int i = 0; i < refs.length; i++) {
+	          if (refs[i].getId().equals(PasserelleModelMultiPageEditor.ID)) {
+	            EclipseUtils.getPage().activate(refs[i].getEditor(true));
+	            break;
+	          }
+	        }
+	      }
+	
+	      // Clear selection.
+	      if (editor != null && editor instanceof PasserelleModelMultiPageEditor) {
+	        ((PasserelleModelMultiPageEditor) editor).setActorSelected(null, false, -1);
+	      }
+	      
+	      // Save the current workspace.
+	      saveWorkSpace();
       }
 
-      // Clear selection.
-      if (editor != null && editor instanceof PasserelleModelMultiPageEditor) {
-        ((PasserelleModelMultiPageEditor) editor).setActorSelected(null, false, -1);
-      }
-
-      // Save the current workspace.
-      saveWorkSpace();
 
       fireRunListeners();
 
       if (System.getProperty("eclipse.debug.session") != null) {
 
+    	final IResource sel = selection;
         final Job job = new Job("Run workflow debug mode") {
           @Override
           protected IStatus run(IProgressMonitor monitor) {
