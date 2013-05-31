@@ -114,27 +114,29 @@
    <extension
          point="org.eclipse.ui.views">
      <view
-            class="com.isencia.passerelle.workbench.model.editor.ui.views.execTrace.ExecutionTracesView"
-            icon="icons/attributes.gif"
-            id="com.isencia.passerelle.workbench.model.editor.ui.views.execTrace.ExecutionTracesView"
-            name="Execution traces">
+           category="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"
+           class="com.isencia.passerelle.workbench.model.editor.ui.views.execTrace.ExecutionTracesView"
+           icon="icons/attributes.gif"
+           id="com.isencia.passerelle.workbench.model.editor.ui.views.execTrace.ExecutionTracesView"
+           name="Execution traces">
       </view>
       
          <view
             icon="icons/tree.gif"
             class="com.isencia.passerelle.workbench.model.editor.ui.views.ActorTreeView"
-            category="org.eclipse.birt.report.designer.ui.views.category"
+            category="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"
             name="Palette"
             id="com.isencia.passerelle.workbench.model.editor.ui.views.ActorTreeView"/>  
       <view
+            category="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"
             class="com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView"
             icon="icons/attributes.gif"
             id="com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView"
             name="Actor Attributes">
       </view>
        <category
-            name="Palette View"
-            id="org.eclipse.birt.report.designer.ui.views.category"/>      
+            name="Data Analysis - Workflows"
+            id="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"/>      
    </extension>
    <extension
          point="org.eclipse.ui.viewActions">
