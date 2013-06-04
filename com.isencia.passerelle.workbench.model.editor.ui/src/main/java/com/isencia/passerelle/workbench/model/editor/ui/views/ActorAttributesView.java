@@ -339,9 +339,14 @@ public class ActorAttributesView extends ViewPart implements
 		if (ModelUtils.isNameLegal(name)) {
 			element.setValue(name);
 			final PasserelleModelMultiPageEditor ed = (PasserelleModelMultiPageEditor) this.part;
-			final RenameCommand cmd = new RenameCommand(viewer,actor,element);
-			ed.getEditor().getEditDomain().getCommandStack().execute(cmd);
-			ed.refreshActions();
+			try {
+				final RenameCommand cmd = new RenameCommand(viewer,actor,element);
+				ed.getEditor().getEditDomain().getCommandStack().execute(cmd);
+				ed.refreshActions();
+			} catch (Exception ne) {
+				MessageDialog.openError(Display.getCurrent().getActiveShell(),
+						"Invalid Name", ne.getMessage());
+			}
 		} else {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),
 					"Invalid Name", "The name '" + name

@@ -18,23 +18,32 @@ public class RenameCommand extends Command {
 	private String newName;
 
 	public RenameCommand(final ColumnViewer viewer, NamedObj model,
-			GeneralAttribute attribute) {
+			GeneralAttribute attribute)throws Exception {
 		this(model, attribute.getValue());
 		this.viewer = viewer;
 		this.attribute = attribute;
 	}
 
 	public RenameCommand(final ColumnViewer viewer, NamedObj model,
-			String newName) {
+			String newName)throws Exception {
 		this(model, newName);
 		this.viewer = viewer;
 	}
 
-	public RenameCommand(NamedObj model, String newName) {
+	/**
+	 * 
+	 * @param model
+	 * @param newName
+	 * @throws Exception if newName is not a valid name
+	 */
+	public RenameCommand(NamedObj model, String newName) throws Exception {
 		super();
 		this.model = model;
 		this.newName = newName;
 
+		if (!newName.matches("[a-zA-Z0-9_ ]+")) {
+			throw new Exception("The new name contains non-alphanumeric characters.");
+		}
 	}
 
 	public void execute() {

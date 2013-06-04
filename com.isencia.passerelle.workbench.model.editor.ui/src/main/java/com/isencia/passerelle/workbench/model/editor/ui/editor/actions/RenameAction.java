@@ -8,8 +8,10 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.ui.actions.SelectionAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -51,8 +53,14 @@ public class RenameAction extends SelectionAction {
 		reqData.put("newName", name);
 		renameReq.setExtendedData(reqData);
 
-		RenameCommand renameCommand = new RenameCommand(model,name);
-		return renameCommand;
+		try {
+			RenameCommand renameCommand = new RenameCommand(model,name);
+			return renameCommand;
+		} catch (Exception ne) {
+			MessageDialog.openError(Display.getCurrent().getActiveShell(),
+					"Invalid Name", ne.getMessage());
+			return null;
+		}
 	}
 
 	public void run() {
