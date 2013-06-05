@@ -1,6 +1,9 @@
 package com.isencia.passerelle.workbench.model.editor.ui.views;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 import com.isencia.passerelle.workbench.model.ui.GeneralAttribute;
 
@@ -29,4 +32,15 @@ public class PropertyLabelProvider extends ColumnLabelProvider {
 		return att.getDisplayName();
 	}
 
+	private final Color lightGrey = new Color(null, 240,240,240);
+
+	public Color getBackground(Object element) {
+		if (element instanceof GeneralAttribute) return lightGrey;
+		return null;
+	}
+	
+	public void dispose() {
+		super.dispose();
+		lightGrey.dispose();
+	}
 }
