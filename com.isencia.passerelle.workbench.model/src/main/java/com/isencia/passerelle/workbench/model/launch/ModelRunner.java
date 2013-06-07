@@ -17,6 +17,7 @@ import ptolemy.kernel.util.Workspace;
 import ptolemy.moml.MoMLParser;
 import com.isencia.constants.IPropertyNames;
 import com.isencia.passerelle.core.PasserelleException;
+import com.isencia.passerelle.director.PasserelleDirector;
 import com.isencia.passerelle.domain.cap.Director;
 import com.isencia.passerelle.ext.ErrorCollector;
 import com.isencia.passerelle.model.FlowManager;
@@ -122,7 +123,7 @@ public class ModelRunner implements IApplication {
           compositeActor.setManager(manager);
 
           // Errors
-          final Director director = (Director) compositeActor.getDirector();
+          final PasserelleDirector director = (PasserelleDirector) compositeActor.getDirector();
           director.getAdapter(null).addErrorCollector(new ErrorCollector() {
             public void acceptError(PasserelleException e) {
               exceptions.add(e);
