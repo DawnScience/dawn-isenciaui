@@ -67,6 +67,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -364,7 +365,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
         }
       });
 
-      getEditor(0).doSave(monitor);
+//      getEditor(0).doSave(monitor);
       for (Object page : pages) {
         if (page instanceof PasserelleModelEditor) {
           CompositeActor actor = ((PasserelleModelEditor) page).getContainer();
@@ -386,19 +387,6 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
    */
   public void doSaveAs() {
     performSaveAs();
-    for (Object page : pages) {
-      if (page instanceof PasserelleModelEditor) {
-        CompositeActor actor = ((PasserelleModelEditor) page).getContainer();
-        int index = getPageIndex(actor);
-        if (index != -1 && index != 0) {
-          IEditorPart editor = getEditor(index);
-          editor.doSaveAs();
-          setPageText(0, editor.getTitle());
-          setInput(editor.getEditorInput());
-        }
-      }
-    }
-
   }
 
   /*
@@ -463,9 +451,14 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
       getLogger().error("Error showing progress monitor during saving of model file : " + file.getName(), e);
     }
 
-    try {
-      superSetInput(new FileEditorInput(file));
-
+	try {
+		setInput(new FileEditorInput(file));
+		
+		for (Object page : pages) {
+			if (page instanceof IReusableEditor) {
+				((IReusableEditor)page).setInput(getEditorInput());
+		}
+	}
     } catch (Exception e) {
       getLogger().error("Error during re-read of saved model file : " + file.getName(), e);
     }
@@ -525,6 +518,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
 
   private void setDiagram(CompositeActor diagram) {
     model = diagram;
+    if (editor!=null) this.editor.setDiagram(diagram);
   }
 
   // public void createPartControl(Composite parent) {

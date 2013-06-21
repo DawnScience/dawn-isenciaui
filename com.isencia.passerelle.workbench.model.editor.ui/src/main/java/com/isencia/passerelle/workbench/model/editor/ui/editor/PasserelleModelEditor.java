@@ -76,6 +76,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
@@ -118,7 +119,8 @@ import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 		                           implements IPasserelleEditor, 
-		                                      ITabbedPropertySheetPageContributor {
+		                                      ITabbedPropertySheetPageContributor,
+		                                      IReusableEditor {
 
 	// Static things
 	private static Logger logger = LoggerFactory.getLogger(PasserelleModelEditor.class);
@@ -667,9 +669,8 @@ public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 		return true;
 	}
 
-	protected void setInput(IEditorInput input) {
+	public void setInput(IEditorInput input) {
 		superSetInput(input);
-		setDiagram(model);
 	}
 
 	public void setDiagram(CompositeActor diagram) {
