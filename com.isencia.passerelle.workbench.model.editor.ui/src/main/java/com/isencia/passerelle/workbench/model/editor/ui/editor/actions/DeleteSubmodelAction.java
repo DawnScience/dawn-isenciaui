@@ -20,7 +20,7 @@ public class DeleteSubmodelAction extends Action {
 
     super();
     setId(getClass().getName());
-    setText("Delete Composite");
+    setText("Delete submodel");
     this.definition = actionOrGroup;
     Activator.getImageDescriptor(icon);
     setHoverImageDescriptor(Activator.getImageDescriptor(icon));
