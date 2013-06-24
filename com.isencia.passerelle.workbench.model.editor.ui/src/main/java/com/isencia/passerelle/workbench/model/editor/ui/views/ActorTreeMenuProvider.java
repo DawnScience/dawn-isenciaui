@@ -64,7 +64,7 @@ public class ActorTreeMenuProvider extends ContextMenuProvider {
     if (element instanceof SubModelPaletteItemDefinition) {
       createCompositeMenu(menu, element);
     } else if (element instanceof PaletteGroup) {
-      if (((PaletteGroup) element).getName().equals("Composites")) {
+      if (((PaletteGroup) element).getName().equals("Submodels")) {
         createCompositeMenu(menu, element);
       }
     }
@@ -74,7 +74,7 @@ public class ActorTreeMenuProvider extends ContextMenuProvider {
   private void createCompositeMenu(IMenuManager menu, Object actionOrGroup) {
 
     CreateSubModelAction emptySubModelAction = new CreateSubModelAction();
-    emptySubModelAction.setText("Create new empty composite");
+    emptySubModelAction.setText("Create new empty submodel");
     menu.appendToGroup(GEFActionConstants.GROUP_EDIT, emptySubModelAction);
 
     menu.appendToGroup(GEFActionConstants.GROUP_EDIT, new EditSubmodelAction(actionOrGroup));

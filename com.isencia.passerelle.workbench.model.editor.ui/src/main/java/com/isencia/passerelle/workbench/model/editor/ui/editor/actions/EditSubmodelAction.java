@@ -33,7 +33,7 @@ public class EditSubmodelAction extends Action {
 
     super();
     setId("EditSubModel");
-    setText("Edit Composite");
+    setText("Edit submodel");
     this.definition = actionOrGroup;
     Activator.getImageDescriptor(icon);
     setHoverImageDescriptor(Activator.getImageDescriptor(icon));

@@ -504,12 +504,12 @@ public class PasserelleModelEditor extends    GraphicalEditorWithFlyoutPalette
 		getSelectionActions().add(closeEditorAction.getId());
 		
 		CreateSubModelAction emptySubModelAction = new CreateSubModelAction(this);
-		emptySubModelAction.setText("Create new empty composite");
+		emptySubModelAction.setText("Create new empty submodel");
 		registry.registerAction(emptySubModelAction);
 		getSelectionActions().add(emptySubModelAction.getId());
 		
 		CreateSubModelAction subModelAction = new CreateSubModelAction(this,getParent());
-		subModelAction.setText("Create composite from this workflow");
+		subModelAction.setText("Create submodel from this workflow");
 		registry.registerAction(subModelAction);
 		getSelectionActions().add(subModelAction.getId());
 		

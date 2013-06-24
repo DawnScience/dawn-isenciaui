@@ -79,10 +79,10 @@ public class PasserelleActionBarContributor extends MultiPageEditorActionBarCont
 				GEFMessages.ToggleGrid_Label, IAction.AS_CHECK_BOX));
 		IWorkbenchWindow iww = getPage().getWorkbenchWindow();
 		addRetargetAction(new RetargetAction(ActionFactory.CLOSE.getId(), "Close editor"));
-		addRetargetAction(new RetargetAction(ActionFactory.NEW.getId(),    "Create empty composite"));
+		addRetargetAction(new RetargetAction(ActionFactory.NEW.getId(),    "Create empty submodel"));
 //		addRetargetAction(new RetargetAction(CommitFlowAction.ID,    "Commit flow"));
 //		addRetargetAction(new RetargetAction(UpdateFlowAction.ID,    "Update flow"));
-		addRetargetAction(new RetargetAction(ActionFactory.EXPORT.getId(), "Create composite from workflow"));
+		addRetargetAction(new RetargetAction(ActionFactory.EXPORT.getId(), "Create submodel from workflow"));
 		
 		addRetargetAction((RetargetAction) ActionFactory.COPY.create(iww));
 		addRetargetAction((RetargetAction) ActionFactory.CUT.create(iww));
