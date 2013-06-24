@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchManager;
@@ -190,10 +191,10 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
   public IFile getModelRunner() throws Exception {
 
     // if the bundle is not ready then there is no image
-    Bundle bundle = Activator.getDefault().getBundle();
+    Bundle bundle = Platform.getBundle("com.isencia.passerelle.workbench.model");
 
     // look for the image (this will check both the plugin and fragment folders
-    URL fullPathString = BundleUtility.find(bundle, "ModelRunner.txt");
+    URL fullPathString = BundleUtility.find(bundle, "ModelRunner.launch");
     final IResource sel = getSelectedResource();
     final IFile file = sel.getProject().getFile("WorkflowConfiguration.launch");
     if (file.exists())
