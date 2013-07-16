@@ -357,7 +357,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
           if (ModelUtils.getPasserelleProject().equals(file.getProject())) {
             if (diagram.isClassDefinition()) {
               Flow flow = (Flow) diagram;
-              PaletteBuilder.getInstance().addSubModel(flow.getName());
+              PaletteBuilder.getInstance().addSubModel(null,null,flow.getName());
               Activator.getDefault().getRepositoryService().createSubmodel(flow);
 
             }

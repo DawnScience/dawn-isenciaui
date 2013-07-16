@@ -5,10 +5,27 @@
   <parent>
     <groupId>com.isencia.passerelle</groupId>
     <artifactId>passerelle-eclipse-workbench</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>8.4.0-SNAPSHOT</version>
   </parent>
   <groupId>com.isencia.passerelle</groupId>
   <artifactId>com.isencia.passerelle.workbench.model.editor.ui.win32.x86_64</artifactId>
-  <version>8.3.0-SNAPSHOT</version>
+  <version>8.4.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <environments>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

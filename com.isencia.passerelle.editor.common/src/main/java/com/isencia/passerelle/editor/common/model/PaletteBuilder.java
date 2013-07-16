@@ -19,8 +19,11 @@ import ptolemy.kernel.util.Location;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
 
+import com.isencia.passerelle.editor.common.activator.Activator;
 import com.isencia.passerelle.editor.common.utils.EditorUtils;
 import com.isencia.passerelle.model.Flow;
+import com.isencia.passerelle.project.repository.api.MetaData;
+import com.isencia.passerelle.project.repository.api.RepositoryService;
 
 public class PaletteBuilder implements Serializable {
   public static final String UTILITIES = "com.isencia.passerelle.actor.actorgroup.utilities";
@@ -250,17 +253,41 @@ public class PaletteBuilder implements Serializable {
     }
 
     try {
-      for (String actorClass : MomlClassRegistry.getAllActorClasses()) {
+      RepositoryService repositoryService = Activator.getDefault().getRepositoryService();
+      for (String actorClass : repositoryService.getAllSubmodels()) {
+        MetaData metaData = repositoryService.getSubmodelMetaData(actorClass);
+        String path = metaData != null ? metaData.getPath() : null;
 
-        SubModelPaletteItemDefinition item = addSubModel(actorClass);
-        if (submodels != null) {
-          submodels.addPaletteItem(item);
+        PaletteGroup group = getPaletteGroup(actorGroups, groups, path, submodels);
+        SubModelPaletteItemDefinition item = addSubModel(submodelDefinition, group, actorClass);
+        if (group != null) {
+          group.addPaletteItem(item);
         }
       }
     } catch (Exception e) {
+
       // logError(e);
     }
     return actorGroups;
+  }
+
+  public PaletteGroup getPaletteGroup(List<PaletteGroup> groups, Map<String, PaletteGroup> groupMap, String path, PaletteGroup parent) {
+    if (path == null) {
+      return parent;
+    }
+
+    String id = parent.getId() + "/" + path;
+    if (groupMap.containsKey(id)) {
+      return groupMap.get(id);
+    }
+
+    PaletteGroup paletteGroup = new PaletteGroup(id, path, parent.getId());
+    paletteGroup.setParent(parent);
+    groupMap.put(id, paletteGroup);
+    groups.add(paletteGroup);
+    parent.addChild(paletteGroup);
+    return paletteGroup;
+
   }
 
   public PaletteGroup getSubModelGroup() {
@@ -275,9 +302,17 @@ public class PaletteBuilder implements Serializable {
     return true;
   }
 
-  public SubModelPaletteItemDefinition addSubModel(String name) {
-    SubModelPaletteItemDefinition item = new SubModelPaletteItemDefinition(submodelDefinition != null ? submodelDefinition.getIcon() : null, submodels, name, name,
-        submodelDefinition != null ? submodelDefinition.getColor() : null);
+  public SubModelPaletteItemDefinition addSubModel(PaletteItemDefinition sd, PaletteGroup gr, String name) {
+    PaletteGroup group = gr;
+    PaletteItemDefinition submodelDef = sd;
+    if (submodelDef == null) {
+      submodelDef = submodelDefinition;
+    }
+    if (group == null) {
+      group = submodels;
+    }
+    SubModelPaletteItemDefinition item = new SubModelPaletteItemDefinition(submodelDef != null ? submodelDef.getIcon() : null, group, name, name,
+        submodelDef != null ? submodelDef.getColor() : null);
 
     return item;
   }

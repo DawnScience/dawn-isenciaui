@@ -4,9 +4,9 @@ import org.eclipse.jface.action.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.isencia.passerelle.editor.common.model.PaletteItemDefinition;
 import com.isencia.passerelle.editor.common.model.SubModelPaletteItemDefinition;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 
 public class DeleteSubmodelAction extends Action {
@@ -44,7 +44,8 @@ public class DeleteSubmodelAction extends Action {
         final SubModelPaletteItemDefinition item = (SubModelPaletteItemDefinition) definition;
         final String name = item.getName();
         PaletteBuilder instance = PaletteBuilder.getInstance();
-        instance.getSubModelGroup().removePaletteItem( instance.getPaletteItem(name));
+        PaletteItemDefinition paletteItem = instance.getSubModelGroup().getPaletteItem(name);
+        instance.getSubModelGroup().removePaletteItem(paletteItem );
         Activator.getDefault().getRepositoryService().deleteSubmodel(name);
 
         SubModelViewUtils.refreshPallette();

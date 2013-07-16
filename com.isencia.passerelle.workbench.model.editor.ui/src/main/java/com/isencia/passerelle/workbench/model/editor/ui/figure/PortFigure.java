@@ -52,7 +52,7 @@ public class PortFigure extends RectangleFigure {
 	public void setFillColor(Color fillColor) {
 		this.fillColor = fillColor;
 	}
-	
+
 	/**
 	 * 
 	 * @param isSelected
@@ -68,8 +68,8 @@ public class PortFigure extends RectangleFigure {
 				ne.printStackTrace();
 				selectedColor = null;
 			}
-		}
-		
+}
+
 	}
 
 }

@@ -1,9 +1,7 @@
 package com.isencia.passerelle.workbench.model.editor.ui.editor.actions;
 
 import java.net.URL;
-
 import javax.management.MBeanServerConnection;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -14,6 +12,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.action.IAction;
@@ -25,9 +25,10 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.isencia.passerelle.ext.ModelElementClassProvider;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.jmx.RemoteManagerAgent;
@@ -35,14 +36,10 @@ import com.isencia.passerelle.workbench.model.launch.ModelRunner;
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 
 /**
- * This action is run on the workbench and starts the workflow.
- * 
- * The workflow notifies with a jmx service whose port is defined by the system property "com.isencia.jmx.service.port"
- * before the action is run. It is variable as the workbench will attempt to find a free port for it to connect to the
- * worklow.
+ * This action is run on the workbench and starts the workflow. The workflow notifies with a jmx service whose port is defined by the system property
+ * "com.isencia.jmx.service.port" before the action is run. It is variable as the workbench will attempt to find a free port for it to connect to the worklow.
  * 
  * @author gerring
- * 
  */
 @SuppressWarnings("restriction")
 public class RunAction extends ExecutionAction implements IEditorActionDelegate, ModelChangeListener {
@@ -145,8 +142,28 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
         configuration.addSystemProperty("workflow.logback.configurationFile");
         // DO NOT CHANGE THIS. IF THESE PROPERTIES ARE NOT PASSED TO THE WORKFLOW,
         // IT DOES NOT WORK, THE JMX SERVICE WILL BE BROKEN
-        DebugUITools.launch(configuration, ILaunchManager.RUN_MODE);
-
+        
+        // add actor bundles to launch configuration through discovery
+        // of the registered actor class providers
+        boolean addedActorBundles = false;
+        String configuredBundles = configuration.getAttribute("selected_target_plugins", "");
+        StringBuilder pluginsToLaunch = new StringBuilder(configuredBundles);
+        ServiceReference<?>[] serviceReferences = Activator.getDefault().getBundleContext().getServiceReferences(ModelElementClassProvider.class.getName(), null);
+        for (ServiceReference<?> serviceReference : serviceReferences) {
+          Bundle bundle = serviceReference.getBundle();
+          String bundleName = bundle.getSymbolicName();
+          if (configuredBundles.indexOf(bundleName) < 0) {
+            pluginsToLaunch.append("," + bundleName + "@default:default");
+            addedActorBundles = true;
+          }
+        }
+        ILaunchConfiguration theOne = configuration;
+        if(addedActorBundles) {
+          ILaunchConfigurationWorkingCopy cfgWorkingCopy = configuration.getWorkingCopy();
+          cfgWorkingCopy.setAttribute("selected_target_plugins", pluginsToLaunch.toString());
+          theOne = cfgWorkingCopy.doSave();
+        }
+        DebugUITools.launch(theOne, ILaunchManager.RUN_MODE);
       }
 
     } catch (Exception e) {

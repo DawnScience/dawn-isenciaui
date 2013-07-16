@@ -18,7 +18,6 @@ import ptolemy.moml.MoMLParser;
 import com.isencia.constants.IPropertyNames;
 import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.director.PasserelleDirector;
-import com.isencia.passerelle.domain.cap.Director;
 import com.isencia.passerelle.ext.ErrorCollector;
 import com.isencia.passerelle.model.FlowManager;
 import com.isencia.passerelle.workbench.model.jmx.RemoteManagerAgent;

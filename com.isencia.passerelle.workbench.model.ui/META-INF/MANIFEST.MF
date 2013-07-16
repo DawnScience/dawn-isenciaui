@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui Plug-in
+Bundle-Name: Passerelle workbench model ui Plug-in
 Bundle-SymbolicName: com.isencia.passerelle.workbench.model.ui;singleton:=true
-Bundle-Version: 8.3.0
+Bundle-Version: 8.4.0.qualifier
 Bundle-Activator: com.isencia.passerelle.workbench.model.ui.activator.Activator
 Bundle-Vendor: ISENCIA
 Require-Bundle: org.eclipse.ui,

@@ -23,6 +23,7 @@ public class Activator extends AbstractUIPlugin {
 
   // The shared instance
   private static Activator plugin;
+  private BundleContext bundleContext;
   private ServiceTracker repoSvcTracker;
   private ServiceRegistration submodelSvcReg;
 
@@ -39,6 +40,7 @@ public class Activator extends AbstractUIPlugin {
    */
   public void start(BundleContext context) throws Exception {
     super.start(context);
+    this.bundleContext = context;
     plugin = this;
     repoSvcTracker = new ServiceTracker(context, RepositoryService.class.getName(), null);
     repoSvcTracker.open();
@@ -67,6 +69,7 @@ public class Activator extends AbstractUIPlugin {
    */
   public void stop(BundleContext context) throws Exception {
     plugin = null;
+    this.bundleContext = null;
     super.stop(context);
     repoSvcTracker.close();
   }
@@ -112,5 +115,9 @@ public class Activator extends AbstractUIPlugin {
     } catch (InterruptedException e) {
       return null;
     }
+  }
+
+  public BundleContext getBundleContext() {
+    return this.bundleContext;
   }
 }

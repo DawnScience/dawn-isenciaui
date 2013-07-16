@@ -10,13 +10,15 @@ import ptolemy.kernel.util.NamedObj;
 
 import com.isencia.passerelle.ext.ActorOrientedClassProvider;
 import com.isencia.passerelle.ext.ModelElementClassProvider;
+import com.isencia.passerelle.project.repository.api.RepositoryService;
 import com.isencia.passerelle.validation.version.VersionSpecification;
 
 public class Activator implements BundleActivator {
-  private ActorOrientedClassProviderTracker repoSvcTracker;
+  private ActorOrientedClassProviderTracker actorClassProviderTracker;
+  private ServiceTracker repoSvcTracker;
+
   private static Activator plugin;
 
-  private ServiceRegistration apSvcReg;
   public static Activator getDefault() {
     return plugin;
   }
@@ -27,30 +29,25 @@ public class Activator implements BundleActivator {
   public void start(BundleContext context) throws Exception {
 
     plugin = this;
-    repoSvcTracker = new ActorOrientedClassProviderTracker(context);
+    actorClassProviderTracker = new ActorOrientedClassProviderTracker(context);
+    actorClassProviderTracker.open();
+
+    repoSvcTracker = new ServiceTracker(context, RepositoryService.class.getName(), null);
     repoSvcTracker.open();
-    
-    apSvcReg = context.registerService(ModelElementClassProvider.class.getName(), new ModelElementClassProvider() {
-      public Class<? extends NamedObj> getClass(String className, VersionSpecification versionSpec) throws ClassNotFoundException {
-        return (Class<? extends NamedObj>) this.getClass().getClassLoader().loadClass(className);
-      }
-    }, null);
 
   }
 
   public void stop(BundleContext context) throws Exception {
-    apSvcReg.unregister();
-    repoSvcTracker.close();
+    actorClassProviderTracker.close();
   }
 
   public ActorOrientedClassProvider getActorOrientedClassProvider() {
-    // TODO use waitforservice
-    return repoSvcTracker != null ? repoSvcTracker.repoService : null;
+    return actorClassProviderTracker != null ? actorClassProviderTracker.actorOrientedClassProvider : null;
   }
 
   private static class ActorOrientedClassProviderTracker extends ServiceTracker {
 
-    private ActorOrientedClassProvider repoService;
+    private ActorOrientedClassProvider actorOrientedClassProvider;
 
     public ActorOrientedClassProviderTracker(BundleContext context) {
       super(context, ActorOrientedClassProvider.class.getName(), null);
@@ -58,14 +55,22 @@ public class Activator implements BundleActivator {
 
     @Override
     public Object addingService(ServiceReference reference) {
-      repoService = (ActorOrientedClassProvider) super.addingService(reference);
-      return repoService;
+      actorOrientedClassProvider = (ActorOrientedClassProvider) super.addingService(reference);
+      return actorOrientedClassProvider;
     }
 
     @Override
     public void removedService(ServiceReference reference, Object service) {
       super.removedService(reference, service);
-      repoService = null;
+      actorOrientedClassProvider = null;
+    }
+  }
+
+  public RepositoryService getRepositoryService() {
+    try {
+      return (RepositoryService) (repoSvcTracker != null ? repoSvcTracker.waitForService(3000) : null);
+    } catch (InterruptedException e) {
+      return null;
     }
   }
 }

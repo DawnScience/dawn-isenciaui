@@ -4,7 +4,8 @@ import java.lang.reflect.Field;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -20,6 +21,7 @@ import org.osgi.framework.BundleListener;
  */
 public class Activator implements BundleActivator, BundleListener {
   private Stack<Bundle> bundles = new Stack<Bundle>();
+  private static final Logger LOGGER = LoggerFactory.getLogger(Activator.class);
 
   public void start(BundleContext context) throws Exception {
     context.addBundleListener(this);
@@ -70,7 +72,7 @@ public class Activator implements BundleActivator, BundleListener {
 
     // try to start the bundle
     bundle.start();
-    Logger.getLogger(getClass()).debug(bundle.getSymbolicName() + " started.");
+    LOGGER.debug(bundle.getSymbolicName() + " started.");
   }
 
   public void stop(BundleContext context) throws Exception {
@@ -82,7 +84,7 @@ public class Activator implements BundleActivator, BundleListener {
       try {
         start(event.getBundle());
       } catch (BundleException e) {
-        Logger.getLogger(getClass()).error(event.getBundle().getSymbolicName() + " start failed.", e);
+    	  LOGGER.error(event.getBundle().getSymbolicName() + " start failed.", e);
       }
   }
 }

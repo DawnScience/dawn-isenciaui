@@ -126,7 +126,7 @@ public class CreateSubModelAction extends SelectionAction implements NameChecker
             PaletteBuilder factory = PaletteBuilder.getInstance();
 
             Activator.getDefault().getRepositoryService().createSubmodel(flow);
-            factory.addSubModel(flow.getName());
+            factory.addSubModel(null,null,flow.getName());
           } catch (Exception e) {
 
           }
@@ -183,7 +183,7 @@ public class CreateSubModelAction extends SelectionAction implements NameChecker
 
     Activator.getDefault().getRepositoryService().createSubmodel(entityAsClass);
     Flow flow = Activator.getDefault().getRepositoryService().getSubmodel(entityAsClass.getName());
-    factory.addSubModel(flow.getName());
+    factory.addSubModel(null, null,flow.getName());
     return entityAsClass;
   }
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
@@ -19,17 +18,13 @@ import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.tools.MarqueeSelectionTool;
 import org.eclipse.gef.ui.palette.PaletteViewer;
-import org.eclipse.help.ui.internal.util.ErrorUtil;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.part.EditorPart;
-
 import ptolemy.actor.Director;
-
 import com.isencia.passerelle.editor.common.model.PaletteGroup;
 import com.isencia.passerelle.editor.common.model.PaletteItemDefinition;
 import com.isencia.passerelle.editor.common.model.SubModelPaletteItemDefinition;
-import com.isencia.passerelle.editor.common.utils.EditorUtils;
 import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.ColorRegistry;
@@ -41,7 +36,7 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
   @Override
   public void logError(Exception e) {
     EclipseUtils.logError(e, e.getMessage(), IStatus.ERROR);
-//    EclipseUtils.displayErrorDialog("Error during open palette", e.getMessage());
+    // EclipseUtils.displayErrorDialog("Error during open palette", e.getMessage());
   }
 
   private static PaletteBuilder builder;
@@ -76,7 +71,6 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
 
   /*
    * (non-Javadoc)
-   * 
    * @see com.isencia.passerelle.editor.common.model.PaletteBuilder#newDefaultIdeIcon()
    */
   @Override
@@ -125,24 +119,21 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
       if (e instanceof PaletteDrawer) {
         PaletteContainer favoritesContainer = (PaletteDrawer) e;
 
-        PaletteGroup group = PaletteBuilder.getInstance().getPaletteGroup(UTILITIES);
-        if (group != null && !favoritesContainer.getLabel().equals(group.getName())) {
-          containers.append(favoritesContainer.getLabel());
-          containers.append(",");
-          StringBuffer entries = new StringBuffer();
-          for (Object o : favoritesContainer.getChildren()) {
-            if (o instanceof CombinedTemplateCreationEntry) {
-              CombinedTemplateCreationEntry entry = (CombinedTemplateCreationEntry) o;
-              ClassTypeFactory entryType = (ClassTypeFactory) entry.getTemplate();
-              Object objectType = entryType.getObjectType();
-              if (entryType.getNewObject() instanceof SubModelPaletteItemDefinition) {
-                entries.append(((SubModelPaletteItemDefinition) entryType.getNewObject()).getName());
-                entries.append(",");
-              } else {
-                entries.append(((Class) objectType).getName());
-                entries.append(",");
+        containers.append(favoritesContainer.getLabel());
+        containers.append(",");
+        StringBuffer entries = new StringBuffer();
+        for (Object o : favoritesContainer.getChildren()) {
+          if (o instanceof CombinedTemplateCreationEntry) {
+            CombinedTemplateCreationEntry entry = (CombinedTemplateCreationEntry) o;
+            ClassTypeFactory entryType = (ClassTypeFactory) entry.getTemplate();
+            Object objectType = entryType.getObjectType();
+            if (entryType.getNewObject() instanceof SubModelPaletteItemDefinition) {
+              entries.append(((SubModelPaletteItemDefinition) entryType.getNewObject()).getName());
+              entries.append(",");
+            } else {
+              entries.append(((Class) objectType).getName());
+              entries.append(",");
 
-              }
             }
           }
           addFavoriteGroup(favoritesContainer.getLabel(), favoritesContainer);
@@ -202,8 +193,8 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
     marqueeStack.setUserModificationPermission(PaletteEntry.PERMISSION_NO_MODIFICATION);
     entries.add(marqueeStack);
 
-    final ConnectionCreationToolEntry ctool = new ConnectionCreationToolEntry("Connection", "Connection", null, Activator.getImageDescriptor("icons/connection16.gif"),
-        Activator.getImageDescriptor("icons/connection24.gif"));
+    final ConnectionCreationToolEntry ctool = new ConnectionCreationToolEntry("Connection", "Connection", null,
+        Activator.getImageDescriptor("icons/connection16.gif"), Activator.getImageDescriptor("icons/connection24.gif"));
     entries.add(ctool);
     controlGroup.addAll(entries);
     return controlGroup;
@@ -234,7 +225,7 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
     this.parent = parent;
     if (paletteRoot == null) {
       paletteRoot = new PaletteRoot();
-      paletteRoot.addAll(createCategories(paletteRoot, parent, PaletteBuilder.getInstance().getPaletteGroup(PaletteBuilder.UTILITIES)));
+      paletteRoot.addAll(createCategories(paletteRoot, parent, null));
 
     }
 
@@ -279,7 +270,8 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
         CombinedTemplateCreationEntry entry = (CombinedTemplateCreationEntry) child;
         ClassTypeFactory entryType = (ClassTypeFactory) entry.getTemplate();
         if ((((Class) entryType.getObjectType()).getName().equals(type) && entryType.getNewObject().equals(name))
-            || (entryType.getNewObject() instanceof SubModelPaletteItemDefinition && ((SubModelPaletteItemDefinition) entryType.getNewObject()).getName().equals(name))) {
+            || (entryType.getNewObject() instanceof SubModelPaletteItemDefinition && ((SubModelPaletteItemDefinition) entryType.getNewObject()).getName()
+                .equals(name))) {
           return true;
         }
       }
@@ -292,18 +284,17 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
   }
 
   public boolean addFavorite(String className, PaletteContainer container) {
-
     PaletteItemDefinition paletteItem = getPaletteItem(className);
+    if (paletteItem == null) {
+      // not in default actors palette, maybe it's a submodel?
+      paletteItem = getSubModelGroup().getPaletteItem(className);
+    }
     if (paletteItem != null && !containsFavorite(container, className, paletteItem.getName())) {
-
       CombinedTemplateCreationEntry createPaletteEntryFromPaletteDefinition = createPaletteEntryFromPaletteDefinition(paletteItem);
       container.add(createPaletteEntryFromPaletteDefinition);
-
       return true;
     }
-
     return false;
-
   }
 
   public Color getColor(Class clazz) {
@@ -350,7 +341,8 @@ public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.P
           (ImageDescriptor) def.getIcon()//$NON-NLS-1$
       );
     } else {
-      return new CombinedTemplateCreationEntry(def.getName(), def.getName(), new ClassTypeFactory(def.getClazz(), def.getName()), (ImageDescriptor) def.getIcon(), //$NON-NLS-1$
+      return new CombinedTemplateCreationEntry(def.getName(), def.getName(), new ClassTypeFactory(def.getClazz(), def.getName()),
+          (ImageDescriptor) def.getIcon(), //$NON-NLS-1$
           (ImageDescriptor) def.getIcon()//$NON-NLS-1$
       );
     }
