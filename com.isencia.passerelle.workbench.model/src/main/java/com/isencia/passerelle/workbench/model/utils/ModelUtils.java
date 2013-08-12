@@ -295,9 +295,11 @@ public class ModelUtils {
     if (!name.equals("")) {
       project = (IProject) ResourcesPlugin.getWorkspace().getRoot().findMember(name);
     }
+    // A project must be set on the actor by the editor.
+    // Now that the sub-models are not being provided by a project, we know that this is
+    // an error at this point.
     if (project == null) {
-      // If this .moml is in .passerelle we return that project
-      project = ModelUtils.getPasserelleProject();
+      throw new Exception("The workspace must be defined as the same name as the project which the moml file is contained in!");
     }
 
     return project;
