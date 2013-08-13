@@ -1,7 +1,9 @@
 package com.isencia.passerelle.workbench.model.editor.ui.editor.actions;
 
 import java.net.URL;
+
 import javax.management.MBeanServerConnection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -10,6 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -28,6 +31,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.isencia.passerelle.ext.ModelElementClassProvider;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
@@ -207,14 +211,13 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
   public IFile getModelRunner() throws Exception {
 
     // if the bundle is not ready then there is no image
-    Bundle bundle = Activator.getDefault().getBundle();
+    Bundle bundle = Platform.getBundle("com.isencia.passerelle.workbench.model");
 
     // look for the image (this will check both the plugin and fragment folders
-    URL fullPathString = BundleUtility.find(bundle, "ModelRunner.txt");
+    URL fullPathString = BundleUtility.find(bundle, "ModelRunner.launch");
     final IResource sel = getSelectedResource();
     final IFile file = sel.getProject().getFile("WorkflowConfiguration.launch");
-    if (file.exists())
-      return file;
+    if (file.exists()) return file;
     file.create(fullPathString.openStream(), true, null);
     file.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
     return file;
