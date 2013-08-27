@@ -92,7 +92,7 @@
          name="Workflow Preferences"
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.edna.workbench.preferences.root"
+            category="org.dawnsci.preferences.root"
             class="com.isencia.passerelle.workbench.model.editor.ui.PasserellePreferencePage"
             id="com.isencia.passerelle.workbench.model.editor.ui.PasserellePreferences"
             name="Workflow Preferences">
