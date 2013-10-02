@@ -101,7 +101,6 @@ public class ModelRunner implements IApplication {
             modelAgent.start();
           }
 
-          notifyModelChangeStart();
 
           reader = new FileReader(modelPath);
 
@@ -120,6 +119,8 @@ public class ModelRunner implements IApplication {
           manager.setPersistent(false); // Important for test decks to pass.
 
           compositeActor.setManager(manager);
+
+          notifyModelChangeStart(true); // TODO Hard coded! Should parse moml to find out if debug set.
 
           // Errors
           final PasserelleDirector director = (PasserelleDirector) compositeActor.getDirector();
@@ -194,13 +195,13 @@ public class ModelRunner implements IApplication {
     return "Model_" + System.currentTimeMillis();
   }
 
-  private void notifyModelChangeStart() {
+  private void notifyModelChangeStart(boolean requireDebug) {
 
     try {
       final IConfigurationElement[] ele = Platform.getExtensionRegistry().getConfigurationElementsFor("com.isencia.passerelle.engine.model.listener");
       for (IConfigurationElement i : ele) {
         final IModelListener l = (IModelListener) i.createExecutableExtension("modelListener");
-        l.executionStarted();
+        l.executionStarted(requireDebug);
       }
 
     } catch (Exception ne) {
