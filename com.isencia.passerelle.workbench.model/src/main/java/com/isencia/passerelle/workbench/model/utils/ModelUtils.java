@@ -338,7 +338,7 @@ public class ModelUtils {
     String contents = "<?xml version=\"1.0\" standalone=\"no\"?> \r\n"
         + "<!DOCTYPE entity PUBLIC \"-//UC Berkeley//DTD MoML 1//EN\" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd\"> \r\n" + "<entity name=\""
         + fileName.substring(0, fileName.length() - 5) + "\" class=\"ptolemy.actor.TypedCompositeActor\"> \r\n"
-        + "   <property name=\"_createdBy\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"7.0.1\" /> \r\n"
+        + "   <property name=\"_createdBy\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"7.0.1.4\" /> \r\n"
         + "   <property name=\"_workbenchVersion\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"" + System.getProperty("passerelle.workbench.version")
         + "\" /> \r\n" + "   <property name=\"Director\" class=\"com.isencia.passerelle.domain.cap.Director\" > \r\n"
         + "      <property name=\"_location\" class=\"ptolemy.kernel.util.Location\" value=\"{20, 20}\" /> \r\n" + "   </property> \r\n" + "</entity>";
