@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.launching,
- org.junit4;bundle-version="4.5.0"
+ org.junit;bundle-version="[4.10.0,5.0.0)"
 Eclipse-LazyStart: false
 Bundle-Vendor: Channing Walton
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
