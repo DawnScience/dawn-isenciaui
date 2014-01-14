@@ -237,6 +237,9 @@ public class ActorAttributesView extends ViewPart implements
 				}
 			}
 		});
+		
+		// Required for documentation to work
+		getSite().setSelectionProvider(viewer);
 
 		try {
 			this.part = EclipseUtils.getActivePage().getActiveEditor();
