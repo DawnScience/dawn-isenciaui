@@ -109,6 +109,11 @@ public class PaletteBuilder implements Serializable {
     return group.getPaletteItem(id);
   }
 
+  /**
+   * An ImageDescriptor is often returned.
+   * @param clazzName
+   * @return
+   */
   public Object getIcon(String clazzName) {
     if (Flow.class.getName().equals(clazzName)) {
       if (submodelDefinition != null) {
