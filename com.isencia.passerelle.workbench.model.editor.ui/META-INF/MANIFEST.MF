@@ -38,6 +38,7 @@ Export-Package: com.isencia.passerelle.workbench.model.editor.ui,
  com.isencia.passerelle.workbench.model.editor.ui.editor.actions,
  com.isencia.passerelle.workbench.model.editor.ui.editpart,
  com.isencia.passerelle.workbench.model.editor.ui.figure,
+ com.isencia.passerelle.workbench.model.editor.ui.palette,
  com.isencia.passerelle.workbench.model.editor.ui.properties
 DynamicImport-Package: *
 Import-Package: com.teaminabox.eclipse.wiki.editors,
