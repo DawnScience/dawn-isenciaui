@@ -1,1 +1,0 @@
-Embedded content with a link to WardsBrowserContentRendererTest

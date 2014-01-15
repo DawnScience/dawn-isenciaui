@@ -1,5 +1,0 @@
-Back to GeneralOverview, HomePage
-
-A WikiName is two or more captilised words without space between them.
-
-See Wiki:OneMinuteWiki (or http://c2.com/cgi/wiki?OneMinuteWiki if you have redefined your interwiki link)

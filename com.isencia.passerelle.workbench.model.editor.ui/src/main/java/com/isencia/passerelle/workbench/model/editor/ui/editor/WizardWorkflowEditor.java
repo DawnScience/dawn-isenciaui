@@ -14,28 +14,17 @@
  */
 package com.isencia.passerelle.workbench.model.editor.ui.editor;
 
-import java.lang.reflect.Field;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IReusableEditor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.part.MultiPageEditorPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView;
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
-import com.teaminabox.eclipse.wiki.editors.WikiBrowser;
-import com.teaminabox.eclipse.wiki.editors.WikiEditor;
 
 public class WizardWorkflowEditor extends PasserelleModelMultiPageEditor implements IReusableEditor {
 
@@ -47,11 +36,6 @@ public class WizardWorkflowEditor extends PasserelleModelMultiPageEditor impleme
 
   private boolean subPagesActive = false;
 
-  /**
-   * May be null
-   */
-  private WikiEditor wikiEditor;
-  private WikiBrowser wikiBrowser;
 
   protected void createPages() {
 
@@ -108,48 +92,7 @@ public class WizardWorkflowEditor extends PasserelleModelMultiPageEditor impleme
   }
 
   protected void createDocPage(int pageIndex) throws Exception {
-    // If we find the wiki page on this file, then show the wiki tab
-    final String name = getEditorInput().getName();
-    final int index = name.toLowerCase().lastIndexOf(".moml");
-    final String root = name.substring(0, index);
-
-    final IFile file = EclipseUtils.getIFile(getEditorInput());
-
-    final String path = root + ".wiki";
-    final IResource wiki = file.getParent().findMember(path);
-    if (wiki != null && wiki.exists() && wiki instanceof IFile) {
-      // Add a wiki browser editor
-      this.wikiEditor = new WikiEditor();
-      wikiEditor.setReusableEditor(this);
-      addPage(pageIndex, wikiEditor, createWikiInput((IFile) wiki));
-      setPageText(pageIndex, "Edit Documentation");
-
-      this.wikiBrowser = new WikiBrowser(wikiEditor);
-      Composite composite = new Composite(getContainer(), SWT.NULL);
-      composite.setLayout(new FillLayout());
-      wikiBrowser.createPartControl(composite);
-      addPage(pageIndex, composite);
-      setPageText(pageIndex, "Documentation");
-
-      wikiBrowser.redrawWebView();
-
-      pages.add(composite);
-      pages.add(wikiEditor);
-
-      // Horrible hack to give access to tabbed folder
-      // to make the editor invisible.
-      final Field field = MultiPageEditorPart.class.getDeclaredField("container");
-      try {
-        field.setAccessible(true);
-        final CTabFolder folder = (CTabFolder) field.get(this);
-        final CTabItem item = folder.getItem(pageIndex + 1);
-        item.dispose();
-
-      } finally {
-        field.setAccessible(false);
-      }
-    }
-
+    // Does not work anymore
   }
 
   private IEditorInput createWikiInput(IFile wiki) {
@@ -190,13 +133,6 @@ public class WizardWorkflowEditor extends PasserelleModelMultiPageEditor impleme
   }
 
   public void setInput(IEditorInput input) {
-    if (input.getName().toLowerCase().endsWith(".moml")) {
       super.setInput(input);
-    } else if (input.getName().toLowerCase().endsWith(".wiki")) {
-      if (wikiEditor != null) {
-        wikiEditor.setInput(input);
-        wikiBrowser.redrawWebView();
-      }
-    }
   }
 }

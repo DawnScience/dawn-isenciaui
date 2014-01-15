@@ -1,5 +1,0 @@
-Back to GeneralOverview, HomePage
-
-com.teaminabox.eclipse.wiki.editors.WikiEditor
-
-The editor!
