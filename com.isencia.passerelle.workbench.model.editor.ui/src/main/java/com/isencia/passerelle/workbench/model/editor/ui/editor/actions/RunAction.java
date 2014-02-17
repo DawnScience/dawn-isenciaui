@@ -114,7 +114,7 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
 
       fireRunListeners();
 
-      if (System.getProperty("eclipse.debug.session") != null) {
+      if (Boolean.getBoolean("eclipse.debug.session")) {
 
     	final IResource sel = selection;
         final Job job = new Job("Run workflow debug mode") {
