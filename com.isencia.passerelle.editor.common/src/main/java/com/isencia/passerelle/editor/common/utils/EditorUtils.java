@@ -48,6 +48,7 @@ public class EditorUtils {
   public static final String DEFAULT_OUTPUT_PORT = "OutputPort";
   public static final String DEFAULT_INPUT_PORT = "InputPort";
   public static final String CLIP_BOARD = "clipBoard";
+  public static final String CHARSET = "UTF-8";
   public static Logger logger = LoggerFactory.getLogger(EditorUtils.class);;
 
   public static Class<?> loadClass(String className) {
@@ -122,7 +123,7 @@ public class EditorUtils {
     MoMLParser moMLParser = new MoMLParser();
     if (errorHandler != null)
       MoMLParser.setErrorHandler(errorHandler);
-    return moMLParser.parse(new String(bytes));
+    return moMLParser.parse(new String(bytes,CHARSET));
 
   }
 
