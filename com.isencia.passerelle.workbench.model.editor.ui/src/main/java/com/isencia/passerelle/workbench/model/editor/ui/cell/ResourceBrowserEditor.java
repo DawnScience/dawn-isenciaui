@@ -86,8 +86,10 @@ public class ResourceBrowserEditor extends DialogBrowserEditor {
 
 		if (value==null) return textValue;
 		
-		final String fullPath = value.getRawLocation().toOSString();
 		if (value.isLinked(IResource.CHECK_ANCESTORS)) {
+			// DO NOT USE RawLocation here or the logic for full path
+			// will not work
+			final String fullPath = value.getLocation().toOSString();
 			if (relative!=null) {
 				try {
 					relative.setToken(new BooleanToken(false));
@@ -97,6 +99,7 @@ public class ResourceBrowserEditor extends DialogBrowserEditor {
 			}
 			return fullPath.replace('\\', '/');
 		} else {
+			final String fullPath = value.getRawLocation().toOSString();
 			try {
 				if (relative!=null) relative.setToken(new BooleanToken(true));
 			} catch (IllegalActionException e) {
