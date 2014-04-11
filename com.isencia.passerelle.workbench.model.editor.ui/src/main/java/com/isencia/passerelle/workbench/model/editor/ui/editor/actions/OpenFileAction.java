@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import ptolemy.actor.Actor;
 
+import com.isencia.passerelle.resources.actor.IResourceActor;
+import com.isencia.passerelle.resources.actor.ResourceObject;
 import com.isencia.passerelle.workbench.model.actor.IPartListenerActor;
-import com.isencia.passerelle.workbench.model.actor.IResourceActor;
-import com.isencia.passerelle.workbench.model.actor.ResourceObject;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.ActorEditPart;
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;

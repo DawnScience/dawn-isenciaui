@@ -2,6 +2,8 @@ package com.isencia.passerelle.workbench.model.actor;
 
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.isencia.passerelle.resources.actor.ResourceObject;
+
 public interface IPartListenerActor {
 
 	/**

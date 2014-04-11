@@ -1,4 +1,4 @@
-package com.isencia.passerelle.workbench.model.actor;
+package com.isencia.passerelle.resources.actor;
 
 import org.eclipse.core.resources.IResource;
 

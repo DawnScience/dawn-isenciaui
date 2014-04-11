@@ -17,9 +17,9 @@ import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.IllegalActionException;
 
 import com.isencia.passerelle.actor.Actor;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
-import com.isencia.passerelle.workbench.util.ResourceUtils;
 
 public class ResourceBrowserEditor extends DialogBrowserEditor {
 

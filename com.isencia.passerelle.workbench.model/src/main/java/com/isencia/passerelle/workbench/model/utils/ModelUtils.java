@@ -43,6 +43,7 @@ import ptolemy.kernel.util.Workspace;
 import ptolemy.moml.Vertex;
 
 import com.isencia.passerelle.editor.common.utils.EditorUtils;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 
 public class ModelUtils {
 
@@ -261,18 +262,8 @@ public class ModelUtils {
 
   public static IFile getProjectFile(final String modelPath) {
 
-    final String workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+	    return ResourceUtils.getProjectFile(modelPath);
 
-    // We must tell the composite actor the containing project name
-    String relPath = modelPath.substring(workspacePath.length());
-    IFile projFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(relPath);
-    if (projFile == null) {
-      relPath = modelPath.substring(workspacePath.length() + 2);
-      projFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(relPath);
-
-    }
-
-    return projFile;
   }
 
   /**
@@ -284,29 +275,7 @@ public class ModelUtils {
    */
   public static IProject getProject(final NamedObj actor) throws Exception {
 
-    // Get top level actor, which knows the project we have.
-    CompositeActor comp = (CompositeActor) actor.getContainer();
-    while (comp.getContainer() != null) {
-      comp = (CompositeActor) comp.getContainer();
-    }
-
-    String name = comp.workspace().getName();
-    IProject project = null;
-    if (!name.equals("")) {
-      project = (IProject) ResourcesPlugin.getWorkspace().getRoot().findMember(name);
-    }
-    // Olof Svensson, 2013-09-17, DAWNSCI-734
-    // I have reverted the patch submitted by Matthew on 2013-08-12, original comment:
-    //// A project must be set on the actor by the editor.
-    //// Now that the sub-models are not being provided by a project, we know that this is
-    //// an error at this point.
-    //TODO: Fix the problem (if possible) in the DAWN MessageSink actor
-    if (project == null) {
-    	project = ModelUtils.getPasserelleProject();
-//      throw new Exception("The workspace must be defined as the same name as the project which the moml file is contained in!");
-    }
-
-    return project;
+	  return ResourceUtils.getProject(actor);
   }
 
   /**
@@ -356,20 +325,7 @@ public class ModelUtils {
 
   public static IProject getPasserelleProject() throws Exception {
 
-    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    final IProject project = root.getProject(".passerelle");
-    if (!project.exists()) {
-      project.create(new NullProgressMonitor());
-      try {
-        project.setHidden(true);
-      } catch (Exception ignored) {
-        // It is not hidden for the test decks
-      }
-    }
-    if (!project.isOpen()) {
-      project.open(new NullProgressMonitor());
-    }
-    return project;
+    return ResourceUtils.getPasserelleProject();
   }
 
   /**
