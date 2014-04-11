@@ -21,6 +21,8 @@ import ptolemy.kernel.util.Settable;
 /**
  * Class designed to give access to operations without dependencies on eclipse.ui, just eclipse.resources.
  * 
+ * Contains a static method to get the project.
+ * 
  * @author fcp94556
  *
  */
