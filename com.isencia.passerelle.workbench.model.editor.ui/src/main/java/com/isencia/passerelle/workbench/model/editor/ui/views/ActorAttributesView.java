@@ -1,5 +1,8 @@
 package com.isencia.passerelle.workbench.model.editor.ui.views;
 
+/*import org.eclipse.graphiti.mm.pictograms.PictogramElement;
+import org.eclipse.graphiti.platform.IDiagramEditor;
+import org.eclipse.graphiti.ui.internal.parts.IShapeEditPart;*/
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -31,9 +34,8 @@ public class ActorAttributesView extends ViewPart implements ISelectionListener 
       if (updateSelectedEntity(selection)) {
         return;
       }
+      viewer.clear();
     }
-    
-    viewer.clear();
   }
 
   @SuppressWarnings("restriction")
@@ -66,11 +68,11 @@ public class ActorAttributesView extends ViewPart implements ISelectionListener 
   public void createPartControl(Composite parent) {
     this.viewer = new ActorAttributesTableViewer(null, part, parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
-    if (getSite() != null)
+    if (getSite() != null) {
+      getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
       // Required for documentation to work
       getSite().setSelectionProvider(viewer);
-    
-      getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+    }
   }
 
   @Override
