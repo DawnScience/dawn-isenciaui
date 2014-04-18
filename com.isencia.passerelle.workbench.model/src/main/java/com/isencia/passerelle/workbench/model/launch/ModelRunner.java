@@ -1,6 +1,7 @@
 package com.isencia.passerelle.workbench.model.launch;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class ModelRunner implements IApplication {
    * 
    * @param modelPath
    */
-  public void runModel(final String modelPath, final boolean doSystemExit) throws Exception {
+  public void runModel(String modelPath, final boolean doSystemExit) throws Exception {
 
     if (!Platform.isRunning())
       throw new Exception("ModelRunner is designed to be used with an eclipse application!");
@@ -102,7 +103,9 @@ public class ModelRunner implements IApplication {
           }
 
           notifyModelChangeStart();
-
+          // to support launch from new graphiti-based editor
+          modelPath = modelPath.replace(".pdml", ".moml");
+          
           reader = new FileReader(modelPath);
 
           // In debug mode the same model can be run in the
@@ -140,6 +143,8 @@ public class ModelRunner implements IApplication {
             }
         }
 
+      } catch (IOException e) {
+        logger.info("No model found to run");
       } finally {
 
         notifyModelChangeEnd(0);

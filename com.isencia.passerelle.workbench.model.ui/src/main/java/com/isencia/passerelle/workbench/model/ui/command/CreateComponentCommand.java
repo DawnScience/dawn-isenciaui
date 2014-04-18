@@ -4,12 +4,11 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.help.ui.internal.util.ErrorUtil;
+import org.eclipse.ui.IEditorPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ptolemy.actor.CompositeActor;
 import ptolemy.actor.Director;
 import ptolemy.actor.TypedIOPort;
@@ -17,11 +16,11 @@ import ptolemy.actor.TypedIORelation;
 import ptolemy.data.BooleanToken;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.ComponentEntity;
+import ptolemy.kernel.ComponentPort;
 import ptolemy.kernel.CompositeEntity;
+import ptolemy.kernel.Entity;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.moml.Vertex;
-import ptolemy.vergil.kernel.attributes.TextAttribute;
-
 import com.isencia.passerelle.actor.Actor;
 import com.isencia.passerelle.editor.common.utils.EditorUtils;
 import com.isencia.passerelle.model.Flow;
@@ -48,7 +47,7 @@ public class CreateComponentCommand extends org.eclipse.gef.commands.Command {
 
   private NamedObj child;
 
-  private IPasserelleMultiPageEditor editor;
+  private IEditorPart editor;
   
   private TypedIORelation relation;
 
@@ -66,10 +65,10 @@ public class CreateComponentCommand extends org.eclipse.gef.commands.Command {
     return child;
   }
 
-  public CreateComponentCommand(IPasserelleMultiPageEditor editor) {
+  public CreateComponentCommand(IEditorPart editor, NamedObj parent) {
     super("CreateComponent");
     this.editor = editor;
-    this.parent = editor.getSelectedContainer();
+    this.parent = parent;
   }
 
   public CreateComponentCommand(Class<? extends NamedObj> clazz, String name, NamedObj parent, double[] location,TypedIORelation relation) {
@@ -123,23 +122,17 @@ public class CreateComponentCommand extends org.eclipse.gef.commands.Command {
               relation = new TypedIORelation(parentModel, componentName);
             }
             child = new Vertex(relation, "Vertex");
-
           } else if (Flow.class.isAssignableFrom(clazz)) {
             if (flow != null) {
-
               child = (NamedObj) flow.instantiate(parentModel, componentName);
               ((CompositeActor) child).setClassName(flow.getName());
-
             }
-
           } else {
             Class constructorClazz = CompositeEntity.class;
-            if (TypedIOPort.class.isAssignableFrom(clazz)) {
+            if (ComponentPort.class.isAssignableFrom(clazz)) {
               constructorClazz = ComponentEntity.class;
-
-            } else if (TextAttribute.class.isAssignableFrom(clazz)) {
+            } else if (!Entity.class.isAssignableFrom(clazz) && !Director.class.isAssignableFrom(clazz)) {
               constructorClazz = NamedObj.class;
-
             }
             Constructor constructor = clazz.getConstructor(constructorClazz, String.class);
 
@@ -173,8 +166,8 @@ public class CreateComponentCommand extends org.eclipse.gef.commands.Command {
     parent.requestChange(new ModelChangeRequest(this.getClass(), parent, "create") {
       @Override
       protected void _execute() throws Exception {
-        if (child instanceof CompositeActor && editor != null)
-          editor.selectPage((CompositeActor) parent);
+        if (child instanceof CompositeActor && editor != null && editor instanceof IPasserelleMultiPageEditor)
+          ((IPasserelleMultiPageEditor)editor).selectPage((CompositeActor) parent);
         if (child instanceof NamedObj) {
           EditorUtils.setContainer(child, parent);
 
@@ -201,8 +194,8 @@ public class CreateComponentCommand extends org.eclipse.gef.commands.Command {
     parent.requestChange(new ModelChangeRequest(this.getClass(), parent, "create") {
       @Override
       protected void _execute() throws Exception {
-        if (child instanceof CompositeActor && editor != null)
-          editor.selectPage((CompositeActor) parent);
+        if (child instanceof CompositeActor && editor != null && editor instanceof IPasserelleMultiPageEditor)
+          ((IPasserelleMultiPageEditor)editor).selectPage((CompositeActor) parent);
         if (child instanceof NamedObj) {
           EditorUtils.setContainer(child, null);
         }

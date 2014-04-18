@@ -80,7 +80,8 @@ public class ModelLauncher {
 	            		"org.apache.commons.beanutils," +
 	            		"org.apache.commons.codec," +
 	            		"org.apache.commons.collections," +
-	            		"org.apache.commons.httpclient," +
+	            		"org.apache.httpcomponents.httpclient," +
+                  "org.apache.httpcomponents.httpcore," +
 	            		"org.apache.commons.logging," +
 	            		"org.apache.commons.math," +
 	            		"org.apache.xerces," +

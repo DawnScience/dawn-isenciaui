@@ -7,6 +7,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import com.isencia.passerelle.editor.common.utils.EditorUtils;
 
 public class PaletteItemDefinition implements Serializable, Comparable<PaletteItemDefinition> {
+
+  private static final long serialVersionUID = -7540471811877075040L;
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -24,12 +27,12 @@ public class PaletteItemDefinition implements Serializable, Comparable<PaletteIt
     return new HashCodeBuilder().append(getClazz()).append(id).hashCode();
   }
 
-  
-  public PaletteItemDefinition(Object icon, PaletteGroup group, String id, String name, String color, Class clazz,String bundleId) {
+  public PaletteItemDefinition(Object icon, PaletteGroup group, String id, String name, String color, Class clazz, String bundleId,int priority) {
     this.group = group;
     this.id = id;
     this.icon = icon;
     this.name = name;
+    this.priority = priority;
     this.bundleId = bundleId;
     if (clazz != null)
       this.clazz = clazz.getName();
@@ -47,7 +50,7 @@ public class PaletteItemDefinition implements Serializable, Comparable<PaletteIt
   }
 
   private String bundleId;
-  
+
   public String getBundleId() {
     return bundleId;
   }
@@ -60,6 +63,16 @@ public class PaletteItemDefinition implements Serializable, Comparable<PaletteIt
 
   public void setIcon(Object icon) {
     this.icon = icon;
+  }
+
+  private String helpUrl;
+
+  public String getHelpUrl() {
+    return helpUrl;
+  }
+
+  public void setHelpUrl(String helpUrl) {
+    this.helpUrl = helpUrl;
   }
 
   private PaletteGroup group;
@@ -110,6 +123,16 @@ public class PaletteItemDefinition implements Serializable, Comparable<PaletteIt
     this.color = color;
   }
 
+  private int priority = 0;
+
+  public int getPriority() {
+    return priority;
+  }
+
+  public void setPriority(int priority) {
+    this.priority = priority;
+  }
+
   private String id;
   private String name;
   private String color;
@@ -125,9 +148,17 @@ public class PaletteItemDefinition implements Serializable, Comparable<PaletteIt
   }
 
   public int compareTo(PaletteItemDefinition arg0) {
+    if (this.priority != arg0.getPriority()) {
+      return -(new Integer(this.priority).compareTo(arg0.getPriority()));
+    }
+
     if (this.name == null) {
       return 0;
     }
     return this.name.compareTo(arg0.getName());
+  }
+  @Override
+  public String toString() {
+    return getId();
   }
 }

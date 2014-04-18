@@ -1,7 +1,6 @@
 package com.isencia.passerelle.workbench.model.editor.ui.editpolicy;
 
 import java.util.List;
-
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
@@ -17,13 +16,10 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.gef.dnd.TemplateTransfer;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
 import org.slf4j.Logger;
-
 import ptolemy.kernel.util.NamedObj;
-
 import com.isencia.passerelle.editor.common.model.SubModelPaletteItemDefinition;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.ui.command.CreateComponentCommand;
@@ -170,7 +166,7 @@ public class DiagramXYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XYLa
   protected Command getCreateCommand(CreateRequest request) {
     try {
             
-      CreateComponentCommand create = new CreateComponentCommand(editor);
+      CreateComponentCommand create = new CreateComponentCommand(editor, editor.getSelectedContainer());
 
       if (request.getNewObject() instanceof SubModelPaletteItemDefinition) {
         create.setFlow(((SubModelPaletteItemDefinition) request.getNewObject()).getFlow());

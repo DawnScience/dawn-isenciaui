@@ -49,11 +49,11 @@ public class VariableEditingSupport extends EditingSupport {
 
   private static Logger logger = LoggerFactory.getLogger(VariableEditingSupport.class);
 
-  private ActorAttributesView actorAttributesView;
+  private ActorAttributesTableViewer actorAttributesView;
 
-  public VariableEditingSupport(ActorAttributesView part, ColumnViewer viewer) {
+  public VariableEditingSupport(ActorAttributesTableViewer viewer) {
     super(viewer);
-    this.actorAttributesView = part;
+    this.actorAttributesView = viewer;
   }
 
   // private Object previousSelection;

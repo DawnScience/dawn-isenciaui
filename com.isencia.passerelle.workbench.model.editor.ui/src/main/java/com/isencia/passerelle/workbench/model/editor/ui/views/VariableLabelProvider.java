@@ -29,14 +29,14 @@ import com.isencia.passerelle.workbench.util.ListUtils;
 
 public class VariableLabelProvider extends ColumnLabelProvider {
 
-	private final ActorAttributesView actorAttributesView;
+	private final ActorAttributesTableViewer actorAttributesTableViewer;
 	private final Font  italicFont,  boldFont;
 	private final Image folderImage;
 
-	public VariableLabelProvider(ActorAttributesView actorAttributesView) {
-		this.actorAttributesView = actorAttributesView;
+	public VariableLabelProvider(ActorAttributesTableViewer actorAttributesView) {
+		this.actorAttributesTableViewer = actorAttributesView;
 		
-		final FontData shellFd = actorAttributesView.getViewSite().getShell().getFont().getFontData()[0];
+		final FontData shellFd = actorAttributesView.getControl().getShell().getFont().getFontData()[0];
 		FontData fd      = new FontData(shellFd.getName(), shellFd.getHeight(), SWT.ITALIC);
 		italicFont = new Font(null, fd);
 		fd      = new FontData(shellFd.getName(), shellFd.getHeight(), SWT.BOLD);
@@ -167,7 +167,7 @@ public class VariableLabelProvider extends ColumnLabelProvider {
 	 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 	 */
 	public Font getFont(Object element) {
-		final boolean canEdit = actorAttributesView.canEditAttribute(element);
+		final boolean canEdit = actorAttributesTableViewer.canEditAttribute(element);
 		if (canEdit) {
 			if (element instanceof GeneralAttribute) return boldFont; // It is probably name
 			return null;
@@ -179,11 +179,11 @@ public class VariableLabelProvider extends ColumnLabelProvider {
 	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
 	public Color getForeground(Object element) {
-		final boolean canEdit = actorAttributesView.canEditAttribute(element);
+		final boolean canEdit = actorAttributesTableViewer.canEditAttribute(element);
 		if (canEdit) return null;
 		return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY);
 	}
-	
+
 	private final Color lightGrey = new Color(null, 240,240,240);
 
 	public Color getBackground(Object element) {
@@ -199,6 +199,6 @@ public class VariableLabelProvider extends ColumnLabelProvider {
         if (ticked!=null)   ticked.dispose();
         if (unticked!=null) unticked.dispose();
 		lightGrey.dispose();
-	}
+}
 
 }

@@ -65,26 +65,11 @@ public class DeleteComponentCommand extends Command implements IRefreshConnectio
   }
 
   protected void doExecute() {
-
     parent.requestChange(new ModelChangeRequest(this.getClass(), parent, "delete", child) {
       @Override
       protected void _execute() throws Exception {
-        Flow toplevel = (Flow) child.toplevel();
-        if (child instanceof Vertex) {
-          Vertex vertex = (Vertex) child;
-          ((TypedIORelation) vertex.getContainer()).setContainer(null);
-          container = ((TypedIORelation) vertex.getContainer()).getContainer();
-        } else {
-          container = child.getContainer();
-          EditorUtils.setContainer(child, null);
-          for (Integer index : indexList) {
-            Comparator comparator = Collections.reverseOrder();
-            Collections.sort(indexList, comparator);
-            multiPageEditor.removePage(index);
-          }
-        }
+//        Flow toplevel = (Flow) child.toplevel();
         Set<Link> links = new HashSet<Link>();
-
         if (child instanceof Actor) {
           Actor actor = (Actor) child;
           List ports = new ArrayList();
@@ -95,12 +80,9 @@ public class DeleteComponentCommand extends Command implements IRefreshConnectio
             if (portLinks != null) {
               links.addAll(portLinks);
             }
-
           }
-
-        } else {
-          if (multiPageEditor != null)
-            links = multiPageEditor.getLinks(child);
+        } else if (multiPageEditor != null) {
+          links = multiPageEditor.getLinks(child);
         }
         if (links != null && links.size() > 0) {
           delecteListCommands = new ArrayList<DeleteLinkCommand>(links.size());
@@ -110,18 +92,28 @@ public class DeleteComponentCommand extends Command implements IRefreshConnectio
             delecteListCommands.add(deleteLinkCommand);
           }
         }
+        if (child instanceof Vertex) {
+          Vertex vertex = (Vertex) child;
+          container = ((TypedIORelation) vertex.getContainer()).getContainer();
+          ((TypedIORelation) vertex.getContainer()).setContainer(null);
+        } else {
+          container = child.getContainer();
+          EditorUtils.setContainer(child, null);
+          for (Integer index : indexList) {
+            Comparator comparator = Collections.reverseOrder();
+            Collections.sort(indexList, comparator);
+            multiPageEditor.removePage(index);
+          }
+        }
       }
     });
-
   }
-
  
   public void redo() {
     doExecute();
   }
 
   private void restoreConnections(NamedObj child) {
-
     for (Command cmd : delecteListCommands) {
       cmd.undo();
     }
@@ -145,19 +137,14 @@ public class DeleteComponentCommand extends Command implements IRefreshConnectio
             Vertex vertex = (Vertex) child;
             ((TypedIORelation) vertex.getContainer()).setContainer((CompositeEntity) container);
           } else {
-
             EditorUtils.setContainer(child, container);
-            restoreConnections(child);
           }
+          restoreConnections(child);
         } catch (Exception e) {
           logger.error("Unable to undo deletion of component", e);
-
           EclipseUtils.logError(e, "Unable to undo deletion of component", IStatus.ERROR);
         }
-
       }
     });
-
   }
-
 }

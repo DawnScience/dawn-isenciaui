@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -12,15 +11,14 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ptolemy.actor.CompositeActor;
 import ptolemy.actor.Director;
 import ptolemy.actor.IOPort;
 import ptolemy.actor.TypedAtomicActor;
 import ptolemy.actor.TypedCompositeActor;
+import ptolemy.data.expr.Parameter;
 import ptolemy.moml.Vertex;
 import ptolemy.vergil.kernel.attributes.TextAttribute;
-
 import com.isencia.passerelle.actor.Sink;
 import com.isencia.passerelle.actor.Source;
 import com.isencia.passerelle.editor.common.model.Link;
@@ -94,16 +92,16 @@ public class EditPartFactory implements org.eclipse.gef.EditPartFactory {
       child = new DirectorEditPart();
     } else if (model instanceof TextAttribute) {
       child = new CommentEditPart();
+    } else if (model instanceof Parameter) {
+      child = new ParameterEditPart();
     } else if (model instanceof Vertex) {
       child = new VertexEditPart();
-
     } else if (model instanceof IOPort) {
       if (((IOPort) model).isInput())
         child = new PortEditPart(true);
       else
         child = new PortEditPart(false);
     } else if (model instanceof LinkWithBendPoints) {
-      
       child = new LinkEditPart();
     } else if (model instanceof TypedCompositeActor) {
       // TODO Check if this is the correct check to make the distinction

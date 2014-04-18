@@ -2,7 +2,10 @@ package com.isencia.passerelle.workbench.model.editor.ui.editor.actions;
 
 import java.net.URL;
 import javax.management.MBeanServerConnection;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -74,49 +77,49 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
     try {
 
       if (fromEditor) {
-	      // We will ensure console view is selected
-	      final IWorkbenchPage page = EclipseUtils.getPage();
-	      page.showView("org.eclipse.ui.console.ConsoleView");
-	
-	      final boolean didSave = EclipseUtils.getPage().saveAllEditors(true);
-	      if (!didSave)
-	        return;
-	
-	      final IEditorPart editor = EclipseUtils.getPage().getActiveEditor();
-	      if (editor != null)
-	        EclipseUtils.getPage().activate(editor);
-	
-	      // Make sure that the current editor is the selected resource.
-	      selection = getSelectedResource();
-	      if (selection instanceof IFile)
-	        EclipseUtils.openEditor((IFile) selection);
-	
-	      // Select any editor which is PasserelleModelMultiPageEditor.ID
-	      if (selection == null && editor == null) {
-	        final IEditorReference[] refs = EclipseUtils.getPage().getEditorReferences();
-	        for (int i = 0; i < refs.length; i++) {
-	          if (refs[i].getId().equals(PasserelleModelMultiPageEditor.ID)) {
-	            EclipseUtils.getPage().activate(refs[i].getEditor(true));
-	            break;
-	          }
-	        }
-	      }
-	
-	      // Clear selection.
-	      if (editor != null && editor instanceof PasserelleModelMultiPageEditor) {
-	        ((PasserelleModelMultiPageEditor) editor).setActorSelected(null, false, -1);
-	      }
-	      
-	      // Save the current workspace.
-	      saveWorkSpace();
+        // We will ensure console view is selected
+        final IWorkbenchPage page = EclipseUtils.getPage();
+        page.showView("org.eclipse.ui.console.ConsoleView");
+
+        final boolean didSave = EclipseUtils.getPage().saveAllEditors(true);
+        if (!didSave)
+          return;
+
+        final IEditorPart editor = EclipseUtils.getPage().getActiveEditor();
+        if (editor != null)
+          EclipseUtils.getPage().activate(editor);
+
+        // Make sure that the current editor is the selected resource.
+        selection = getSelectedResource();
+        if (selection instanceof IFile)
+          EclipseUtils.openEditor((IFile) selection);
+
+        // Select any editor which is PasserelleModelMultiPageEditor.ID
+        if (selection == null && editor == null) {
+          final IEditorReference[] refs = EclipseUtils.getPage().getEditorReferences();
+          for (int i = 0; i < refs.length; i++) {
+            if (refs[i].getId().equals(PasserelleModelMultiPageEditor.ID)) {
+              EclipseUtils.getPage().activate(refs[i].getEditor(true));
+              break;
+            }
+          }
+        }
+
+        // Clear selection.
+        if (editor != null && editor instanceof PasserelleModelMultiPageEditor) {
+          ((PasserelleModelMultiPageEditor) editor).setActorSelected(null, false, -1);
+        }
+
+        // Save the current workspace.
+        saveWorkSpace();
       }
 
-
+      selection = getMomlFileForPdmlFile(selection);
       fireRunListeners();
 
-      if (Boolean.getBoolean("eclipse.debug.session")) {
+      if (System.getProperty("eclipse.debug.session") != null) {
 
-    	final IResource sel = selection;
+        final IResource sel = selection;
         final Job job = new Job("Run workflow debug mode") {
           @Override
           protected IStatus run(IProgressMonitor monitor) {
@@ -142,7 +145,7 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
         configuration.addSystemProperty("workflow.logback.configurationFile");
         // DO NOT CHANGE THIS. IF THESE PROPERTIES ARE NOT PASSED TO THE WORKFLOW,
         // IT DOES NOT WORK, THE JMX SERVICE WILL BE BROKEN
-        
+
         // add actor bundles to launch configuration through discovery
         // of the registered actor class providers
         boolean addedActorBundles = false;
@@ -158,7 +161,7 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
           }
         }
         ILaunchConfiguration theOne = configuration;
-        if(addedActorBundles) {
+        if (addedActorBundles) {
           ILaunchConfigurationWorkingCopy cfgWorkingCopy = configuration.getWorkingCopy();
           cfgWorkingCopy.setAttribute("selected_target_plugins", pluginsToLaunch.toString());
           theOne = cfgWorkingCopy.doSave();
@@ -227,14 +230,36 @@ public class RunAction extends ExecutionAction implements IEditorActionDelegate,
       final Object res = str.getFirstElement();
       if (res instanceof IFile) {
         final IFile file = (IFile) res;
-        if (file.getName().toLowerCase().endsWith(".moml"))
+        if (file.getName().toLowerCase().endsWith(".moml") || file.getName().toLowerCase().endsWith(".pdml"))
           return file;
       }
     }
     final IFile file = EclipseUtils.getIFile(EclipseUtils.getPage().getActiveEditor().getEditorInput());
-    if (file.getName().toLowerCase().endsWith(".moml"))
+    if (file.getName().toLowerCase().endsWith(".moml") || file.getName().toLowerCase().endsWith(".pdml")) {
       return file;
+    }
     return null;
+  }
+
+  public static IResource getMomlFileForPdmlFile(IResource file) {
+    if (file.getName().toLowerCase().endsWith(".moml")) {
+      // the joker is giving us the moml file i.o. a pdml file!
+      // just give it back then
+      return file;
+    } else {
+      IFile momlFile = null;
+      IContainer fileContainer = file.getParent();
+      String diagramFileName = file.getName();
+      String momlFileName = diagramFileName.substring(0, diagramFileName.lastIndexOf(".")) + ".moml";
+      if (fileContainer instanceof IFolder) {
+        momlFile = ((IFolder) fileContainer).getFile(momlFileName);
+      } else if (fileContainer instanceof IProject) {
+        momlFile = ((IProject) fileContainer).getFile(momlFileName);
+      } else {
+        throw new RuntimeException("Unable to get MOML file : Diagram file " + file + " not in a IFolder nor in a IProject");
+      }
+      return momlFile;
+    }
   }
 
   public void setActiveEditor(IAction action, IEditorPart targetEditor) {

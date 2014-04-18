@@ -1,12 +1,10 @@
-package com.isencia.passerelle.workbench.model.editor.ui.views;
+package com.isencia.passerelle.workbench.model.editor.ui.palette;
 
 import org.eclipse.gef.dnd.TemplateTransfer;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
-
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 
 public class DropFavouriteListener extends DropTargetAdapter {
 	private PaletteViewer paletteViewer;

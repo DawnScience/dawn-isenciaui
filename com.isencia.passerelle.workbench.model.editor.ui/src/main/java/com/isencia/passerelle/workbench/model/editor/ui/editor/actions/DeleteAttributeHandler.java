@@ -7,17 +7,15 @@ import org.eclipse.core.commands.HandlerEvent;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
-
-import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
 import com.isencia.passerelle.workbench.model.editor.ui.views.ActorAttributesView;
 import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 
@@ -39,7 +37,7 @@ public class DeleteAttributeHandler extends AbstractHandler implements IViewActi
 
 	private void doAction() {
 		
-		final PasserelleModelMultiPageEditor ed = (PasserelleModelMultiPageEditor)EclipseUtils.getActivePage().getActiveEditor();
+		final IEditorPart ed = EclipseUtils.getActivePage().getActiveEditor();
 		if (ed==null) return;
 		
 		final ActorAttributesView attView = (ActorAttributesView)EclipseUtils.getActivePage().getActivePart();

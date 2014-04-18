@@ -12,16 +12,12 @@
 package com.isencia.passerelle.workbench.model.editor.ui.views;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.GridData;
-import org.eclipse.gef.dnd.TemplateTransfer;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.TreeEvent;
@@ -34,28 +30,33 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-
 import com.isencia.passerelle.editor.common.model.PaletteGroup;
 import com.isencia.passerelle.editor.common.model.PaletteItemDefinition;
-import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
+import com.isencia.passerelle.workbench.model.editor.ui.palette.DefaultDragSupportBuilder;
+import com.isencia.passerelle.workbench.model.editor.ui.palette.DragSupportBuilder;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
 
 /**
  * This class represents the tree view page of the data view
- * 
  */
 public class ActorTreeViewerPage extends ActorPalettePage implements IAdaptable {
 
   private ActionRegistry actionRegistry;
   private FilteredTree tree;
+  private DragSupportBuilder dragSupportBuilder;
+
+  public ActorTreeViewerPage(ActionRegistry actionRegistry, DragSupportBuilder dragSupportBuilder) {
+    super();
+    this.actionRegistry = actionRegistry;
+    if (dragSupportBuilder != null) {
+      this.dragSupportBuilder = dragSupportBuilder;
+    } else {
+      this.dragSupportBuilder = new DefaultDragSupportBuilder();
+    }
+  }
 
   public ActionRegistry getActionRegistry() {
     return actionRegistry;
-  }
-
-  public ActorTreeViewerPage(ActionRegistry actionRegistry) {
-    super();
-    this.actionRegistry = actionRegistry;
   }
 
   /**
@@ -107,17 +108,17 @@ public class ActorTreeViewerPage extends ActorPalettePage implements IAdaptable 
       }
     });
     PaletteBuilder builder = PaletteBuilder.getInstance();
-    
+
     final List<PaletteGroup> grps = builder.getRootPaletteGroups();
     for (PaletteGroup grp : grps) {
-    	if (grp.isExpanded()) {
-    		getTreeViewer().expandToLevel(grp, 1);
-    	}
-    	for(PaletteGroup childGrp : grp.getChildren()) {
-            if (childGrp.isExpanded()) {
-              getTreeViewer().expandToLevel(childGrp, 1);
-            }
+      if (grp.isExpanded()) {
+        getTreeViewer().expandToLevel(grp, 1);
+      }
+      for (PaletteGroup childGrp : grp.getChildren()) {
+        if (childGrp.isExpanded()) {
+          getTreeViewer().expandToLevel(childGrp, 1);
         }
+      }
     }
   }
 
@@ -160,26 +161,21 @@ public class ActorTreeViewerPage extends ActorPalettePage implements IAdaptable 
     // add inline renaming support
 
     // Adds drag and drop support
-    int ops = DND.DROP_MOVE | DND.DROP_COPY;
-    Transfer[] transfers = new Transfer[] { TemplateTransfer.getInstance() };
-    transfers = new Transfer[] { TemplateTransfer.getInstance() };
-    DragTargetListener dragListener = new DragTargetListener(getTreeViewer());
-    getTreeViewer().addDragSupport(ops, transfers, dragListener);
+    dragSupportBuilder.addDragSupport(getTreeViewer());
 
   }
 
   /**
    * Initializes the root of the view
-   * 
    */
   private void initRoot() {
     PaletteBuilder builder = PaletteBuilder.getInstance();
-     getTreeViewer().setInput(builder.getRootPaletteGroups().toArray());
+    getTreeViewer().setInput(builder.getRootPaletteGroups().toArray());
   }
 
   /**
-   * The <code>Page</code> implementation of this <code>IPage</code> method disposes of this page's control (if it has
-   * one and it has not already been disposed). Disposes the visitor of the element
+   * The <code>Page</code> implementation of this <code>IPage</code> method disposes of this page's control (if it has one and it has not already been
+   * disposed). Disposes the visitor of the element
    */
   public void dispose() {
     super.dispose();

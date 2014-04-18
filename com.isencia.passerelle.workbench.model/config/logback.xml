@@ -30,12 +30,17 @@
   </appender>
 -->
 
+<logger name="com.isencia" level="INFO"/>
+<logger name="org.dawnsci.passerelle" level="ALL"/>
+<logger name="org.dawb" level="INFO"/>
+<logger name="uk.ac.diamond" level="INFO"/>
+
   <root>
-    <level value="ALL" />
+    <level value="ERROR" />
     <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE" />
+   <!-- <appender-ref ref="FILE" />
     <appender-ref ref="FILE_DAWB" />
-    <!--   <appender-ref ref="SOCKET" /> -->
+    <appender-ref ref="SOCKET" /> -->
   </root>
   
 </configuration>

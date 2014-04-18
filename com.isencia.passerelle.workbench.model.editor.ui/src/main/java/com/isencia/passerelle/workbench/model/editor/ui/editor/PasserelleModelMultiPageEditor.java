@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -85,15 +84,12 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ptolemy.actor.CompositeActor;
 import ptolemy.actor.TypedCompositeActor;
 import ptolemy.actor.TypedIORelation;
 import ptolemy.kernel.ComponentRelation;
-import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.moml.Vertex;
-
 import com.isencia.passerelle.editor.common.model.Link;
 import com.isencia.passerelle.editor.common.model.LinkHolder;
 import com.isencia.passerelle.model.Flow;
@@ -170,7 +166,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
     }
 
     if (type == ActorPalettePage.class || type == Page.class) {
-      actorTreeViewPage = new ActorTreeViewerPage(editor.getActionRegistry());
+      actorTreeViewPage = new ActorTreeViewerPage(editor.getActionRegistry(), null);
       return actorTreeViewPage;
     }
 
@@ -212,7 +208,7 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
   }
 
   public IEditorPart getEditor(int index) {
-    return super.getEditor(index);
+    return (index>0)?super.getEditor(index):null;
   }
 
   public int addPage(TypedCompositeActor model, IEditorPart editor, IEditorInput input) throws PartInitException {

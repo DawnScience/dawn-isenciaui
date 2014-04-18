@@ -1,4 +1,4 @@
-package com.isencia.passerelle.workbench.model.editor.ui.views;
+package com.isencia.passerelle.workbench.model.editor.ui.palette;
 
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.ui.palette.PaletteMessages;

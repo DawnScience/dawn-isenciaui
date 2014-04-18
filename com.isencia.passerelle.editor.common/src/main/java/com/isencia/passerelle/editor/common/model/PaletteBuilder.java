@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
@@ -26,6 +28,8 @@ import com.isencia.passerelle.project.repository.api.MetaData;
 import com.isencia.passerelle.project.repository.api.RepositoryService;
 
 public class PaletteBuilder implements Serializable {
+  private static final long serialVersionUID = 5998773152255762310L;
+  private static Logger logger = LoggerFactory.getLogger(PaletteBuilder.class);
   public static final String UTILITIES = "com.isencia.passerelle.actor.actorgroup.utilities";
   public static final String SUBMODELS = "com.isencia.passerelle.actor.actorgroup.submodels";
   List<PaletteGroup> paletteGroups;
@@ -78,8 +82,8 @@ public class PaletteBuilder implements Serializable {
     paletteGroups = createCategories();
   }
 
-  private Map<String, PaletteGroup> groups;
-  private Map<String, PaletteItemDefinition> paletteItemMap;
+  protected Map<String, PaletteGroup> groups;
+  protected Map<String, PaletteItemDefinition> paletteItemMap;
 
   public PaletteItemDefinition getPaletteItem(String clazz) {
 
@@ -144,8 +148,8 @@ public class PaletteBuilder implements Serializable {
     return clazzName;
   }
 
-  PaletteItemDefinition submodelDefinition = null;
-  PaletteGroup submodels = null;
+  protected PaletteItemDefinition submodelDefinition = null;
+  protected PaletteGroup submodels = null;
 
   public List<PaletteGroup> createCategories() {
     List<PaletteGroup> actorGroups = new ArrayList<PaletteGroup>();
@@ -181,6 +185,7 @@ public class PaletteBuilder implements Serializable {
             try {
               e.setPriority(Integer.parseInt(priorityAttribute));
             } catch (Exception e2) {
+              logger.error("Item with id " + idAttribute + " has a priority which is not a valid Integer " + priorityAttribute);
 
             }
           }
@@ -236,18 +241,28 @@ public class PaletteBuilder implements Serializable {
             String colorAttribute = configurationElement.getAttribute("color");
             String idAttribute = configurationElement.getAttribute("id");
             String iconAttribute = configurationElement.getAttribute("icon");
+            String priorityAttribute = configurationElement.getAttribute("priority");
             String iconLocationAttribute = configurationElement.getAttribute("iconClass");
             final String bundleId = configurationElement.getDeclaringExtension().getContributor().getName();
 
             Object icon = createIcon(null, iconLocationAttribute, iconAttribute, bundleId);
             if (group != null && submodels != null && submodels.getId().equals(group.getId())) {
-              submodelDefinition = new PaletteItemDefinition(icon, null, idAttribute, nameAttribute, colorAttribute, Flow.class, null);
+              submodelDefinition = new PaletteItemDefinition(icon, null, idAttribute, nameAttribute, colorAttribute, Flow.class, null, 0);
             } else {
               final Class<?> clazz = loadClass(configurationElement, bundleId);
 
               if (clazz != null && group != null) {
-                PaletteItemDefinition item = new PaletteItemDefinition(icon, group, idAttribute, nameAttribute, colorAttribute, clazz, bundleId);
-                group.addPaletteItem(item);
+                int priority = 0;
+                if (priorityAttribute != null) {
+                  try {
+                    priority = Integer.parseInt(priorityAttribute);
+                  } catch (Exception e) {
+
+                  }
+                }
+                PaletteItemDefinition item = new PaletteItemDefinition(icon, group, idAttribute, nameAttribute, colorAttribute, clazz, bundleId, priority);
+
+                item.setHelpUrl(generateHelpUrl(item));
                 actorBundleMap.put(clazz.getName(), bundleId);
                 paletteItemMap.put(item.getClazz().getName(), item);
               }
@@ -259,12 +274,10 @@ public class PaletteBuilder implements Serializable {
 
     try {
       RepositoryService repositoryService = Activator.getDefault().getRepositoryService();
-      for (String actorClass : repositoryService.getAllSubmodels()) {
-        MetaData metaData = repositoryService.getSubmodelMetaData(actorClass);
-        String path = metaData != null ? metaData.getPath() : null;
+      for (MetaData metaData : repositoryService.getAllSubmodelMetaData()) {
 
-        PaletteGroup group = getPaletteGroup(actorGroups, groups, path, submodels);
-        SubModelPaletteItemDefinition item = addSubModel(submodelDefinition, group, actorClass);
+        PaletteGroup group = getPaletteGroup(actorGroups, groups, metaData.getPath(), submodels);
+        SubModelPaletteItemDefinition item = addSubModel(submodelDefinition, group, metaData.getCode());
         if (group != null) {
           group.addPaletteItem(item);
         }
@@ -274,6 +287,19 @@ public class PaletteBuilder implements Serializable {
       // logError(e);
     }
     return actorGroups;
+  }
+
+  protected String generateHelpUrl(PaletteItemDefinition item) {
+    return null;
+  }
+
+  public String getHelpUrl(String clazzName) {
+
+    PaletteItemDefinition itemDefinition = getPaletteItem(clazzName);
+    if (itemDefinition != null) {
+      return itemDefinition.getHelpUrl();
+    }
+    return null;
   }
 
   public PaletteGroup getPaletteGroup(List<PaletteGroup> groups, Map<String, PaletteGroup> groupMap, String path, PaletteGroup parent) {

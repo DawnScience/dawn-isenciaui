@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Passerelle workbench editor ui plug-in
 Bundle-SymbolicName: com.isencia.passerelle.workbench.model.editor.ui; singleton:=true
-Bundle-Version: 8.4.0.qualifier
+Bundle-Version: 8.7.0.qualifier
 Bundle-Activator: com.isencia.passerelle.workbench.model.editor.ui.Activator
 Bundle-Vendor: ISENCIA
 Require-Bundle: org.eclipse.core.runtime,
@@ -12,11 +12,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.gef;bundle-version="3.4.1",
  ptolemy.core;bundle-version="7.0.1",
- com.isencia.passerelle.actor;bundle-version="7.0.0",
- com.isencia.passerelle.engine;bundle-version="7.0.0",
- com.isencia.passerelle.workbench.model;bundle-version="1.0.1",
- com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",
- com.isencia.passerelle.workbench.util;bundle-version="1.0.0",
+ com.isencia.passerelle.actor;bundle-version="8.7.0",
+ com.isencia.passerelle.engine;bundle-version="8.7.0",
+ com.isencia.passerelle.workbench.model;bundle-version="8.7.0",
+ com.isencia.passerelle.workbench.model.ui;bundle-version="8.7.0",
+ com.isencia.passerelle.workbench.util;bundle-version="8.7.0",
  org.eclipse.ui.views.properties.tabbed,
  ptolemy.gui;bundle-version="7.0.1",
  org.eclipse.emf.edit.ui;bundle-version="[2.8.0,2.8.1)",
@@ -26,21 +26,22 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.help.base;bundle-version="3.4.0",
  org.eclipse.help.ui;bundle-version="3.4.0",
  org.eclipse.help.webapp;bundle-version="3.4.0",
- com.isencia.passerelle.project.repository.api;bundle-version="8.0.2",
- com.isencia.passerelle.editor.common;bundle-version="1.0.0",
+ com.isencia.passerelle.project.repository.api;bundle-version="8.7.0",
+ com.isencia.passerelle.editor.common;bundle-version="8.7.0",
  org.eclipse.jdt.core;bundle-version="3.7.0",
  org.eclipse.jdt.launching;bundle-version="3.6.0",
  com.isencia.passerelle.resources;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: com.isencia.passerelle.workbench.model.editor.ui,
- com.isencia.passerelle.workbench.model.editor.ui.cell,
- com.isencia.passerelle.workbench.model.editor.ui.dnd,
- com.isencia.passerelle.workbench.model.editor.ui.editor,
- com.isencia.passerelle.workbench.model.editor.ui.editor.actions,
- com.isencia.passerelle.workbench.model.editor.ui.editpart,
- com.isencia.passerelle.workbench.model.editor.ui.figure,
- com.isencia.passerelle.workbench.model.editor.ui.palette,
- com.isencia.passerelle.workbench.model.editor.ui.properties
+Export-Package: com.isencia.passerelle.workbench.model.editor.ui;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.cell;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.dnd;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.editor;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.editor.actions;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.editpart;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.figure;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.palette;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.properties;version="8.7.0",
+ com.isencia.passerelle.workbench.model.editor.ui.views;version="8.7.0"
 DynamicImport-Package: *
 Import-Package: org.apache.commons.lang;version="2.4.0",
  org.eclipse.core.filesystem,
