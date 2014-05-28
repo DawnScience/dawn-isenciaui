@@ -10,23 +10,20 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.internal.ui.palette.editparts.DrawerEditPart;
 import org.eclipse.gef.internal.ui.palette.editparts.DrawerFigure;
 import org.eclipse.gef.ui.palette.PaletteViewer;
-import org.eclipse.swt.widgets.Control;
 
 import ptolemy.actor.CompositeActor;
-import ptolemy.kernel.ComponentEntity;
 import ptolemy.kernel.CompositeEntity;
-import ptolemy.kernel.util.IllegalActionException;
-import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-import ptolemy.vergil.kernel.attributes.TextAttribute;
 
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PaletteMouseListener;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.DiagramEditPart;
 
 public abstract class WorkbenchUtility {
 	public static void addMouseListenerToPaletteViewer(PaletteViewer paletteViewer) {
-		Control control = paletteViewer.getControl();
 		EditPart contents = paletteViewer.getContents();
+		if (contents == null)
+			return;
+
 		Set<DrawerEditPart> drawers = new HashSet<DrawerEditPart>();
 		for (Object o : contents.getChildren()) {
 			if (o instanceof DrawerEditPart
