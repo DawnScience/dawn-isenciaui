@@ -5,22 +5,48 @@
        <Pattern>%d{HH:mm:ss.SSS} %-5level %msg %n</Pattern>
     </layout>
   </appender>
-
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+  
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>false</append>
     <file>${user.home}/.passerelle/modelRunner.log</file>
-    <append>false</append>
-    <layout class="ch.qos.logback.classic.PatternLayout">
-       <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
-    </layout>
-  </appender>
-
-  <appender name="FILE_DAWB" class="ch.qos.logback.core.FileAppender">
-    <file>${user.home}/.dawb/workflow.log</file>
-    <append>false</append>
     <layout class="ch.qos.logback.classic.PatternLayout">
       <Pattern>%d{HH:mm:ss.SSS} %-5level [thread=%thread] [class=%logger{36}] - %msg %n</Pattern>
     </layout>
+    
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>ERROR</level>
+    </filter>
+    
+    <!-- keep 1 days' worth of history we are only a GUI -->
+    <maxHistory>1</maxHistory>
+        
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+        <maxFileSize>20MB</maxFileSize>
+    </triggeringPolicy>
+    
   </appender>
+  
+
+ <appender name="FILE_DAWB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>false</append>
+    <file>${user.home}/.dawn/workflow.log</file>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d{HH:mm:ss.SSS} %-5level [thread=%thread] [class=%logger{36}] - %msg %n</Pattern>
+    </layout>
+    
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>ERROR</level>
+    </filter>
+    
+    <!-- keep 1 days' worth of history we are only a GUI -->
+    <maxHistory>1</maxHistory>
+        
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+        <maxFileSize>20MB</maxFileSize>
+    </triggeringPolicy>
+    
+  </appender>
+
 <!--
   <appender name="SOCKET" class="ch.qos.logback.classic.net.SocketAppender">
     <RemoteHost>localhost</RemoteHost>
