@@ -22,6 +22,12 @@ public class Activator implements BundleActivator, BundleListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(Activator.class);
 
   public void start(BundleContext context) throws Exception {
+	  
+	  // For some reason if this plugin exists in the workspace, it can still sometimes be loaded
+	  // once a workflow project exists or has existed. Once it does get loaded then the defects
+	  // below happen again. Therefore we have a system property to switch this off.
+	  if (Boolean.getBoolean("org.dawnsci.passerelle.do.not.break.osgi")) return;
+	  
     context.addBundleListener(this);
 
     for (Bundle bundle : context.getBundles()) {
@@ -85,7 +91,8 @@ public class Activator implements BundleActivator, BundleListener {
   }
 
   public void stop(BundleContext context) throws Exception {
-    context.removeBundleListener(this);
+    if (context!=null) context.removeBundleListener(this);
+    context = null;
   }
 
   public void bundleChanged(BundleEvent event) {
