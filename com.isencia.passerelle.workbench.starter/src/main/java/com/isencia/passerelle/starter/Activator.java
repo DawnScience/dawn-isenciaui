@@ -31,6 +31,16 @@ public class Activator implements BundleActivator, BundleListener {
 
     }
 
+    // IMPORTANT Doing this is evil! We spent many days attempting to 
+    // find out why OSGI was broken in the UI product. The start exceptions
+    // is not printed so dependencies can change which result in the wrong
+    // thing being started at the wrong time. Resulting in these defects:
+    // http://jira.diamond.ac.uk/browse/DAWNSCI-858
+    // http://jira.diamond.ac.uk/browse/DAWNSCI-841
+    // http://jira.diamond.ac.uk/browse/DAWNSCI-840
+    // However if this plugin is only started in the workflow config, then
+    // hopefully this is not an issue, although festering evil may escape one day...
+    
     // while there are bundles still to be started...
     Bundle bundle = null;
 
@@ -39,6 +49,7 @@ public class Activator implements BundleActivator, BundleListener {
       try {
         start(bundle);
       } catch (BundleException e) {
+    	  e.printStackTrace();
       }
     }
   }
