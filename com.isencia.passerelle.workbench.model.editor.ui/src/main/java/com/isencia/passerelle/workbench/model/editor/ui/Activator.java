@@ -81,14 +81,16 @@ public class Activator extends AbstractUIPlugin {
 
   }
 
-  
+  private static boolean alreadyLoaded = false;
   /**
    * If we call loadBundles() from the activator EVER, even when not auto starting
    * this plugin, there are circumstances where it will cause DAWN to malfunction. 
    * Probably any eclipse application in fact.
    */
-  public static void loadBundles() {
+  public static synchronized void loadBundles() {
 
+	  if (alreadyLoaded) return;
+	  
 	  // If we do this during startup, it causes a defect to happen in DAWN RCP version if you use the -clean argument.
 	  // Since eclipse automatically sets -clean when its installation changes, users see this issue.
 	  // See http://jira.diamond.ac.uk/browse/DAWNSCI-858 for more information
@@ -102,6 +104,7 @@ public class Activator extends AbstractUIPlugin {
 			  e.printStackTrace();
 		  }
 	  }
+	  alreadyLoaded = true;
   }
 
   private static void start(Bundle bundle, Stack<Bundle> bundles) throws BundleException {
