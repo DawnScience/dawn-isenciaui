@@ -29,10 +29,7 @@ public class ActorBundleInitializer {
 	public synchronized void start() {
 		
 		if (alreadyLoaded) return;
-		
-		// Check preference again just in case this class gets used elsewhere.
-		if (Boolean.getBoolean("org.dawnsci.passerelle.do.not.break.osgi")) return;
-		
+				
 		Stack<Bundle> bundles = parseBundles();
 		
 		// IMPORTANT Doing this is evil! We spent many days attempting to 
