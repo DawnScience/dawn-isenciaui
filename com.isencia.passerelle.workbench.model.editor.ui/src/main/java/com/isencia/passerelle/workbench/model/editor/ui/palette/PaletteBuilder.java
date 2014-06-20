@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
@@ -21,11 +22,14 @@ import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.part.EditorPart;
+
 import ptolemy.actor.Director;
+
 import com.isencia.passerelle.editor.common.model.PaletteGroup;
 import com.isencia.passerelle.editor.common.model.PaletteItemDefinition;
 import com.isencia.passerelle.editor.common.model.SubModelPaletteItemDefinition;
 import com.isencia.passerelle.model.Flow;
+import com.isencia.passerelle.starter.ActorBundleInitializer;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.ColorRegistry;
 import com.isencia.passerelle.workbench.model.editor.ui.WorkbenchUtility;
@@ -33,6 +37,18 @@ import com.isencia.passerelle.workbench.model.ui.utils.EclipseUtils;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 public class PaletteBuilder extends com.isencia.passerelle.editor.common.model.PaletteBuilder {
+	
+	static {
+		// The builder must load the passerelle plugins
+		// otherwise it cannot load properly. We do this
+		// in a lazy way otherwise DAWN takes a long time to start and
+		// this defect happens:
+		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
+    	ActorBundleInitializer initer = com.isencia.passerelle.starter.Activator.getInitializer();
+    	if (initer!=null) initer.start();
+	}
+
+
   @Override
   public void logError(Exception e) {
     EclipseUtils.logError(e, e.getMessage(), IStatus.ERROR);

@@ -127,12 +127,12 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
 	public static final String ID = "com.isencia.passerelle.workbench.model.editor.ui.editors.modelEditor";
 
 	static {
-		// The router factory must load the passerelle plugins
-		// otherwise it cannot route things properly. We do this
+		// The builder must load the passerelle plugins
+		// otherwise it cannot load properly. We do this
 		// in a lazy way otherwise DAWN takes a long time to start and
 		// this defect happens:
 		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
-    	ActorBundleInitializer initer = com.isencia.passerelle.starter.Activator.getInitializer();
+		ActorBundleInitializer initer = com.isencia.passerelle.starter.Activator.getInitializer();
     	if (initer!=null) initer.start();
 	}
 
