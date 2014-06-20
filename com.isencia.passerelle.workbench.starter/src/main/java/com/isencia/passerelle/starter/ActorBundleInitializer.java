@@ -30,6 +30,11 @@ public class ActorBundleInitializer {
 	    	  && !bundle.getSymbolicName().contains("persistence")) 
 	    	  && !bundle.equals(context.getBundle())) {
 	    	  
+	    	  if (bundle.getSymbolicName().startsWith("com.isencia")) {
+		    	  bundles.push(bundle);
+		    	  continue;
+	    	  }
+	    	  
 	    	  // Identify actor plugins and load them
 	    	  final String buds = bundle.getHeaders().get("Eclipse-RegisterBuddy");
 	    	  if (buds!=null) {
@@ -39,6 +44,8 @@ public class ActorBundleInitializer {
 	    		  // [com.isencia.passerelle.engine,  ptolemy.core,  com.isencia.passerelle.actor]
 	    		  if (buddies!=null) {
 	    			  if (Arrays.asList(buddies).contains("ptolemy.core")) {
+	    		    	  bundles.push(bundle);
+	    			  } else if (Arrays.asList(buddies).contains("com.isencia.passerelle.actor")) {
 	    		    	  bundles.push(bundle);
 	    			  }
 	    		  }
