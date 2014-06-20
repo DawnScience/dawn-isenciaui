@@ -12,12 +12,12 @@ import org.osgi.framework.BundleContext;
 public class Activator implements BundleActivator {
 
 
-	private static Initializer initializer;
+	private static ActorBundleInitializer initializer;
 
 	public void start(BundleContext context) throws Exception {
 
  
-		initializer = new Initializer(context);
+		initializer = new ActorBundleInitializer(context);
 
 		// For some reason if this plugin exists in the workspace, it can still sometimes be loaded
 		// once a workflow project exists or has existed. Once it does get loaded then the defects
@@ -34,7 +34,7 @@ public class Activator implements BundleActivator {
 	}
 
 
-	public static Initializer getInitializer() {
+	public static ActorBundleInitializer getInitializer() {
 		return initializer;
 	}
 }

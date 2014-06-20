@@ -1,5 +1,6 @@
 package com.isencia.passerelle.starter;
 
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -9,14 +10,14 @@ import org.osgi.framework.BundleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Initializer {
+public class ActorBundleInitializer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Activator.class);
 
 	private Stack<Bundle> bundles;
 	private boolean       alreadyLoaded;
 	
-	public Initializer(BundleContext context) {
+	public ActorBundleInitializer(BundleContext context) {
 		
 		bundles = new Stack<Bundle>();
 		
@@ -24,18 +25,40 @@ public class Initializer {
 
 	    for (Bundle bundle : context.getBundles()) {
 	      
-	      if (!(bundle.getSymbolicName().equals("com.isencia.passerelle.workbench")) && !(bundle.getSymbolicName().contains("eclipse") && !bundle.getSymbolicName().contains("persistence")) && !bundle.equals(context.getBundle()))
-	        bundles.push(bundle);
+	      if (!(bundle.getSymbolicName().equals("com.isencia.passerelle.workbench")) 
+	    	  && !(bundle.getSymbolicName().contains("eclipse") 
+	    	  && !bundle.getSymbolicName().contains("persistence")) 
+	    	  && !bundle.equals(context.getBundle())) {
+	    	  
+	    	  // Identify actor plugins and load them
+	    	  final String buds = bundle.getHeaders().get("Eclipse-RegisterBuddy");
+	    	  if (buds!=null) {
+	    		  final String[] buddies = buds.split(",");
+	    		  
+	    		  // Buddy list for actor plugins
+	    		  // [com.isencia.passerelle.engine,  ptolemy.core,  com.isencia.passerelle.actor]
+	    		  if (buddies!=null) {
+	    			  if (Arrays.asList(buddies).contains("ptolemy.core")) {
+	    		    	  bundles.push(bundle);
+	    			  }
+	    		  }
+	    	  }
+	      }
 
 	    }
 
 	}
 	
-	
-	public void start() {
+	/**
+	 * Attempts to start the passerelle bundles in a thread safe way.
+	 */
+	public synchronized void start() {
 		
 		if (alreadyLoaded) return;
-
+		
+		// Check preference again just in case this class gets used elsewhere.
+		if (Boolean.getBoolean("org.dawnsci.passerelle.do.not.break.osgi")) return;
+		
 		// IMPORTANT Doing this is evil! We spent many days attempting to 
 		// find out why OSGI was broken in the UI product. The start exceptions
 		// is not printed so dependencies can change which result in the wrong
@@ -89,13 +112,13 @@ public class Initializer {
 			}
 		}
 
-		// try to start the bundle
 		bundle.start();
 		LOGGER.debug(bundle.getSymbolicName() + " started.");
 	}
 
 
 	public void stop(BundleContext context) {
+		bundles.clear();
 		//if (context!=null) context.removeBundleListener(this);
 	}
 
