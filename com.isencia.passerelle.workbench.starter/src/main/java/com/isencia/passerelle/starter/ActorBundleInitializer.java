@@ -15,12 +15,56 @@ public class ActorBundleInitializer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Activator.class);
 
-	private Stack<Bundle> bundles;
-	private boolean       alreadyLoaded;
+    private boolean       alreadyLoaded;
+
+	private BundleContext context;
 	
 	public ActorBundleInitializer(BundleContext context) {
+		this.context = context;
+	}
+	
+	/**
+	 * Attempts to start the passerelle bundles in a thread safe way.
+	 */
+	public synchronized void start() {
 		
-		bundles = new Stack<Bundle>();
+		if (alreadyLoaded) return;
+		
+		// Check preference again just in case this class gets used elsewhere.
+		if (Boolean.getBoolean("org.dawnsci.passerelle.do.not.break.osgi")) return;
+		
+		Stack<Bundle> bundles = parseBundles();
+		
+		// IMPORTANT Doing this is evil! We spent many days attempting to 
+		// find out why OSGI was broken in the UI product. The start exceptions
+		// is not printed so dependencies can change which result in the wrong
+		// thing being started at the wrong time. Resulting in these defects:
+		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
+		// http://jira.diamond.ac.uk/browse/DAWNSCI-841
+		// http://jira.diamond.ac.uk/browse/DAWNSCI-840
+		// However if this plugin is only started in the workflow config, then
+		// hopefully this is not an issue, although festering evil may escape one day...
+	
+		// while there are bundles still to be started...
+		Bundle bundle = null;
+	
+		while (!bundles.isEmpty()) {
+			bundle = bundles.pop();
+			try {
+				start(bundle, bundles);
+			} catch (BundleException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		alreadyLoaded = true;
+
+	}
+
+
+	private Stack<Bundle> parseBundles() {
+		
+		Stack<Bundle> bundles = new Stack<Bundle>();
 		
 	    //context.addBundleListener(this);
 
@@ -55,47 +99,10 @@ public class ActorBundleInitializer {
 	      }
 
 	    }
-
-	}
-	
-	/**
-	 * Attempts to start the passerelle bundles in a thread safe way.
-	 */
-	public synchronized void start() {
-		
-		if (alreadyLoaded) return;
-		
-		// Check preference again just in case this class gets used elsewhere.
-		if (Boolean.getBoolean("org.dawnsci.passerelle.do.not.break.osgi")) return;
-		
-		// IMPORTANT Doing this is evil! We spent many days attempting to 
-		// find out why OSGI was broken in the UI product. The start exceptions
-		// is not printed so dependencies can change which result in the wrong
-		// thing being started at the wrong time. Resulting in these defects:
-		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
-		// http://jira.diamond.ac.uk/browse/DAWNSCI-841
-		// http://jira.diamond.ac.uk/browse/DAWNSCI-840
-		// However if this plugin is only started in the workflow config, then
-		// hopefully this is not an issue, although festering evil may escape one day...
-	
-		// while there are bundles still to be started...
-		Bundle bundle = null;
-	
-		while (!bundles.isEmpty()) {
-			bundle = bundles.pop();
-			try {
-				start(bundle);
-			} catch (BundleException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		alreadyLoaded = true;
-
+	    return bundles;
 	}
 
-
-	private void start(Bundle bundle) throws BundleException {
+	private void start(Bundle bundle, Stack<Bundle> bundles) throws BundleException {
 
 		// first start any required bundles
 		String requiredBundles = (String) bundle.getHeaders().get("Require-Bundle");
@@ -114,7 +121,7 @@ public class ActorBundleInitializer {
 					if (requiredBundle.getSymbolicName().equals(bundleName)) {
 						// remove the required bundle from the stack
 						bundles.remove(i);
-						start(requiredBundle);
+						start(requiredBundle, bundles);
 						break;
 					}
 				}
@@ -127,7 +134,6 @@ public class ActorBundleInitializer {
 
 
 	public void stop(BundleContext context) {
-		bundles.clear();
 		//if (context!=null) context.removeBundleListener(this);
 	}
 
