@@ -118,18 +118,20 @@ import com.isencia.passerelle.workbench.model.utils.ModelUtils;
  * </ul>
  */
 public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implements LinkHolder, IPasserelleMultiPageEditor, IResourceChangeListener {
-  boolean dirty = false;
+  
+    private static Logger logger = LoggerFactory.getLogger(PasserelleModelMultiPageEditor.class);
+	public static final String ID = "com.isencia.passerelle.workbench.model.editor.ui.editors.modelEditor";
 
-  @Override
-  public boolean isDirty() {
-    if (dirty)
-      return true;
-    return super.isDirty();
-  }
+	static {
+		// The router factory must load the passerelle plugins
+		// otherwise it cannot route things properly. We do this
+		// in a lazy way otherwise DAWN takes a long time to start and
+		// this defect happens:
+		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
+		Activator.loadBundles();
+	}
 
-  public static final String ID = "com.isencia.passerelle.workbench.model.editor.ui.editors.modelEditor";
 
-  private static Logger logger = LoggerFactory.getLogger(PasserelleModelMultiPageEditor.class);
 
   private CompositeActor model = new CompositeActor();
   protected boolean editorSaving = false;
@@ -330,6 +332,17 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
 
   public void setText(int idex, String text) {
     setPageText(idex, text);
+  }
+
+
+	
+  private boolean dirty = false;
+
+  @Override
+  public boolean isDirty() {
+    if (dirty)
+      return true;
+    return super.isDirty();
   }
 
   public void doSave(final IProgressMonitor monitor) {
