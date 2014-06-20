@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -84,18 +85,21 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import ptolemy.actor.CompositeActor;
 import ptolemy.actor.TypedCompositeActor;
 import ptolemy.actor.TypedIORelation;
 import ptolemy.kernel.ComponentRelation;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.moml.Vertex;
+
 import com.isencia.passerelle.editor.common.model.Link;
 import com.isencia.passerelle.editor.common.model.LinkHolder;
 import com.isencia.passerelle.model.Flow;
 import com.isencia.passerelle.model.FlowManager;
 import com.isencia.passerelle.model.util.CollectingMomlParsingErrorHandler;
 import com.isencia.passerelle.model.util.MoMLParser;
+import com.isencia.passerelle.starter.Initializer;
 import com.isencia.passerelle.workbench.model.editor.ui.Activator;
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.OutlinePartFactory;
 import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
@@ -128,7 +132,8 @@ public class PasserelleModelMultiPageEditor extends MultiPageEditorPart implemen
 		// in a lazy way otherwise DAWN takes a long time to start and
 		// this defect happens:
 		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
-		Activator.loadBundles();
+    	Initializer initer = com.isencia.passerelle.starter.Activator.getInitializer();
+    	if (initer!=null) initer.start();
 	}
 
 

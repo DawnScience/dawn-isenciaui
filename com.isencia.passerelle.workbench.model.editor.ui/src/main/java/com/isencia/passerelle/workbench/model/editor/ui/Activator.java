@@ -1,15 +1,11 @@
 package com.isencia.passerelle.workbench.model.editor.ui;
 
 import java.io.File;
-import java.util.Stack;
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
@@ -30,7 +26,6 @@ public class Activator extends AbstractUIPlugin {
 
   // The shared instance
   private static Activator plugin;
-  private static Stack<Bundle> bundles;
 
   private BundleContext bundleContext;
   private ServiceTracker repoSvcTracker;
@@ -51,14 +46,6 @@ public class Activator extends AbstractUIPlugin {
 	  super.start(context);
 	  this.bundleContext = context;
 	  
-	  bundles = new Stack<Bundle>();
-	  for (Bundle bundle : context.getBundles()) {
-
-		  if (!(bundle.getSymbolicName().equals("com.isencia.passerelle.workbench")) && !(bundle.getSymbolicName().contains("eclipse") && !bundle.getSymbolicName().contains("persistence")) && !bundle.equals(context.getBundle()))
-			  bundles.push(bundle);
-
-	  }
-
 	  plugin = this;
 	  repoSvcTracker = new ServiceTracker(context, RepositoryService.class.getName(), null);
 	  repoSvcTracker.open();
@@ -80,64 +67,6 @@ public class Activator extends AbstractUIPlugin {
 	  getRepositoryService();
 
   }
-
-  private static boolean alreadyLoaded = false;
-  /**
-   * If we call loadBundles() from the activator EVER, even when not auto starting
-   * this plugin, there are circumstances where it will cause DAWN to malfunction. 
-   * Probably any eclipse application in fact.
-   */
-  public static synchronized void loadBundles() {
-
-	  if (alreadyLoaded) return;
-	  
-	  // If we do this during startup, it causes a defect to happen in DAWN RCP version if you use the -clean argument.
-	  // Since eclipse automatically sets -clean when its installation changes, users see this issue.
-	  // See http://jira.diamond.ac.uk/browse/DAWNSCI-858 for more information
-	  // Now in DAWN we turn off this special starting by not starting this plugin automatically at startup.
-	  while (!bundles.isEmpty()) {
-		  Bundle bundle = bundles.pop();
-
-		  try {
-			  start(bundle, bundles);
-		  } catch (BundleException e) {
-			  e.printStackTrace();
-		  }
-	  }
-	  alreadyLoaded = true;
-  }
-
-  private static void start(Bundle bundle, Stack<Bundle> bundles) throws BundleException {
-
-	  // first start any required bundles
-	  String requiredBundles = (String) bundle.getHeaders().get("Require-Bundle");
-	  if (requiredBundles != null) {
-		  StringTokenizer tokenizer = new StringTokenizer(requiredBundles, ",");
-		  while (tokenizer.hasMoreTokens()) {
-			  String bundleName = tokenizer.nextToken();
-			  // strip version info
-			  int index = bundleName.indexOf(';');
-			  if (index > 0)
-				  bundleName = bundleName.substring(0, index);
-
-			  // look for the required bundle in the stack of bundles still to be started
-			  for (int i = 0; i < bundles.size(); i++) {
-				  Bundle requiredBundle = bundles.get(i);
-				  if (requiredBundle.getSymbolicName().equals(bundleName)) {
-					  // remove the required bundle from the stack
-					  bundles.remove(i);
-					  start(requiredBundle, bundles);
-					  break;
-				  }
-			  }
-		  }
-	  }
-
-	  // try to start the bundle
-	  bundle.start();
-	  LOGGER.debug(bundle.getSymbolicName() + " started.");
-  }
-
   /*
    * (non-Javadoc)
    * 
