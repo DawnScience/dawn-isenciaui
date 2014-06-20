@@ -1,6 +1,7 @@
 package com.isencia.passerelle.starter;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -43,9 +44,10 @@ public class ActorBundleInitializer {
 	    		  // Buddy list for actor plugins
 	    		  // [com.isencia.passerelle.engine,  ptolemy.core,  com.isencia.passerelle.actor]
 	    		  if (buddies!=null) {
-	    			  if (Arrays.asList(buddies).contains("ptolemy.core")) {
+	    			  List<String> budList = Arrays.asList(buddies);
+	    			  if (budList.contains("ptolemy.core")) {
 	    		    	  bundles.push(bundle);
-	    			  } else if (Arrays.asList(buddies).contains("com.isencia.passerelle.actor")) {
+	    			  } else if (budList.contains("com.isencia.passerelle.actor")) {
 	    		    	  bundles.push(bundle);
 	    			  }
 	    		  }
