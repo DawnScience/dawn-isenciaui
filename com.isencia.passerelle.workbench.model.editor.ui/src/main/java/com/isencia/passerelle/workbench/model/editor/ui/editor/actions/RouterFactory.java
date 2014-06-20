@@ -19,16 +19,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMu
 import com.isencia.passerelle.workbench.model.editor.ui.router.SCAManhattanConnectionRouter;
 
 public class RouterFactory {
-	
-	static {
-		// The router factory must load the passerelle plugins
-		// otherwise it cannot route things properly. We do this
-		// in a lazy way otherwise DAWN takes a long time to start and
-		// this defect happens:
-		// http://jira.diamond.ac.uk/browse/DAWNSCI-858
-		Activator.loadBundles();
-	}
-	
+		
 	public static final String ROUTER_PREF = "com.isencia.passerelle.workbench.model.editor.ui.RouterType";
 	
 	private static ROUTER_TYPE     type = ROUTER_TYPE.getDefaultType();
