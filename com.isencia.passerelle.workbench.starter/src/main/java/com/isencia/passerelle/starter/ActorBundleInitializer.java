@@ -93,6 +93,13 @@ public class ActorBundleInitializer {
 	    			  }
 	    		  }
 	    	  }
+	    	  
+	    	  // Identify services and ensure these bundles are also loaded
+	    	  final String serv = bundle.getHeaders().get("Service-Component");
+	    	  if (serv!=null && !"".equals(serv)) {
+	    		  bundles.push(bundle);
+	    	  }
+
 	      }
 
 	    }
