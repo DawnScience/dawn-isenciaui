@@ -9,7 +9,7 @@
           name="ModelLauncher"
           point="org.eclipse.core.runtime.applications">
  	  <application
-          cardinality="1"
+          cardinality="*"
           icon="icons/model.gif"
           thread="main"
           visible="true">
