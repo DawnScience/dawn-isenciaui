@@ -187,7 +187,7 @@ public class ActorTreeViewerPage extends ActorPalettePage implements IAdaptable 
 
   public Object getAdapter(Class type) {
     if (type == String.class) {
-      return "Pallette";
+      return "Palette";
     }
     return null;
   }
