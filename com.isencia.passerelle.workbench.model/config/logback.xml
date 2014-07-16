@@ -1,50 +1,58 @@
-<configuration>
+<configuration debug="false">
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <layout class="ch.qos.logback.classic.PatternLayout">
-       <Pattern>%d{HH:mm:ss.SSS} %-5level %msg %n</Pattern>
-    </layout>
+    <encoder>
+       <pattern>%d{HH:mm:ss.SSS} %-5level %msg %n</pattern>
+    </encoder>
   </appender>
   
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <append>false</append>
     <file>${user.home}/.passerelle/modelRunner.log</file>
-    <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>%d{HH:mm:ss.SSS} %-5level [thread=%thread] [class=%logger{36}] - %msg %n</Pattern>
-    </layout>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [thread=%thread] [class=%logger{36}] - %msg %n</pattern>
+    </encoder>
     
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
         <level>ERROR</level>
     </filter>
-    
-    <!-- keep 1 days' worth of history we are only a GUI -->
-    <maxHistory>1</maxHistory>
-        
-    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-        <maxFileSize>20MB</maxFileSize>
-    </triggeringPolicy>
-    
+
+	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<fileNamePattern>${user.home}/.passerelle/modelRunner_%d{yyyy-MM-dd}.%i.log
+		</fileNamePattern>
+		<!-- keep 1 days' worth of history we are only a GUI -->
+		<maxHistory>1</maxHistory>
+		<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		<timeBasedFileNamingAndTriggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+			<!-- or whenever the file size reaches 20MB -->
+			<maxFileSize>20MB</maxFileSize>
+		</timeBasedFileNamingAndTriggeringPolicy>
+	</rollingPolicy>
   </appender>
   
 
  <appender name="FILE_DAWB" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <append>false</append>
     <file>${user.home}/.dawn/workflow.log</file>
-    <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>%d{HH:mm:ss.SSS} %-5level [thread=%thread] [class=%logger{36}] - %msg %n</Pattern>
-    </layout>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [thread=%thread] [class=%logger{36}] - %msg %n</pattern>
+    </encoder>
     
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
         <level>ERROR</level>
     </filter>
-    
-    <!-- keep 1 days' worth of history we are only a GUI -->
-    <maxHistory>1</maxHistory>
-        
-    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-        <maxFileSize>20MB</maxFileSize>
-    </triggeringPolicy>
-    
+
+	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		<fileNamePattern>${user.home}/.dawn/workflow_%d{yyyy-MM-dd}.%i.log
+		</fileNamePattern>
+		<!-- keep 1 days' worth of history we are only a GUI -->
+		<maxHistory>1</maxHistory>
+		<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		<timeBasedFileNamingAndTriggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+			<!-- or whenever the file size reaches 20MB -->
+			<maxFileSize>20MB</maxFileSize>
+		</timeBasedFileNamingAndTriggeringPolicy>
+	</rollingPolicy>
   </appender>
 
 <!--
