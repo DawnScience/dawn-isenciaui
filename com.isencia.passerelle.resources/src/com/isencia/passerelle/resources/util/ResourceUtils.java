@@ -23,7 +23,7 @@ import ptolemy.kernel.util.Settable;
  * 
  * Contains a static method to get the project.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class ResourceUtils {

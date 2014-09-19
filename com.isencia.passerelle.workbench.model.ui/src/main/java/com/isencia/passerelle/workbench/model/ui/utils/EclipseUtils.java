@@ -57,7 +57,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import com.isencia.passerelle.workbench.model.ui.activator.Activator;
 
 /**
- * @author fcp94556
+ * @author Matthew Gerring
  * 
  */
 public class EclipseUtils {
