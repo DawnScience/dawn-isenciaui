@@ -132,8 +132,12 @@ public class ActorBundleInitializer {
 			}
 		}
 
-		bundle.start();
-		LOGGER.debug(bundle.getSymbolicName() + " started.");
+		try {
+			bundle.start();
+			LOGGER.debug(bundle.getSymbolicName() + " started.");
+		} catch (org.osgi.framework.BundleException ignored) {
+			// Otherwise one gets a read error when starting the workflow run configuration.
+		}
 	}
 
 
