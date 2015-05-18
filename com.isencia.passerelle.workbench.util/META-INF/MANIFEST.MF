@@ -7,7 +7,7 @@ Bundle-Activator: com.isencia.passerelle.workbench.util.Activator
 Bundle-Vendor: ESRF
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.eclipse.core.resources,
  ptolemy.data.expr;version="7.0.1",
  ptolemy.kernel.util;version="7.0.1"

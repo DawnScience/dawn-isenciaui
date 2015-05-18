@@ -32,7 +32,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.launching;bundle-version="3.6.0",
  com.isencia.passerelle.resources;bundle-version="1.0.0",
  com.isencia.passerelle.workbench.starter;bundle-version="8.7.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.isencia.passerelle.workbench.model.editor.ui;version="8.7.0",
  com.isencia.passerelle.workbench.model.editor.ui.cell;version="8.7.0",
  com.isencia.passerelle.workbench.model.editor.ui.dnd;version="8.7.0",
