@@ -1,10 +1,17 @@
 package com.isencia.passerelle.workbench.model.launch;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -12,10 +19,12 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import ptolemy.actor.CompositeActor;
 import ptolemy.actor.Manager;
 import ptolemy.kernel.util.Workspace;
 import ptolemy.moml.MoMLParser;
+
 import com.isencia.constants.IPropertyNames;
 import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.director.PasserelleDirector;
@@ -36,11 +45,30 @@ public class ModelRunner implements IApplication {
 
   private Manager manager;
 
-  public Object start(IApplicationContext applicationContextMightBeNull) throws Exception {
+  public Object start(IApplicationContext context) throws Exception {
 
-    String model = System.getProperty("model");
-    runModel(model, "true".equals(System.getProperty("com.isencia.jmx.service.terminate")));
-    return IApplication.EXIT_OK;
+	  if (context!=null) {
+		  final Map      args          = context.getArguments();
+		  final String[] configuration = (String[])args.get("application.args");
+	
+		  Map<String, String> conf = new HashMap<String, String>(7);
+		  for (int i = 0; i < configuration.length; i++) {
+			  final String pkey = configuration[i];
+			  if (pkey.startsWith("-")) {
+				  conf.put(pkey.substring(1), configuration[i+1]);
+			  }
+		  }
+		  
+		  if (conf.containsKey("properties")) {
+			  logger.debug("Adding properties from: "+conf.get("properties"));
+			  System.getProperties().putAll(loadProperties(conf.get("properties")));
+		  }
+	  }
+
+
+	  String model = System.getProperty("model");
+	  runModel(model, "true".equals(System.getProperty("com.isencia.jmx.service.terminate")));
+	  return IApplication.EXIT_OK;
   }
 
   public void stop() {
@@ -243,5 +271,20 @@ public class ModelRunner implements IApplication {
     final ModelRunner runner = new ModelRunner();
     runner.runModel(model, true);
   }
+
+	static Properties loadProperties(String path) throws Exception {
+		
+		File file = new File(path);
+		if (!file.exists()) throw new Exception("Cannot read properties file "+path);
+		
+		final BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+		try {
+			Properties props = new Properties();
+			props.load(in);
+			return props;
+		} finally {
+			in.close();
+		}
+	}
 
 }
