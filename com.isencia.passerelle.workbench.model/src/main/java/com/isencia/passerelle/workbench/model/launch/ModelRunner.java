@@ -61,7 +61,13 @@ public class ModelRunner implements IApplication {
 		  
 		  if (conf.containsKey("properties")) {
 			  logger.debug("Adding properties from: "+conf.get("properties"));
-			  System.getProperties().putAll(loadProperties(conf.get("properties")));
+			  Properties props = loadProperties(conf.get("properties"));
+			  for (Object key : props.keySet()) {
+				  
+				  String value = (String)props.get(key);
+				  System.setProperty(key.toString(), value);
+				  logger.debug("-D"+key+"="+value);
+			}
 		  }
 	  }
 
