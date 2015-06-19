@@ -67,7 +67,7 @@ public class ModelRunner implements IApplication {
 				  String value = (String)props.get(key);
 				  System.setProperty(key.toString(), value);
 				  logger.debug("-D"+key+"="+value);
-			}
+			  }
 		  }
 	  }
 
