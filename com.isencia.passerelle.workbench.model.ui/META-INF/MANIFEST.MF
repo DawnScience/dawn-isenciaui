@@ -34,5 +34,5 @@ Import-Package: org.eclipse.core.filesystem,
  org.eclipse.gef.commands,
  org.eclipse.gef.ui.actions,
  org.eclipse.help.ui.internal.util,
- org.slf4j;version="[1.7.6,1.7.7)"
+ org.slf4j;version="[1.7.2,2.0.0)"
 DynamicImport-Package: *
